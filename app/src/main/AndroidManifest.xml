@@ -44,7 +44,26 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".FeatDetail"
+            android:label="@string/title_activity_feat_detail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ItemListActivity"
+            android:label="@string/title_item_list"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ItemDetailActivity"
+            android:label="@string/title_item_detail"
+            android:parentActivityName=".ItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.ycp.cs482.iorc.ItemListActivity" />
+        </activity>
+        <activity android:name=".SkillDetailActivity" />
+        <activity android:name=".DiceWidgetActivity"></activity>
     </application>
 
 </manifest>
