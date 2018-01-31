@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
@@ -68,6 +69,10 @@ public class CharacterListActivity extends AppCompatActivity {
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
+        recyclerView.addItemDecoration(itemDecor);
+
     }
 
     public static class SimpleItemRecyclerViewAdapter
