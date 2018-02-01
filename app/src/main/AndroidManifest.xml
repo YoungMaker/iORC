@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CharacterListActivity"
+            android:name=".DiceWidgetActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -63,7 +63,6 @@
                 android:value="edu.ycp.cs482.iorc.ItemListActivity" />
         </activity>
         <activity android:name=".SkillDetailActivity" />
-        <activity android:name=".DiceWidgetActivity"></activity>
     </application>
 
 </manifest>

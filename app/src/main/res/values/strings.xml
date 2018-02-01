@@ -184,4 +184,6 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="roll_dice">Roll Dice</string>
+    <string name="hello_world">Hello World</string>
 </resources>
