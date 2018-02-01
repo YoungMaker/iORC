@@ -17,6 +17,7 @@ public class DummyContent {
      * An array of sample (dummy) items.
      */
     public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    //public static final List<DummySkill>
 
     /**
      * A map of sample (dummy) items, by ID.
@@ -67,6 +68,17 @@ public class DummyContent {
         @Override
         public String toString() {
             return content;
+        }
+    }
+
+    public static class DummySkill {
+        public final String id;
+        public final String name;
+        public final String level;
+        public DummySkill(String id, String name, String level){
+            this.id = id;
+            this.name = name;
+            this.level = level;
         }
     }
 }
