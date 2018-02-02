@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import edu.ycp.cs482.iorc.ItemSkillFragment.OnListFragmentInteractionListener;
 import edu.ycp.cs482.iorc.dummy.DummyContent.DummyItem;
+import edu.ycp.cs482.iorc.dummy.DummyContent.DummySkill;
 
 import java.util.List;
 
