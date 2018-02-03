@@ -33,7 +33,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.ycp.cs482.iorc.CharacterListActivity" />
         </activity>
-        <activity android:name=".RaceClassChooser" />
+       <!-- <activity android:name=".RaceClassChooser" />-->
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -63,7 +63,20 @@
                 android:value="edu.ycp.cs482.iorc.ItemListActivity" />
         </activity>
         <activity android:name=".SkillDetailActivity" />
-        <activity android:name=".DiceWidgetActivity"></activity>
+        <activity android:name=".DiceWidgetActivity" />
+        <activity
+            android:name=".ClassRaceListActivity"
+            android:label="@string/title_classrace_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ClassRaceDetailActivity"
+            android:label="@string/title_classrace_detail"
+            android:parentActivityName=".ClassRaceListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.ycp.cs482.iorc.ClassRaceListActivity" />
+        </activity>
     </application>
 
 </manifest>
