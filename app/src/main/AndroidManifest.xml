@@ -33,7 +33,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.ycp.cs482.iorc.CharacterListActivity" />
         </activity>
-       <!-- <activity android:name=".RaceClassChooser" />-->
+        <!-- <activity android:name=".RaceClassChooser" /> -->
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -67,7 +67,7 @@
         <activity
             android:name=".ClassRaceListActivity"
             android:label="@string/title_classrace_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ClassRaceDetailActivity"
             android:label="@string/title_classrace_detail"
@@ -76,6 +76,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.ycp.cs482.iorc.ClassRaceListActivity" />
+        </activity>
+        <activity
+            android:name=".AlignmentReligionListActivity"
+            android:label="@string/title_alignmentreligion_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".AlignmentReligionDetailActivity"
+            android:label="@string/title_alignmentreligion_detail"
+            android:parentActivityName=".AlignmentReligionListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.ycp.cs482.iorc.AlignmentReligionListActivity" />
         </activity>
     </application>
 
