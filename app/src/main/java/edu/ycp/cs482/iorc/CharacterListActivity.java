@@ -51,7 +51,7 @@ public class CharacterListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 /*Snackbar.make(view, "Create new Character Action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                startActivity(new Intent(CharacterListActivity.this, LoginActivity.class));
+                startActivity(new Intent(CharacterListActivity.this, ClassRaceListActivity.class));
             }
         });
 
