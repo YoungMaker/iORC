@@ -68,19 +68,19 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final AlignmentReligionListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<DummyContent.DummyAlignment> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                DummyContent.DummyAlignment item = (DummyContent.DummyAlignment) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
@@ -100,7 +100,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(AlignmentReligionListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<DummyContent.DummyAlignment> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -117,7 +117,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mContentView.setText(mValues.get(position).name);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

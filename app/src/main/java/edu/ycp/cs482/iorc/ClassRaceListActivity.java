@@ -68,19 +68,19 @@ public class ClassRaceListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final ClassRaceListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<DummyContent.DummyClass> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                DummyContent.DummyClass item = (DummyContent.DummyClass) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
@@ -100,7 +100,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(ClassRaceListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<DummyContent.DummyClass> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -117,7 +117,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mContentView.setText(mValues.get(position).name);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

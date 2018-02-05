@@ -69,7 +69,7 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CHARACTERS, mTwoPane));
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
         recyclerView.addItemDecoration(itemDecor);
@@ -80,12 +80,12 @@ public class CharacterListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<DummyContent.DummyCharacter> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                DummyContent.DummyCharacter item = (DummyContent.DummyCharacter) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.id);
@@ -105,7 +105,7 @@ public class CharacterListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<DummyContent.DummyCharacter> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -122,7 +122,7 @@ public class CharacterListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mContentView.setText(mValues.get(position).name);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
