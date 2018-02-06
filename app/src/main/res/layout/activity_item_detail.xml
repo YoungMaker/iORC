@@ -7,12 +7,6 @@
     tools:context="edu.ycp.cs482.iorc.ItemDetailActivity"
     tools:ignore="MergeRootFrame">
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/item_detail_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar"
             android:layout_width="match_parent"
@@ -39,7 +33,12 @@
             </android.support.design.widget.CollapsingToolbarLayout>
 
         </android.support.design.widget.AppBarLayout>
-    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/item_detail_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
