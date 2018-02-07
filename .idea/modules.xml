@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Hunter\StudioProjects\iORC\app\app.iml" filepath="C:\Users\Hunter\StudioProjects\iORC\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/iORC.iml" filepath="$PROJECT_DIR$/iORC.iml" />
+      <module fileurl="file://C:\Users\Hunter\StudioProjects\iORC\iORC.iml" filepath="C:\Users\Hunter\StudioProjects\iORC\iORC.iml" />
     </modules>
   </component>
 </project>

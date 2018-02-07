@@ -38,9 +38,30 @@ public class DummyContent {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
-            addClass(createDummyClasses(i));
-            addCharacter(createDummyCharacters(i));
         }
+        //characters
+        addCharacter(createDummyCharacters("1","Hank the Tank","Enjoys the front line","Paladin","Goliath", "23","9","9","25","3","3","13","10","3"));
+        addCharacter(createDummyCharacters("2","Gorden the Warden","Stuff","Warden","Half Elf","16", "15","15","12","18","11","14","16","17"));
+        addCharacter(createDummyCharacters("3","Piper the Sniper","Pew pew","Ranger","Elf","12", "16","14","13","15","11","13","15","16"));
+        addCharacter(createDummyCharacters("4","Craig","Good old Craig","Wizard","Human", "8","11","10","19","17","14","16","11","10"));
+        //addCharacter(createDummyCharacters("","","","","","", "","","","","","","",""));
+
+        //classes
+        addClass(createDummyClasses("1", "Ranger","Agile combatant that uses both melee and ranged attacks." , "+2 Ref"));
+        addClass(createDummyClasses("2", "Fighter","Person who whacks people over the head with a various assortment of large melee weapons.", "+2 Fort"));
+        addClass(createDummyClasses("3", "Wizard", "User of magic who focuses on spells that have both utility and combat capabilities.","+2 Will"));
+        addClass(createDummyClasses("4", "Rogue", "A class that relies on cunning and stealth.", "+1 Ref, +1 Will"));
+        addClass(createDummyClasses("5", "Cleric", "A class that focuses on the healing arts","+1 Will, +1 Fort"));
+        addClass(createDummyClasses("6", "Paladin", "Heavily armoured frontline class", "+2 Fort"));
+        addClass(createDummyClasses("7", "Warlock","A mage that focuses on the darker arts, more aggressive type of wizard","+1 Will, +1 Ref"));
+        addClass(createDummyClasses("8", "Bard","Motivates the group through song.", "+2 Ref"));
+        addClass(createDummyClasses("9", "Barbarian", "Loves hitting things, think of an angrier fighter.", "+2 Fort"));
+        addClass(createDummyClasses("10", "Monk", "Calm and dedicated to good monks are known for their superior unarmed combat skills.", "+1 Ref, +1 Will"));
+        addClass(createDummyClasses("11", "Druid", "Uses the power of nature to support themselves both in and out of combat.", "+2 Will"));
+        addClass(createDummyClasses("12", "Warden", "Defender of nature, able to hold their own and avoid damage despite having light armour.", "+1 Ref, +1 Will"));
+        addClass(createDummyClasses("13", "Warlord", "Leaders who inspire and give opportunities to their comrades.", "+1 Fort, +1 Will"));
+
+        //alignments
         addAlignment(createDummyAlignment("1", "Lawful Good", "Characters that act within the law and follow it's processes."));
         addAlignment(createDummyAlignment("2", "True Good", "Character that does what they think is right, regardless of law."));
         addAlignment(createDummyAlignment("3", "Chaotic Good", "Characters that do what needs to be done for a good end result, regardless of means"));
@@ -73,11 +94,11 @@ public class DummyContent {
     private static DummyItem createDummyItem(int position) {
         return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
     }
-    private static DummyClass createDummyClasses(int position){
-        return new DummyClass(String.valueOf(position), "Ranger " + position, "Class that balances ranged and melee combat styles.");
+    private static DummyClass createDummyClasses(String id, String name, String description, String defBonus){
+        return new DummyClass(id, name, description, defBonus);
     }
-    private static DummyCharacter createDummyCharacters(int position){
-        return new DummyCharacter(String.valueOf(position), "Hank the Tank " + position, "This character makes his way through forests, decimating the wildlife in the process.");
+    private static DummyCharacter createDummyCharacters(String id, String name, String content, String charClass, String race, String str, String dex, String con, String intel, String wis, String cha, String will, String fort, String ref){
+        return new DummyCharacter(id, name, content,charClass, race, str, dex, con, intel, wis, cha, will, fort, ref);
     }
     private static DummyAlignment createDummyAlignment(String id, String name, String content) {
         return new DummyAlignment(id, name, content);
@@ -118,10 +139,12 @@ public class DummyContent {
         public final String id;
         public final String name;
         public final String content;
-        public DummyClass(String id, String name, String content){
+        public final String defBonus;
+        public DummyClass(String id, String name, String content , String defBonus){
             this.id = id;
             this.name = name;
             this.content = content;
+            this.defBonus = defBonus;
         }
     }
 
@@ -129,10 +152,32 @@ public class DummyContent {
         public final String id;
         public final String name;
         public final String content;
-        public DummyCharacter(String id, String name, String content){
+        public final String charClass;
+        public final String race;
+        public final String str;
+        public final String dex;
+        public final String con;
+        public final String intel;
+        public final String wis;
+        public final String cha;
+        public final String will;
+        public final String fort;
+        public final String ref;
+        public DummyCharacter(String id, String name, String content, String charClass, String race, String str, String dex, String con, String intel, String wis, String cha, String will, String fort, String ref){
             this.id = id;
             this.name = name;
             this.content = content;
+            this.charClass = charClass;
+            this.race = race;
+            this.str = str;
+            this.dex = dex;
+            this.con = con;
+            this.intel = intel;
+            this.wis = wis;
+            this.cha = cha;
+            this.will = will;
+            this.fort = fort;
+            this.ref = ref;
         }
     }
 
