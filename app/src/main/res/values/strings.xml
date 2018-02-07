@@ -188,4 +188,5 @@
     <string name="title_classrace_detail">ClassRace Detail</string>
     <string name="title_alignmentreligion_list">AlignmentsReligions</string>
     <string name="title_alignmentreligion_detail">AlignmentReligion Detail</string>
+    <string name="empty_char_name">Character Name</string>
 </resources>
