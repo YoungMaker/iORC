@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.ycp.cs482.iorc.RaceClassChooser">
+    tools:context="edu.ycp.cs482.iorc.SkillDetailActivity">
 
+
+    <include layout="@layout/fragment_itemskill_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 </android.support.constraint.ConstraintLayout>

@@ -11,28 +11,27 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 /**
- * An activity representing a single Character detail screen. This
+ * An activity representing a single ClassRace detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
  * item details are presented side-by-side with a list of items
- * in a {@link CharacterListActivity}.
+ * in a {@link ClassRaceListActivity}.
  */
-public class CharacterDetailActivity extends AppCompatActivity {
+public class ClassRaceDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_character_detail);
+        setContentView(R.layout.activity_classrace_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override //TODO: save the selected Class or Race.
+            public void onClick(View view) {
+                 startActivity(new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class));
+            }
+        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -53,12 +52,12 @@ public class CharacterDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-            CharacterDetailFragment fragment = new CharacterDetailFragment();
+            arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
+            ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.character_detail_container, fragment)
+                    .add(R.id.classrace_detail_container, fragment)
                     .commit();
         }
     }
@@ -73,7 +72,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, CharacterListActivity.class));
+            navigateUpTo(new Intent(this, ClassRaceListActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
