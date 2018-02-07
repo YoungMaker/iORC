@@ -63,6 +63,7 @@
                 android:value="edu.ycp.cs482.iorc.ItemListActivity" />
         </activity>
         <activity android:name=".SkillDetailActivity" />
+        <activity android:name=".DiceWidgetActivity" />
     </application>
 
 </manifest>
