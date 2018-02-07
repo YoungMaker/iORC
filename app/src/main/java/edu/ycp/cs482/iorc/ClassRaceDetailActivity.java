@@ -27,10 +27,9 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            @Override
+            @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                 startActivity(new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class));
             }
         });
 
