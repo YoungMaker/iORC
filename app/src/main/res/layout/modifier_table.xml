@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+    <LinearLayout 
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    
+        <!--<TextView-->
+            <!--android:id="@+id/mod_lev"-->
+            <!--style="?android:attr/textAppearanceListItemSmall"-->
+            <!--android:layout_width="45dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="3dp"-->
+            <!---->
+            <!--android:textSize="14sp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="&#45;&#45;"-->
+            <!--/>-->
+    <!---->
+        <TextView
+            android:id="@+id/mod_abil"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="--"
+            />
+    
+        <TextView
+            android:id="@+id/mod_class"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="--"
+            />
+    
+        <TextView
+            android:id="@+id/mod_feat"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:text="--"
+            android:gravity="center"
+            
+            />
+    
+        <TextView
+            android:id="@+id/mod_enh"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="--"
+            />
+        
+        
+    </LinearLayout>
+    
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="1"
+        >
+
+        <!--<TextView-->
+            <!--style="?android:attr/textAppearanceListItemSmall"-->
+            <!--android:layout_width="45dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:padding="3dp"-->
+            <!--android:textSize="12sp"-->
+            <!--android:text="1/2LEV"-->
+            <!--android:gravity="center"-->
+            <!---->
+            <!--/>-->
+    
+        <TextView
+            android:id="@+id/mod_abil_title"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="ABIL"
+            android:textSize="12sp"
+            android:gravity="center"
+            
+
+            />
+
+        <TextView
+            android:id="@+id/mod_class_title"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="CLASS"
+            android:gravity="center"
+            android:textSize="12sp"
+            
+
+            />
+
+        <TextView
+            android:id="@+id/mod_feat_title"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:text="FEAT"
+            android:textSize="12sp"
+            android:gravity="center"
+            
+            />
+
+        <TextView
+            android:id="@+id/mod_enh_title"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            
+            android:gravity="center"
+            android:textSize="12sp"
+            android:text="ENH"
+            />
+
+
+    </LinearLayout>
+
+</GridLayout>
