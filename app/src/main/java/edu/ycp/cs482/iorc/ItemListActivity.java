@@ -48,8 +48,11 @@ public class ItemListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent(ItemListActivity.this, CharacterListActivity.class);
+                intent.putExtra("SET_CHAR_NAME", true); //this is so we can pop the dialog in the char activity
+                startActivity(intent);  //TODO: Instead package the character here?
             }
         });
 
