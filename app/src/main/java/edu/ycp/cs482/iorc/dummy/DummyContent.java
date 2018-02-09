@@ -36,9 +36,22 @@ public class DummyContent {
 
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
+        /*for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
-        }
+        }*/
+
+        //items
+        addItem(createDummyItem("1", "Water Skin","Used to store water for adventurers.","1 GP"));
+        addItem(createDummyItem("2", "Bedroll","Useful for sleeping on during times.","15 GP"));
+        addItem(createDummyItem("3", "Standard adventurer gear","Starting gear including a backpack, sunrods and rations.","30 GP"));
+        addItem(createDummyItem("4", "Rations (7days)","7 days worth of dried nuts fruits and meats.","50 SP"));
+        addItem(createDummyItem("5", "Sunrod","Rod that produces light for 6 hours.","10 GP"));
+        addItem(createDummyItem("6", "Lock picking kit","Tools used for picking locks.","25 GP"));
+        addItem(createDummyItem("7", "Alchemy Kit","Contains the gear needed to grind and mix ingredients for spells and rituals.","15 GP"));
+        addItem(createDummyItem("8", "Longsword","Military style sword","10 GP"));
+        addItem(createDummyItem("9", "Longbow","Military style ranged weapon","15 GP"));
+        addItem(createDummyItem("10", "Leather Armor","Light armor that offers basic protection while allowing for agile movement.","20 GP"));
+
         //characters
         addCharacter(createDummyCharacters("1","Hank the Tank","Enjoys the front line","Paladin","Goliath", "23","9","9","25","3","3","13","10","3"));
         addCharacter(createDummyCharacters("2","Gorden the Warden","Stuff","Warden","Half Elf","16", "15","15","12","18","11","14","16","17"));
@@ -91,8 +104,8 @@ public class DummyContent {
         ALIGNMENT_MAP.put(alignment.id, alignment);
     }
 
-    private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+    private static DummyItem createDummyItem(String id, String content, String details, String price) {
+        return new DummyItem(id, content, details, price);
     }
     private static DummyClass createDummyClasses(String id, String name, String description, String defBonus){
         return new DummyClass(id, name, description, defBonus);
@@ -122,11 +135,13 @@ public class DummyContent {
         public final String id;
         public final String content;
         public final String details;
+        public final String price;
 
-        public DummyItem(String id, String content, String details) {
+        public DummyItem(String id, String content, String details, String price) {
             this.id = id;
             this.content = content;
             this.details = details;
+            this.price = price;
         }
 
         @Override
