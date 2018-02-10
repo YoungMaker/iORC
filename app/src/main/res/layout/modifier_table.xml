@@ -29,7 +29,7 @@
             
             android:textSize="14sp"
             android:gravity="center"
-            android:text="--"
+            android:text="@string/double_placeholder"
             />
     
         <TextView
@@ -41,7 +41,7 @@
             
             android:textSize="14sp"
             android:gravity="center"
-            android:text="--"
+            android:text="@string/double_placeholder"
             />
     
         <TextView
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:textSize="14sp"
-            android:text="--"
+            android:text="@string/double_placeholder"
             android:gravity="center"
             
             />
@@ -65,7 +65,7 @@
             
             android:textSize="14sp"
             android:gravity="center"
-            android:text="--"
+            android:text="@string/double_placeholder"
             />
         
         
@@ -96,7 +96,7 @@
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="ABIL"
+            android:text="@string/desc_abil"
             android:textSize="12sp"
             android:gravity="center"
             
@@ -109,7 +109,7 @@
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="CLASS"
+            android:text="@string/desc_class"
             android:gravity="center"
             android:textSize="12sp"
             
@@ -122,7 +122,7 @@
             android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:padding="3dp"
-            android:text="FEAT"
+            android:text="@string/desc_feat"
             android:textSize="12sp"
             android:gravity="center"
             
@@ -137,7 +137,7 @@
             
             android:gravity="center"
             android:textSize="12sp"
-            android:text="ENH"
+            android:text="@string/desc_enh"
             />
 
 

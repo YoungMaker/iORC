@@ -31,8 +31,7 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Initiative:--"
-            
+            android:text="@string/pref_init"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
 
             />
@@ -46,8 +45,7 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="HP:--"
-            
+            android:text="@string/pref_hp"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             />
 
@@ -60,8 +58,7 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Speed:--"
-            
+            android:text="@string/pref_speed"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             />
     </LinearLayout>
@@ -77,7 +74,7 @@
         android:paddingRight="8dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="Ability Points:"
+        android:text="@string/abil_title"
         android:layout_gravity="center_horizontal"
         
         tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
@@ -100,7 +97,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="STR: --"
+            android:text="@string/pref_str"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="0"
@@ -113,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="CON: --"
+            android:text="@string/pref_con"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
@@ -126,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="DEX: --"
+            android:text="@string/pref_dex"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
@@ -139,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="INT: --"
+            android:text="@string/pref_int"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="0"
@@ -152,7 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="WIS: --"
+            android:text="@string/pref_wis"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
@@ -165,7 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="CHA: --"
+            android:text="@string/pref_cha"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
@@ -175,7 +172,7 @@
     </GridLayout>
 
     <TextView
-        android:id="@+id/character_abil_title"
+        android:id="@+id/character_def_title"
         style="@style/Base.DialogWindowTitle.AppCompat"
         android:textSize="14sp"
         android:layout_width="wrap_content"
@@ -184,7 +181,7 @@
         android:paddingRight="8dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="Defense:"
+        android:text="@string/def_title"
         android:layout_gravity="center_horizontal"
         
         tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"

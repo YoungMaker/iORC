@@ -188,5 +188,31 @@
     <string name="title_classrace_detail">ClassRace Detail</string>
     <string name="title_alignmentreligion_list">AlignmentsReligions</string>
     <string name="title_alignmentreligion_detail">AlignmentReligion Detail</string>
+    
+    <!-- character_detail.xml - fragment -->
     <string name="empty_char_name">Character Name</string>
+    <string name="abil_title">Ability Points:</string>
+    <string name="pref_dex">DEX: </string>
+    <string name="pref_con">CON: </string>
+    <string name="pref_str">STR: </string>
+    <string name="pref_int">INT: </string>
+    <string name="pref_wis">WIS: </string>
+    <string name="pref_cha">CHA: </string>
+    <string name="def_title">Defense: </string>
+    <string name="pref_speed">Speed: </string>
+    <string name="pref_hp">HP: </string>
+    <string name="pref_init">Initiative: </string>
+    
+    <!--defense_layout.xml-->
+    <string name="pref_ac">AC: </string>
+    <string name="pref_fort">FORT: </string>
+    <string name="pref_ref">REF: </string>
+    <string name="pref_will">WILL: </string>
+    <string name="double_placeholder">--</string>
+    
+    <!--modifier_table.xml-->
+    <string name="desc_abil">ABIL</string>
+    <string name="desc_class">CLASS</string>
+    <string name="desc_enh">ENH</string>
+    <string name="desc_feat">FEAT</string>
 </resources>
