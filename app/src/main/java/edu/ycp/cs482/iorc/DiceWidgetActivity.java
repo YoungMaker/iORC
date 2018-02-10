@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Random;
@@ -19,14 +21,8 @@ public class DiceWidgetActivity extends AppCompatActivity {
     ImageButton androidImageButton_d4;
 
     Random rand = new Random();
-
-    int die20 = rand.nextInt(20) + 1;
-    int die12 = rand.nextInt(12) + 1;
-    int die10 = rand.nextInt(10) + 1;
-    int die8 = rand.nextInt(8) + 1;
-    int die6 = rand.nextInt(6) + 1;
-    int die4 = rand.nextInt(4) + 1;
-
+    private String diceOutput;
+    private TextView textOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +36,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d20.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 rand = new Random();
-                die20 = rand.nextInt(20) + 1;
+                int die20 = rand.nextInt(20) + 1;
                 String d20 = String.valueOf(die20);
-                Toast.makeText(DiceWidgetActivity.this, d20, Toast.LENGTH_SHORT).show();
+                diceOutput = "d20:  " + d20;
+                textOut = (TextView) findViewById(R.id.txtOutput);
+                textOut.setText(diceOutput);
             }
         });
 
@@ -51,9 +49,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d12.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 rand = new Random();
-                die12 = rand.nextInt(12) + 1;
+                int die12 = rand.nextInt(12) + 1;
                 String d12 = String.valueOf(die12);
-                Toast.makeText(DiceWidgetActivity.this, d12, Toast.LENGTH_SHORT).show();
+                diceOutput = "d12:  " + d12;
+                textOut = (TextView) findViewById(R.id.txtOutput);
+                textOut.setText(diceOutput);
             }
         });
 
@@ -62,9 +62,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d10.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 rand = new Random();
-                die10 = rand.nextInt(10) + 1;
+                int die10 = rand.nextInt(10) + 1;
                 String d10 = String.valueOf(die10);
-                Toast.makeText(DiceWidgetActivity.this, d10, Toast.LENGTH_SHORT).show();
+                diceOutput = "d10:  " + d10;
+                textOut = (TextView) findViewById(R.id.txtOutput);
+                textOut.setText(diceOutput);
             }
         });
 
@@ -73,9 +75,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d8.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 rand = new Random();
-                die8 = rand.nextInt(8) + 1;
+                int die8 = rand.nextInt(8) + 1;
                 String d8 = String.valueOf(die8);
-                Toast.makeText(DiceWidgetActivity.this, d8, Toast.LENGTH_SHORT).show();
+                diceOutput = " d8:  " + d8;
+                textOut = (TextView) findViewById(R.id.txtOutput);
+                textOut.setText(diceOutput);
             }
         });
 
@@ -84,9 +88,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d6.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 rand = new Random();
-                die6 = rand.nextInt(6) + 1;
+                int die6 = rand.nextInt(6) + 1;
                 String d6 = String.valueOf(die6);
-                Toast.makeText(DiceWidgetActivity.this, d6, Toast.LENGTH_SHORT).show();
+                diceOutput = " d6:  " + d6;
+                textOut = (TextView) findViewById(R.id.txtOutput);
+                textOut.setText(diceOutput);
             }
         });
 
@@ -95,9 +101,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 rand = new Random();
-                die4 = rand.nextInt(4) + 1;
+                int die4 = rand.nextInt(4) + 1;
                 String d4 = String.valueOf(die4);
-                Toast.makeText(DiceWidgetActivity.this, d4, Toast.LENGTH_SHORT).show();
+                diceOutput = " d4:  " + d4;
+                textOut = (TextView) findViewById(R.id.txtOutput);
+                textOut.setText(diceOutput);
             }
         });
     }
