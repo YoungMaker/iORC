@@ -222,4 +222,6 @@
     <string name="roll_a_die">Roll a Die</string>
     <string name="dice">dice</string>
     <string name="roll_result">Roll Result</string>
+    <string name="description">Description:</string>
+    <string name="name">Name:</string>
 </resources>

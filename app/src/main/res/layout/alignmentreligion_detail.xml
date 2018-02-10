@@ -1,9 +1,78 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/alignmentreligion_detail"
-    style="?android:attr/textAppearanceLarge"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context="edu.ycp.cs482.iorc.AlignmentReligionDetailFragment" />
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_column="0"
+        android:layout_row="0"
+        >
+
+        <TextView xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/alignmentreligion_name_string"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/name"
+            tools:context="edu.ycp.cs482.iorc.AlignmentReligionDetailFragment"
+            />
+
+        <TextView xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/alignmentreligion_name"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text=""
+            tools:context="edu.ycp.cs482.iorc.AlignmentReligionDetailFragment" />
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_column="0"
+        android:layout_row="1"
+        >
+
+        <TextView xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/alignmentreligion_detail_string"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@string/description"
+            tools:context="edu.ycp.cs482.iorc.AlignmentReligionDetailFragment"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_column="0"
+        android:layout_row="2"
+        >
+
+        <TextView xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/alignmentreligion_detail"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text=""
+            tools:context="edu.ycp.cs482.iorc.AlignmentReligionDetailFragment"
+            />
+
+    </LinearLayout>
+
+</GridLayout>
