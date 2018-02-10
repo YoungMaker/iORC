@@ -101,7 +101,7 @@
         android:layout_marginEnd="159dp"
         android:layout_marginStart="163dp"
         android:layout_marginTop="73dp"
-        android:text="Roll Result"
+        android:text="@string/roll_result"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
