@@ -12,19 +12,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 
 import java.util.List;
-import java.util.function.ToLongBiFunction;
 
 /**
  * An activity representing a list of Characters. This activity
@@ -36,8 +32,6 @@ import java.util.function.ToLongBiFunction;
  */
 public class CharacterListActivity extends AppCompatActivity {
 
-    Button button;
-
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -48,20 +42,6 @@ public class CharacterListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_list);
-
-        //Locate the button on character_list_activity
-        //button = (Button) findViewById(R.id.DiceButton);
-
-        //Capture on button click
-        //button.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            //public void onClick(View view) {
-
-                //Start DiceWidget
-                //Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
-                //startActivity(diceIntent);
-            //}
-        //});
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,8 +80,6 @@ public class CharacterListActivity extends AppCompatActivity {
     //Create the menu button on the toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        //MenuInflater mMenuInflater = getMenuInflater();
-        //mMenuInflater.inflate(R.menu.menu_character_list_activity,menu);
         getMenuInflater().inflate(R.menu.menu_character_list_activity,menu);
         return true;
     }
