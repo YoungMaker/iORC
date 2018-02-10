@@ -51,6 +51,9 @@ public class DummyContent {
         addItem(createDummyItem("8", "Longsword","Military style sword","10 GP"));
         addItem(createDummyItem("9", "Longbow","Military style ranged weapon","15 GP"));
         addItem(createDummyItem("10", "Leather Armor","Light armor that offers basic protection while allowing for agile movement.","20 GP"));
+        addItem(createDummyItem("11","light shield","Small but sturdy shield","10 GP"));
+        addItem(createDummyItem("12","Climber's Kit","All of the equipment needed for most climbs.","25 GP"));
+        addItem(createDummyItem("13","Poisoner's Kit","Equipment needed to mix and create a variety of poisons","35 GP"));
 
         //characters
         addCharacter(createDummyCharacters("1","Hank the Tank","Enjoys the front line","Paladin","Goliath", "23","9","9","25","3","3","13","10","3"));
