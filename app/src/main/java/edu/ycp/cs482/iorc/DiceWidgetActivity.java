@@ -1,24 +1,16 @@
 package edu.ycp.cs482.iorc;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.Random;
 
 public class DiceWidgetActivity extends AppCompatActivity {
 
-    ImageButton androidImageButton_d20;
-    ImageButton androidImageButton_d12;
-    ImageButton androidImageButton_d10;
-    ImageButton androidImageButton_d8;
-    ImageButton androidImageButton_d6;
-    ImageButton androidImageButton_d4;
+    ImageButton androidImageButton_d20, androidImageButton_d12, androidImageButton_d10,
+                androidImageButton_d8, androidImageButton_d6, androidImageButton_d4;
 
     Random rand = new Random();
     private String diceOutput;
