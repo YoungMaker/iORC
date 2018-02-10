@@ -14,6 +14,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -54,9 +56,8 @@ public class CharacterListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Create new Character Action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                startActivity(new Intent(CharacterListActivity.this, ClassRaceListActivity.class));
+                Snackbar.make(view, "Create new Character Action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -120,6 +121,25 @@ public class CharacterListActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(itemDecor);
 
     }
+
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_character_list_activity,menu);
+        return true;
+    }
+
+    //Select in menu button to move to another activity
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.dice:
+                Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
+                startActivity(diceIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
