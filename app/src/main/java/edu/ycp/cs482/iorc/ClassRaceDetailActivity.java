@@ -35,7 +35,6 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
-                Bundle extra = getIntent().getExtras();
                 if(!showRace){
                     Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
                     intent.putExtra("RACE_SWITCH", true);

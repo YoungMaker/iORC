@@ -35,7 +35,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private boolean isReligion;
+    private boolean showReligion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +55,15 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 //            }
 //        });
 
+        Bundle extra = getIntent().getExtras();
+        if(extra != null){
+            if(extra.getBoolean("RELIGION_SWITCH")){
+                //indicate a switch in values
+                showReligion = true;
+                getIntent().removeExtra("RELIGION_SWITCH");
+            }
+        }
+
         if (findViewById(R.id.alignmentreligion_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -69,7 +78,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, isReligion));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion));
         //divide items in list
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
@@ -117,16 +126,29 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).name);
+            if(!isReligion){
+                holder.mIdView.setText(mValues.get(position).id);
+                holder.mContentView.setText(mValues.get(position).name);
 
-            holder.itemView.setTag(mValues.get(position));
+                holder.itemView.setTag(mValues.get(position));
+            } else if(isReligion){
+                holder.mIdView.setText(amValues.get(position).id);
+                holder.mContentView.setText(amValues.get(position).name);
+
+                holder.itemView.setTag(amValues.get(position));
+            }
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            int itemCount = 0;
+            if(!isReligion){
+                itemCount = mValues.size();
+            } else if(isReligion){
+                itemCount = amValues.size();
+            }
+            return itemCount;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -153,6 +175,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
+                intent.putExtra("isReligion",true);
 
                 context.startActivity(intent);
             }
@@ -171,6 +194,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
+                intent.putExtra("isReligion",false);
 
                 context.startActivity(intent);
             }

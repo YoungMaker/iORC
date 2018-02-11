@@ -17,22 +17,35 @@ import android.view.MenuItem;
  * in a {@link AlignmentReligionListActivity}.
  */
 public class AlignmentReligionDetailActivity extends AppCompatActivity {
-
+    private boolean showReligion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alignmentreligion_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-
+        Bundle extra = getIntent().getExtras();
+        if(extra.getBoolean("isReligion")){
+            showReligion = true;
+        } else {
+           showReligion = false;
+        }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                startActivity(new Intent(AlignmentReligionDetailActivity.this, ItemListActivity.class));
+                Intent intent;
+                if(showReligion){
+                    intent = new Intent(AlignmentReligionDetailActivity.this, AlignmentReligionListActivity.class);
+                    intent.putExtra("RELIGION_SWITCH", true);
+                    startActivity(intent);
 
+                }else if(!showReligion){
+                    intent = new Intent(AlignmentReligionDetailActivity.this, ItemListActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -57,6 +70,11 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID));
+            if(showReligion){
+                arguments.putBoolean("SHOW_RELIGION", true);
+            }else{
+                arguments.putBoolean("SHOW_RELIGION", false);
+            }
             AlignmentReligionDetailFragment fragment = new AlignmentReligionDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
