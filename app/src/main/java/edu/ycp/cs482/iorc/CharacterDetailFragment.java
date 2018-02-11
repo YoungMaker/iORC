@@ -29,8 +29,6 @@ public class CharacterDetailFragment extends Fragment {
      */
     private DummyContent.DummyCharacter mItem;
 
-    private CharacterView mCharView;
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -60,8 +58,8 @@ public class CharacterDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.character_detail, container, false);
-        //TODO: create and set a Character View instance.
-        mCharView = new CharacterView(rootView);
+
+        CharacterView mCharView = new CharacterView(rootView);
         mCharView.updateCharView(mItem);
         return rootView;
     }
