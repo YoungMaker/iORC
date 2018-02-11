@@ -21,9 +21,7 @@ public class DummyContent {
     public static final List<DummyCharacter> CHARACTERS = new ArrayList<DummyCharacter>();
     public static final List<DummyAlignment> ALIGNMENTS = new ArrayList<DummyAlignment>();
     public static final List<DummyRace> RACE = new ArrayList<DummyRace>();
-
-
-
+    public static final List<DummyReligion> RELIGIONS = new ArrayList<DummyReligion>();
 
     /**
      * A map of sample (dummy) items, by ID.
@@ -33,6 +31,7 @@ public class DummyContent {
     public static final Map<String, DummyCharacter> CHARACTER_MAP = new HashMap<String, DummyCharacter>();
     public static final Map<String, DummyAlignment> ALIGNMENT_MAP = new HashMap<String, DummyAlignment>();
     public static final Map<String, DummyRace> RACE_MAP = new HashMap<String, DummyRace>();
+    public static final Map<String, DummyReligion> RELIGION_MAP = new HashMap<String, DummyReligion>();
 
     private static final int COUNT = 25;
 
@@ -93,6 +92,8 @@ public class DummyContent {
         addRace(createDummyRace("1", "Human","Your standard everyday person."));
         addRace(createDummyRace("2", "Elf","Like humans but are more graceful and live longer lives."));
         addRace(createDummyRace("3","Dwarf","Short and hardy people that enjoy burrowing."));
+
+        addReligion(createDummyReligion("1", "Raven Queen","Goddess of the afterlife, her followers resent the undead and those that would try and hinder death."));
     }
 
     private static void addItem(DummyItem item) {
@@ -118,6 +119,11 @@ public class DummyContent {
         RACE_MAP.put(race.id, race);
     }
 
+    private static void addReligion(DummyReligion religion){
+        RELIGIONS.add(religion);
+        RELIGION_MAP.put(religion.id, religion);
+    }
+
     private static DummyItem createDummyItem(String id, String content, String details, String price) {
         return new DummyItem(id, content, details, price);
     }
@@ -132,6 +138,10 @@ public class DummyContent {
     }
     private static DummyRace createDummyRace(String id, String name, String content){
         return new DummyRace(id, name, content);
+    }
+
+    private static DummyReligion createDummyReligion(String id, String name, String content){
+        return new DummyReligion(id, name, content);
     }
 
 
@@ -229,6 +239,17 @@ public class DummyContent {
         public final String name;
         public final String content;
         public DummyRace(String id, String name, String content){
+            this.id = id;
+            this.name = name;
+            this.content = content;
+        }
+    }
+
+    public static class DummyReligion{
+        public final String id;
+        public final String name;
+        public final String content;
+        public DummyReligion(String id, String name, String content){
             this.id = id;
             this.name = name;
             this.content = content;
