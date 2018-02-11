@@ -192,22 +192,22 @@
     <!-- character_detail.xml - fragment -->
     <string name="empty_char_name">Character Name</string>
     <string name="abil_title">Ability Points:</string>
-    <string name="pref_dex">DEX: </string>
-    <string name="pref_con">CON: </string>
-    <string name="pref_str">STR: </string>
-    <string name="pref_int">INT: </string>
-    <string name="pref_wis">WIS: </string>
-    <string name="pref_cha">CHA: </string>
-    <string name="def_title">Defense: </string>
-    <string name="pref_speed">Speed: </string>
-    <string name="pref_hp">HP: </string>
-    <string name="pref_init">Initiative: </string>
+    <string name="pref_dex">DEX: %1$s</string>
+    <string name="pref_con">CON: %1$s</string>
+    <string name="pref_str">STR: %1$s</string>
+    <string name="pref_int">INT: %1$s</string>
+    <string name="pref_wis">WIS: %1$s</string>
+    <string name="pref_cha">CHA: %1$s</string>
+    <string name="def_title">Defense:</string>
+    <string name="pref_speed">Speed: %1$s</string>
+    <string name="pref_hp">HP: %1$s</string>
+    <string name="pref_init">Initiative: %1$s</string>
 
     <!--defense_layout.xml-->
-    <string name="pref_ac">AC: </string>
-    <string name="pref_fort">FORT: </string>
-    <string name="pref_ref">REF: </string>
-    <string name="pref_will">WILL: </string>
+    <string name="pref_ac">AC: %1$s</string>
+    <string name="pref_fort">FORT: %1$s</string>
+    <string name="pref_ref">REF: %1$s</string>
+    <string name="pref_will">WILL: %1$s</string>
     <string name="double_placeholder">--</string>
 
     <!--modifier_table.xml-->

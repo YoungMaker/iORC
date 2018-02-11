@@ -29,6 +29,8 @@ public class CharacterDetailFragment extends Fragment {
      */
     private DummyContent.DummyCharacter mItem;
 
+    private CharacterView mCharView;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -58,12 +60,55 @@ public class CharacterDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.character_detail, container, false);
-
-        // Show the dummy content as text in a TextView.
-        if (mItem != null) {
-           // ((TextView) rootView.findViewById(R.id.character_detail)).setText(mItem.content);
-        }
-
+        //TODO: create and set a Character View instance.
+        mCharView = new CharacterView(rootView);
+        mCharView.updateCharView(mItem);
         return rootView;
     }
+
+    private class CharacterView {
+
+//        private TextView mCharacterDetailInitiative;
+//        private TextView mCharacterDetailHp;
+        private TextView mCharacterDetailFort;
+        private TextView mCharacterDetailRef;
+       // private TextView mCharacterDetailSpd;
+        private TextView mCharacterAbilStr;
+        private TextView mCharacterAbilCon;
+        private TextView mCharacterAbilDex;
+        private TextView mCharacterAbilInt;
+        private TextView mCharacterAbilWis;
+        private TextView mCharacterAbilCha;
+
+
+        private CharacterView(View rootView){
+//            mCharacterDetailInitiative = (TextView)rootView.findViewById(R.id.character_detail_initiative);
+           // mCharacterDetailHp = (TextView)rootView.findViewById(R.id.character_abil_hp);
+            mCharacterDetailFort = (TextView)rootView.findViewById(R.id.character_abil_fort);
+            mCharacterDetailRef = (TextView)rootView.findViewById(R.id.character_abil_ref);
+           // mCharacterDetailSpd = (TextView)rootView.findViewById(R.id.character_detail_spd);
+            mCharacterAbilStr = (TextView)rootView.findViewById(R.id.character_abil_str);
+            mCharacterAbilCon = (TextView)rootView.findViewById(R.id.character_abil_con);
+            mCharacterAbilDex = (TextView)rootView.findViewById(R.id.character_abil_dex);
+            mCharacterAbilInt = (TextView)rootView.findViewById(R.id.character_abil_int);
+            mCharacterAbilWis = (TextView)rootView.findViewById(R.id.character_abil_wis);
+            mCharacterAbilCha = (TextView)rootView.findViewById(R.id.character_abil_cha);
+        }
+
+        private void updateCharView(DummyContent.DummyCharacter item) {
+            mCharacterAbilStr.setText(getResources().getString(R.string.pref_str, item.str));
+            mCharacterAbilCon.setText(getResources().getString(R.string.pref_con, item.con));
+            mCharacterAbilDex.setText(getResources().getString(R.string.pref_dex, item.dex));
+            mCharacterAbilInt.setText(getResources().getString(R.string.pref_int, item.intel));
+            mCharacterAbilWis.setText(getResources().getString(R.string.pref_wis, item.wis));
+            mCharacterAbilCha.setText(getResources().getString(R.string.pref_cha, item.cha));
+            mCharacterDetailRef.setText(getResources().getString(R.string.pref_cha, item.ref));
+            mCharacterDetailFort.setText(getResources().getString(R.string.pref_cha, item.fort));
+           // mCharacterDetailSpd.setText(getResources().getString(R.string.pref_cha, item.sp));
+
+        }
+    }
+
 }
+
+
