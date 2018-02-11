@@ -20,6 +20,7 @@ public class DummyContent {
     public static final List<DummyClass> CLASSES = new ArrayList<DummyClass>();
     public static final List<DummyCharacter> CHARACTERS = new ArrayList<DummyCharacter>();
     public static final List<DummyAlignment> ALIGNMENTS = new ArrayList<DummyAlignment>();
+    public static final List<DummyRace> RACE = new ArrayList<DummyRace>();
 
 
 
@@ -31,6 +32,7 @@ public class DummyContent {
     public static final Map<String, DummyClass> CLASS_MAP = new HashMap<String, DummyClass>();
     public static final Map<String, DummyCharacter> CHARACTER_MAP = new HashMap<String, DummyCharacter>();
     public static final Map<String, DummyAlignment> ALIGNMENT_MAP = new HashMap<String, DummyAlignment>();
+    public static final Map<String, DummyRace> RACE_MAP = new HashMap<String, DummyRace>();
 
     private static final int COUNT = 25;
 
@@ -87,6 +89,10 @@ public class DummyContent {
         addAlignment(createDummyAlignment("7", "Lawful Evil", "Characters that act within the law but use their power to subvert those under them."));
         addAlignment(createDummyAlignment("8", "True Evil", "Characters that only care about increasing their power and influence."));
         addAlignment(createDummyAlignment("9", "Chaotic Evil", "Characters that just want to watch the world burn."));
+
+        addRace(createDummyRace("1", "Human","Your standard everyday person."));
+        addRace(createDummyRace("2", "Elf","Like humans but are more graceful and live longer lives."));
+        addRace(createDummyRace("3","Dwarf","Short and hardy people that enjoy burrowing."));
     }
 
     private static void addItem(DummyItem item) {
@@ -107,6 +113,11 @@ public class DummyContent {
         ALIGNMENT_MAP.put(alignment.id, alignment);
     }
 
+    private static void addRace(DummyRace race){
+        RACE.add(race);
+        RACE_MAP.put(race.id, race);
+    }
+
     private static DummyItem createDummyItem(String id, String content, String details, String price) {
         return new DummyItem(id, content, details, price);
     }
@@ -118,6 +129,9 @@ public class DummyContent {
     }
     private static DummyAlignment createDummyAlignment(String id, String name, String content) {
         return new DummyAlignment(id, name, content);
+    }
+    private static DummyRace createDummyRace(String id, String name, String content){
+        return new DummyRace(id, name, content);
     }
 
 
@@ -204,6 +218,17 @@ public class DummyContent {
         public final String name;
         public final String content;
         public DummyAlignment(String id, String name, String content){
+            this.id = id;
+            this.name = name;
+            this.content = content;
+        }
+    }
+
+    public static class DummyRace {
+        public final String id;
+        public final String name;
+        public final String content;
+        public DummyRace(String id, String name, String content){
             this.id = id;
             this.name = name;
             this.content = content;

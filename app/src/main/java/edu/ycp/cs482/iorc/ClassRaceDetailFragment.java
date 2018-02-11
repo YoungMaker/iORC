@@ -23,11 +23,15 @@ public class ClassRaceDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_SHOW_ITEM = "SHOW_RACE";
 
     /**
      * The dummy content this fragment is presenting.
      */
     private DummyContent.DummyClass mItem;
+    private DummyContent.DummyRace amItem;
+
+    private boolean showRace = false;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -40,16 +44,24 @@ public class ClassRaceDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments().containsKey(ARG_ITEM_ID)) {
+        if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_SHOW_ITEM)) {
+            showRace = getArguments().getBoolean("SHOW_RACE");
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             mItem = DummyContent.CLASS_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            amItem = DummyContent.RACE_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.name);
+                if(showRace){
+                    appBarLayout.setTitle(amItem.name);
+                }
+                else{
+                    appBarLayout.setTitle(mItem.name);
+                }
+
             }
         }
     }
@@ -60,9 +72,12 @@ public class ClassRaceDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.classrace_detail, container, false);
 
         // Show the dummy content as text in a TextView.
-        if (mItem != null) {
+        if (!showRace && mItem != null) {
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(mItem.content);
             ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(mItem.defBonus);
+        }else if (showRace && amItem != null){
+            ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(amItem.content);
+            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(amItem.name);
         }
 
         return rootView;

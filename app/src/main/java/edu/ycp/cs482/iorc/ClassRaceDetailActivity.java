@@ -16,20 +16,35 @@ import android.view.MenuItem;
  * item details are presented side-by-side with a list of items
  * in a {@link ClassRaceListActivity}.
  */
-public class ClassRaceDetailActivity extends AppCompatActivity {
 
+public class ClassRaceDetailActivity extends AppCompatActivity {
+    private boolean showRace;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classrace_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-
+        Bundle extra = getIntent().getExtras();
+        if(extra.getBoolean("isRace")){
+            showRace = true;
+        }else {
+            showRace = false;
+        }
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
-                 startActivity(new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class));
+                Bundle extra = getIntent().getExtras();
+                if(!showRace){
+                    Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
+                    intent.putExtra("RACE_SWITCH", true);
+                    startActivity(intent);
+
+                } else if(showRace){
+                    Intent intent = new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -54,6 +69,11 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
+            if(showRace){
+                arguments.putBoolean("SHOW_RACE", true);
+            }else {
+                arguments.putBoolean("SHOW_RACE", false);
+            }
             ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
