@@ -64,6 +64,7 @@ public class CharacterDetailFragment extends Fragment {
         return rootView;
     }
 
+
     private class CharacterView {
 
 //        private TextView mCharacterDetailInitiative;
@@ -100,8 +101,8 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilInt.setText(getResources().getString(R.string.pref_int, item.intel));
             mCharacterAbilWis.setText(getResources().getString(R.string.pref_wis, item.wis));
             mCharacterAbilCha.setText(getResources().getString(R.string.pref_cha, item.cha));
-            mCharacterDetailRef.setText(getResources().getString(R.string.pref_cha, item.ref));
-            mCharacterDetailFort.setText(getResources().getString(R.string.pref_cha, item.fort));
+            mCharacterDetailRef.setText(getResources().getString(R.string.pref_ref, item.ref));
+            mCharacterDetailFort.setText(getResources().getString(R.string.pref_fort, item.fort));
            // mCharacterDetailSpd.setText(getResources().getString(R.string.pref_cha, item.sp));
 
         }

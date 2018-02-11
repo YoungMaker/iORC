@@ -224,4 +224,7 @@
     <string name="roll_result">Roll Result</string>
     <string name="description">Description:</string>
     <string name="name">Name:</string>
+    <string name="text_skills">skills</string>
+    <string name="text_equipment">Equipment</string>
+    <string name="text_magic">Magic</string>
 </resources>
