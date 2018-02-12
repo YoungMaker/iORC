@@ -37,12 +37,12 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
 //                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 Intent intent;
-                if(showReligion){
+                if(!showReligion){
                     intent = new Intent(AlignmentReligionDetailActivity.this, AlignmentReligionListActivity.class);
                     intent.putExtra("RELIGION_SWITCH", true);
                     startActivity(intent);
 
-                }else if(!showReligion){
+                }else if(showReligion){
                     intent = new Intent(AlignmentReligionDetailActivity.this, ItemListActivity.class);
                     startActivity(intent);
                 }
@@ -93,7 +93,11 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, AlignmentReligionListActivity.class));
+            Intent intent = new Intent(this, AlignmentReligionListActivity.class);
+            if(showReligion){
+                intent.putExtra("RELIGION_SWITCH", true);
+            }
+            navigateUpTo(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

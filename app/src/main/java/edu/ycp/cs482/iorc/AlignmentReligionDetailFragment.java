@@ -45,6 +45,7 @@ public class AlignmentReligionDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_SHOW_ITEM)) {
+            showReligion = getArguments().getBoolean(ARG_SHOW_ITEM);
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.

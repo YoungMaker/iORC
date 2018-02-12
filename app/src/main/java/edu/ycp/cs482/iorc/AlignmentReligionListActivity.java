@@ -175,7 +175,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra("isReligion",true);
+                intent.putExtra("isReligion",false);
 
                 context.startActivity(intent);
             }
@@ -194,7 +194,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra("isReligion",false);
+                intent.putExtra("isReligion",true);
 
                 context.startActivity(intent);
             }

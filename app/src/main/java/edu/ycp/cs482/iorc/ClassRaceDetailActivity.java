@@ -91,7 +91,11 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, ClassRaceListActivity.class));
+            Intent intent = new Intent(this, ClassRaceListActivity.class);
+            if(showRace){
+                intent.putExtra("RACE_SWITCH", true);
+            }
+            navigateUpTo(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
