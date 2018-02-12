@@ -18,6 +18,9 @@ import android.view.MenuItem;
  */
 public class AlignmentReligionDetailActivity extends AppCompatActivity {
     private boolean showReligion;
+    private String ARG_BOOL_KEY = "isReligion";
+    private String ARG_EXTRA_NAME = "RELIGION_SWITCH";
+    private String ARG_FRAG_BOOL = "SHOW_RELIGION";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +28,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
         Bundle extra = getIntent().getExtras();
-        if(extra.getBoolean("isReligion")){
+        if(extra.getBoolean(ARG_BOOL_KEY)){
             showReligion = true;
         } else {
            showReligion = false;
@@ -39,7 +42,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
                 Intent intent;
                 if(!showReligion){
                     intent = new Intent(AlignmentReligionDetailActivity.this, AlignmentReligionListActivity.class);
-                    intent.putExtra("RELIGION_SWITCH", true);
+                    intent.putExtra(ARG_EXTRA_NAME, true);
                     startActivity(intent);
 
                 }else if(showReligion){
@@ -71,9 +74,9 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID));
             if(showReligion){
-                arguments.putBoolean("SHOW_RELIGION", true);
+                arguments.putBoolean(ARG_FRAG_BOOL, true);
             }else{
-                arguments.putBoolean("SHOW_RELIGION", false);
+                arguments.putBoolean(ARG_FRAG_BOOL, false);
             }
             AlignmentReligionDetailFragment fragment = new AlignmentReligionDetailFragment();
             fragment.setArguments(arguments);
@@ -95,7 +98,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             //
             Intent intent = new Intent(this, AlignmentReligionListActivity.class);
             if(showReligion){
-                intent.putExtra("RELIGION_SWITCH", true);
+                intent.putExtra(ARG_EXTRA_NAME, true);
             }
             navigateUpTo(intent);
             return true;

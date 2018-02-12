@@ -36,6 +36,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private boolean showReligion;
+    private String ARG_BOOL_KEY = "RELIGION_SWITCH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +58,10 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 
         Bundle extra = getIntent().getExtras();
         if(extra != null){
-            if(extra.getBoolean("RELIGION_SWITCH")){
+            if(extra.getBoolean(ARG_BOOL_KEY)){
                 //indicate a switch in values
                 showReligion = true;
-                getIntent().removeExtra("RELIGION_SWITCH");
+                getIntent().removeExtra(ARG_BOOL_KEY);
             }
         }
 
@@ -93,6 +94,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         private final List<DummyContent.DummyReligion> amValues;
         private final boolean mTwoPane;
         private final boolean isReligion;
+        private final String ARG_EXTRA_NAME = "isReligion";
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -175,7 +177,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra("isReligion",false);
+                intent.putExtra(ARG_EXTRA_NAME,false);
 
                 context.startActivity(intent);
             }
@@ -194,7 +196,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra("isReligion",true);
+                intent.putExtra(ARG_EXTRA_NAME,true);
 
                 context.startActivity(intent);
             }

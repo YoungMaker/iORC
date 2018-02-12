@@ -36,6 +36,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private boolean showRace;
+    private String ARG_BOOL_KEY = "RACE_SWITCH";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +59,10 @@ public class ClassRaceListActivity extends AppCompatActivity {
         //get our bundle from when a user is finished selecting class that enables the user to then select race inside the same M/V flow
         Bundle extra = getIntent().getExtras();
         if(extra != null){
-            if(extra.getBoolean("RACE_SWITCH")){
+            if(extra.getBoolean(ARG_BOOL_KEY)){
                 //indicate a switch in values
                 showRace = true;
-                getIntent().removeExtra("RACE_SWITCH");
+                getIntent().removeExtra(ARG_BOOL_KEY);
             }
         }
 
@@ -94,6 +95,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         private final List<DummyContent.DummyRace> amValues;
         private final boolean mTwoPane;
         private final boolean showRace;
+        private final String ARG_EXTRA_NAME = "isRace";
 
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -182,7 +184,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ClassRaceDetailActivity.class);
                 intent.putExtra(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra("isRace", false);
+                intent.putExtra(ARG_EXTRA_NAME, false);
 
                 context.startActivity(intent);
             }
@@ -201,7 +203,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ClassRaceDetailActivity.class);
                 intent.putExtra(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra("isRace", true);
+                intent.putExtra(ARG_EXTRA_NAME, true);
 
                 context.startActivity(intent);
             }

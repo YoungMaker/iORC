@@ -19,6 +19,9 @@ import android.view.MenuItem;
 
 public class ClassRaceDetailActivity extends AppCompatActivity {
     private boolean showRace;
+    private String ARG_BOOL_KEY = "isRace";
+    private String ARG_EXTRA_NAME = "RACE_SWITCH";
+    private String ARG_FRAG_BOOL = "SHOW_RACE";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +29,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
         Bundle extra = getIntent().getExtras();
-        if(extra.getBoolean("isRace")){
+        if(extra.getBoolean(ARG_BOOL_KEY)){
             showRace = true;
         }else {
             showRace = false;
@@ -37,7 +40,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(!showRace){
                     Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
-                    intent.putExtra("RACE_SWITCH", true);
+                    intent.putExtra(ARG_EXTRA_NAME, true);
                     startActivity(intent);
 
                 } else if(showRace){
@@ -69,9 +72,9 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
             if(showRace){
-                arguments.putBoolean("SHOW_RACE", true);
+                arguments.putBoolean(ARG_FRAG_BOOL, true);
             }else {
-                arguments.putBoolean("SHOW_RACE", false);
+                arguments.putBoolean(ARG_FRAG_BOOL, false);
             }
             ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
             fragment.setArguments(arguments);
@@ -93,7 +96,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             //
             Intent intent = new Intent(this, ClassRaceListActivity.class);
             if(showRace){
-                intent.putExtra("RACE_SWITCH", true);
+                intent.putExtra(ARG_EXTRA_NAME, true);
             }
             navigateUpTo(intent);
             return true;
