@@ -89,11 +89,22 @@ public class DummyContent {
         addAlignment(createDummyAlignment("8", "True Evil", "Characters that only care about increasing their power and influence."));
         addAlignment(createDummyAlignment("9", "Chaotic Evil", "Characters that just want to watch the world burn."));
 
-        addRace(createDummyRace("1", "Human","Your standard everyday person."));
-        addRace(createDummyRace("2", "Elf","Like humans but are more graceful and live longer lives."));
-        addRace(createDummyRace("3","Dwarf","Short and hardy people that enjoy burrowing."));
+        addRace(createDummyRace("1", "Human","Your standard everyday person.", "+2 to any one ability score"));
+        addRace(createDummyRace("2", "Elf","Like humans but are more graceful and live longer lives.", "+2 DEX +2 WIS"));
+        addRace(createDummyRace("3","Dwarf","Short and hardy people that enjoy burrowing.","+2 STR, +2 CON"));
+        addRace(createDummyRace("4","Dragonborn"," Dragonborn are humanoid dragons. They are strong and wise with a deep culture and the blood of dragons still flowing through their veins.","+2 CON +2 WIS"));
+        addRace(createDummyRace("5","Half-Elf","Half-elves are half-human half-elf. Because of this middle ground of race, they have become accustomed to being consulted on matters of diplomacy. As such, they have a knack for talking to people and for leading.", "+2 CHA +2 WIS"));
+        addRace(createDummyRace("6","Shifter","Shifters are humans with animalistic features. Possibly descendant from lycanthropes, every Shifter can generally be identified by their animal-like eyes, long teeth, sharp claws and strong muscles.", "+2 DEX +2 WIS"));
+        addRace(createDummyRace("7","Shardmind","Shardminds are sentient framents of the Living Gate, which once stood at the pinnacle of the intricate lattace of the Astral Sea. Beyond the gate lay the alien Far Realm, and the gate's destruction during the Dawn War resulted in the rise of the mind flayer empire. Though Ioun's power holds the portal closed, shardminds seek to rebuild the gate and forever cut off the Far Realm's ability to influence the world.", "+2 INT +2 WIS"));
+        addRace(createDummyRace("8","Halfling","Halflings are like hobbits, only more slender. Instead of being stout and plucky, they’re agile and nimble little guys who seem to be extra lucky.","+2 DEX +2 CHA"));
 
-        addReligion(createDummyReligion("1", "Raven Queen","Goddess of the afterlife, her followers resent the undead and those that would try and hinder death."));
+        addReligion(createDummyReligion("1", "Raven Queen","Unaligned Goddess of Death, Fate and Doom. Seasonal Goddess of Winter."));
+        addReligion(createDummyReligion("2", "Melora","Unaligned Goddess of Wilderness, Nature and the Sea."));
+        addReligion(createDummyReligion("3","Bahamut","Lawful Good God of Justice, Protection and Nobility. Patron of Dragonborn."));
+        addReligion(createDummyReligion("4","Moradin","Lawful Good God of Family, Community and Creation (as in smithing). Patron of Dwarves."));
+        addReligion(createDummyReligion("5","Tharizdun","The Chained God, also known as the Elder Elemental Eye, creator of the Abyss."));
+        addReligion(createDummyReligion("6","Vecna","Evil God of the Undead and Necromancy. Lord of Secrets."));
+        //addReligion(createDummyReligion("","",""));
     }
 
     private static void addItem(DummyItem item) {
@@ -136,8 +147,8 @@ public class DummyContent {
     private static DummyAlignment createDummyAlignment(String id, String name, String content) {
         return new DummyAlignment(id, name, content);
     }
-    private static DummyRace createDummyRace(String id, String name, String content){
-        return new DummyRace(id, name, content);
+    private static DummyRace createDummyRace(String id, String name, String content, String bonus){
+        return new DummyRace(id, name, content, bonus);
     }
 
     private static DummyReligion createDummyReligion(String id, String name, String content){
@@ -238,10 +249,12 @@ public class DummyContent {
         public final String id;
         public final String name;
         public final String content;
-        public DummyRace(String id, String name, String content){
+        public final String bonus;
+        public DummyRace(String id, String name, String content, String bonus){
             this.id = id;
             this.name = name;
             this.content = content;
+            this.bonus = bonus;
         }
     }
 

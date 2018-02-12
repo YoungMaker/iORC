@@ -77,7 +77,7 @@ public class ClassRaceDetailFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(mItem.defBonus);
         }else if (showRace && amItem != null){
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(amItem.content);
-            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(amItem.name);
+            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(amItem.bonus);
         }
 
         return rootView;
