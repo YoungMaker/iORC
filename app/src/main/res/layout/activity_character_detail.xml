@@ -53,9 +53,12 @@
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
         app:menu="@menu/bottom_navigation_main"
+        android:id="@+id/character_bottom"
         android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
         >
     </android.support.design.widget.BottomNavigationView>
+
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->
         <!--android:layout_width="wrap_content"-->
