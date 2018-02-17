@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,9 +23,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+
 import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+//import fragment.CharacterData;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of Characters. This activity
@@ -60,6 +69,8 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
+        getIds();
+
         if (findViewById(R.id.character_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -79,6 +90,25 @@ public class CharacterListActivity extends AppCompatActivity {
                 getIntent().removeExtra("SET_CHAR_NAME");
             }
         }
+    }
+
+    //test query
+    private void getIds(){
+
+        MyApolloClient.getMyApolloClient().query(
+                IdQuery.builder().id("0").build()).enqueue(new ApolloCall.Callback<IdQuery.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<IdQuery.Data> response) {
+                Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.e("ERROR: ", e.toString());
+            }
+        });
+
     }
 
     private void popInputDialog(String title ) {
