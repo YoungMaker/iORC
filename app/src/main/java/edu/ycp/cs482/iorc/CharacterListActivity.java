@@ -89,7 +89,7 @@ public class CharacterListActivity extends AppCompatActivity {
         }
 
 
-
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -123,7 +123,7 @@ public class CharacterListActivity extends AppCompatActivity {
                         Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
                         characterResponses.add(characterResponseData);
                         characterDetailMap.put("58ff414b-f945-44bd-b20f-4a2ad3440254",(new Gson()).toJson(characterResponseData));
-
+                        refreshView();
                     }
                 });
             }
@@ -168,7 +168,7 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane));
+        recyclerView.setAdapter(mSimpleAdapter);
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
         recyclerView.addItemDecoration(itemDecor);
@@ -265,5 +265,9 @@ public class CharacterListActivity extends AppCompatActivity {
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
         }
+    }
+
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }
