@@ -1,0 +1,33 @@
+ query IdQuery($id: ID!) {
+ 	getCharacterById(id : $id ) {
+    ... CharacterData
+   }
+ }
+ 
+ fragment CharacterData on Character {
+  id
+  name
+  abilityPoints {
+    str
+    con
+    dex
+    int
+    wis
+    cha
+   }
+  race {
+	  ...RaceData
+  }
+}
+
+
+fragment RaceData on Race {
+  id
+  name
+  description
+  version
+  modifiers {
+    key
+    value
+  }
+}
