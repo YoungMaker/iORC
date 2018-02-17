@@ -1,32 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
     >
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="3"
-        android:rowCount="5"
-        >
 
     <TextView
         android:id="@+id/textView2"
         android:textSize="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_row="0"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/roll_a_die"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+        android:layout_column="0"
+        android:layout_row="0"
         />
 
     <GridLayout
@@ -36,6 +31,7 @@
         android:layout_row="1"
         android:columnCount="4"
         android:rowCount="3"
+        android:layout_gravity="center_horizontal"
         >
 
         <ImageButton
@@ -43,12 +39,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_row="1"
+            android:layout_row="0"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d20"
+            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -57,12 +54,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
-            android:layout_row="1"
+            android:layout_row="0"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d12"
+            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -71,12 +69,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
-            android:layout_row="1"
+            android:layout_row="0"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d10"
+            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -85,12 +84,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="0"
-            android:layout_row="2"
+            android:layout_row="1"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d8"
+            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -99,12 +99,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="1"
-            android:layout_row="2"
+            android:layout_row="1"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d6"
+            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -113,12 +114,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_column="2"
-            android:layout_row="2"
+            android:layout_row="1"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d4"
+            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -130,16 +132,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="0"
-        android:layout_row="3"
+        android:layout_row="2"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_gravity="center_horizontal"
+        tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
         android:text="@string/roll_result"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         />
 
-    </GridLayout>
+</GridLayout>
 
-</android.support.constraint.ConstraintLayout>
+
