@@ -55,6 +55,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
             CharacterDetailFragment fragment = new CharacterDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

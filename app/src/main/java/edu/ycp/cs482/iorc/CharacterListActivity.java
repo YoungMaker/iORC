@@ -20,12 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import com.google.gson.Gson;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
@@ -54,8 +56,10 @@ public class CharacterListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private String mText;
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private IdQuery.GetCharacterById.Fragments characterResponseData;
     private List <IdQuery.GetCharacterById.Fragments> characterResponses = new ArrayList<IdQuery.GetCharacterById.Fragments>();
+    private HashMap<String, String> characterDetailMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class CharacterListActivity extends AppCompatActivity {
         });
 
         getIds();
-
+        Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
         if (findViewById(R.id.character_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -83,6 +87,8 @@ public class CharacterListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
+
 
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
@@ -101,17 +107,23 @@ public class CharacterListActivity extends AppCompatActivity {
     private void getIds(){
 
         MyApolloClient.getMyApolloClient().query(
-                IdQuery.builder().id("b9704025-b811-426b-af3a-461dd40866e3").build()).enqueue(new ApolloCall.Callback<IdQuery.Data>() {
+                //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
+                //Boii:    b9704025-b811-426b-af3a-461dd40866e3
+                IdQuery.builder().id("58ff414b-f945-44bd-b20f-4a2ad3440254").build()).enqueue(new ApolloCall.Callback<IdQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<IdQuery.Data> response) {
-                //Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+
                 characterResponseData = response.data().getCharacterById().fragments();
-                Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
-                characterResponses.add(characterResponseData);
+                Log.d("BEFORE UI THREAD","Line before new runnable");
                 CharacterListActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //characterResponses.add(characterResponseData);
+                        // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+                        Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
                         characterResponses.add(characterResponseData);
+                        characterDetailMap.put("58ff414b-f945-44bd-b20f-4a2ad3440254",(new Gson()).toJson(characterResponseData));
+
                     }
                 });
             }
@@ -156,12 +168,10 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, characterResponses, mTwoPane));
-        //TODO: Apply this to other M/D Flows
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane));
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
         recyclerView.addItemDecoration(itemDecor);
-
     }
 
     //Create the menu button on the toolbar
@@ -188,14 +198,17 @@ public class CharacterListActivity extends AppCompatActivity {
 
         private final CharacterListActivity mParentActivity;
         private final List<IdQuery.GetCharacterById.Fragments> mValues;
+        private final HashMap<String, String> mMap;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyCharacter item = (DummyContent.DummyCharacter) view.getTag();
+                IdQuery.GetCharacterById.Fragments item = (IdQuery.GetCharacterById.Fragments) view.getTag();
+
+                //TODO bundle the queried character data and pass it on to the detail activity
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.characterData.id());
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -204,7 +217,8 @@ public class CharacterListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
-                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.characterData.id());
+                    intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
 
                     context.startActivity(intent);
                 }
@@ -213,10 +227,11 @@ public class CharacterListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
                                       List<IdQuery.GetCharacterById.Fragments> items,
-                                      boolean twoPane) {
+                                      HashMap<String, String> characterDetailMap, boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mMap = characterDetailMap;
         }
 
         @Override
