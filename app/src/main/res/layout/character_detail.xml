@@ -5,14 +5,6 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="118dp"
-        android:layout_height="107dp"
-        android:layout_column="1"
-        android:layout_row="1"
-        android:src="@drawable/ic_person_outline_black_300dp" />
-
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
