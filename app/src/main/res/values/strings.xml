@@ -227,4 +227,6 @@
     <string name="text_skills">skills</string>
     <string name="text_equipment">Equipment</string>
     <string name="text_magic">Magic</string>
+    <string name="Skills">Skills</string>
+    <string name="character">Character</string>
 </resources>
