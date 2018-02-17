@@ -29,8 +29,11 @@ import com.apollographql.apollo.exception.ApolloException;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.fragment.CharacterData;
 //import fragment.CharacterData;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -51,6 +54,8 @@ public class CharacterListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private String mText;
+    private IdQuery.GetCharacterById.Fragments characterResponseData;
+    private List <IdQuery.GetCharacterById.Fragments> characterResponses = new ArrayList<IdQuery.GetCharacterById.Fragments>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +101,19 @@ public class CharacterListActivity extends AppCompatActivity {
     private void getIds(){
 
         MyApolloClient.getMyApolloClient().query(
-                IdQuery.builder().id("0").build()).enqueue(new ApolloCall.Callback<IdQuery.Data>() {
+                IdQuery.builder().id("b9704025-b811-426b-af3a-461dd40866e3").build()).enqueue(new ApolloCall.Callback<IdQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<IdQuery.Data> response) {
-                Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-
+                //Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+                characterResponseData = response.data().getCharacterById().fragments();
+                Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                characterResponses.add(characterResponseData);
+                CharacterListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        characterResponses.add(characterResponseData);
+                    }
+                });
             }
 
             @Override
@@ -143,7 +156,7 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CHARACTERS, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, characterResponses, mTwoPane));
         //TODO: Apply this to other M/D Flows
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
@@ -174,7 +187,7 @@ public class CharacterListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<DummyContent.DummyCharacter> mValues;
+        private final List<IdQuery.GetCharacterById.Fragments> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -199,7 +212,7 @@ public class CharacterListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
-                                      List<DummyContent.DummyCharacter> items,
+                                      List<IdQuery.GetCharacterById.Fragments> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -215,8 +228,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).name);
+            //holder.mIdView.setText(mValues.get(position).characterData.id());
+            holder.mContentView.setText(mValues.get(position).characterData.name());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
