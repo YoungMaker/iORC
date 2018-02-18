@@ -40,7 +40,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.character_detail_container, fragment)
                             .commit();
-                    return true;
+                    break;
 
 
                 case R.id.action_skills:
@@ -48,21 +48,27 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
                     fragmentTransaction2.commit();
-                    return true;
+                    //Intent intent1 = new Intent(CharacterDetailActivity.this, SkillDetailActivity.class);
+                    //startActivity(intent1);
+                    break;
 
                 case R.id.action_equipment:
                     EquipmentFragment fragment3 = new EquipmentFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
                     fragmentTransaction3.commit();
-                    return true;
+                    //return true;
+                    Intent intent2 = new Intent(CharacterDetailActivity.this, ItemListActivity.class);
+                    startActivity(intent2);
+                    break;
 
                 case R.id.action_magic:
                     MagicFragment fragment4 = new MagicFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
                     fragmentTransaction4.commit();
-                    return true;
+                    break;
+
             }
             return true;
         }
