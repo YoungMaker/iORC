@@ -23,7 +23,6 @@ import org.w3c.dom.Text;
  * in a {@link CharacterListActivity}.
  */
 public class CharacterDetailActivity extends AppCompatActivity {
-    private TextView mTextMessage;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -48,8 +47,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
                     fragmentTransaction2.commit();
-                    //Intent intent1 = new Intent(CharacterDetailActivity.this, SkillDetailActivity.class);
-                    //startActivity(intent1);
                     break;
 
                 case R.id.action_equipment:
@@ -57,9 +54,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
                     fragmentTransaction3.commit();
-                    //return true;
-                    Intent intent2 = new Intent(CharacterDetailActivity.this, ItemListActivity.class);
-                    startActivity(intent2);
                     break;
 
                 case R.id.action_magic:
@@ -80,7 +74,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_character_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView Bottom_navigation_main = (BottomNavigationView) findViewById(R.id.character_bottom);
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 

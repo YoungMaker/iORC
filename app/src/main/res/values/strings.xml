@@ -192,16 +192,22 @@
     <!-- character_detail.xml - fragment -->
     <string name="empty_char_name">Character Name</string>
     <string name="abil_title">Ability Points:</string>
-    <string name="pref_dex">DEX: %1$s</string>
-    <string name="pref_con">CON: %1$s</string>
-    <string name="pref_str">STR: %1$s</string>
-    <string name="pref_int">INT: %1$s</string>
-    <string name="pref_wis">WIS: %1$s</string>
-    <string name="pref_cha">CHA: %1$s</string>
+    <string name="pref_dex">%1$s</string>
+    <string name="pref_con">%1$s</string>
+    <string name="pref_str">%1$s</string>
+    <string name="pref_int">%1$s</string>
+    <string name="pref_wis">%1$s</string>
+    <string name="pref_cha">%1$s</string>
     <string name="def_title">Defense:</string>
     <string name="pref_speed">Speed: %1$s</string>
     <string name="pref_hp">HP: %1$s</string>
     <string name="pref_init">Initiative: %1$s</string>
+    <string name="Con">CON:</string>
+    <string name="Str">STR:</string>
+    <string name="Dex">DEX:</string>
+    <string name="Int">INT:</string>
+    <string name="Wis">WIS:</string>
+    <string name="Cha">CHA:</string>
 
     <!--defense_layout.xml-->
     <string name="pref_ac">AC: %1$s</string>
@@ -229,4 +235,9 @@
     <string name="text_magic">Magic</string>
     <string name="Skills">Skills</string>
     <string name="character">Character</string>
+    <string name="initiative">Initiative:</string>
+    <string name="hitpoints">Hitpoints:</string>
+    <string name="speed">Speed:</string>
+
+
 </resources>

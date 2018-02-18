@@ -15,6 +15,18 @@
         android:layout_row="2"
         >
         <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/initiative"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            />
+
+        <TextView
             android:id="@+id/character_detail_initiative"
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
@@ -23,9 +35,19 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@string/pref_init"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            />
 
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/hitpoints"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             />
 
         <TextView
@@ -37,7 +59,18 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@string/pref_hp"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="0dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/speed"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             />
 
@@ -50,7 +83,6 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="@string/pref_speed"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             />
     </LinearLayout>
@@ -79,20 +111,44 @@
         android:layout_height="wrap_content"
         android:layout_column="0"
         android:layout_row="1"
-        android:columnCount="3"
-        android:rowCount="2"
+        android:columnCount="6"
+        android:rowCount="4"
         >
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/stat_padding"
+            android:text="@string/Str"
+            
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="0"
+            android:layout_row="0"
+            android:layout_gravity=""
+            />
 
         <TextView
             android:id="@+id/character_abil_str"
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/pref_str"
+            android:padding="@dimen/stat_padding"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="0"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/stat_padding"
+            android:text="@string/Con"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="0"
+            android:layout_column="2"
             android:layout_row="0"
             />
 
@@ -101,11 +157,22 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/pref_con"
+            android:padding="@dimen/stat_padding"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="3"
+            android:layout_row="0"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/stat_padding"
+            android:text="@string/Dex"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="1"
+            android:layout_column="4"
             android:layout_row="0"
             />
 
@@ -114,12 +181,23 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/pref_dex"
+            android:padding="@dimen/stat_padding"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="5"
+            android:layout_row="0"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/stat_padding"
+            android:text="@string/Int"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="2"
-            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_row="1"
             />
 
         <TextView
@@ -127,11 +205,22 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/pref_int"
+            android:padding="@dimen/stat_padding"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="1"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/stat_padding"
+            android:text="@string/Wis"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="0"
+            android:layout_column="2"
             android:layout_row="1"
             />
 
@@ -140,11 +229,22 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/pref_wis"
+            android:padding="@dimen/stat_padding"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="3"
+            android:layout_row="1"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/stat_padding"
+            android:text="@string/Cha"
             
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="1"
+            android:layout_column="4"
             android:layout_row="1"
             />
 
@@ -153,11 +253,10 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:text="@string/pref_cha"
-            
+            android:padding="@dimen/stat_padding"
+
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="2"
+            android:layout_column="5"
             android:layout_row="1"
             />
 
