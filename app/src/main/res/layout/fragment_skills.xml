@@ -4,11 +4,9 @@
     android:layout_height="match_parent"
     tools:context="edu.ycp.cs482.iorc.SkillsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="20dp"
-        android:text="Skills Fragment" />
+        android:layout_height="wrap_content"
+        android:id="@+id/skillList" />
 
 </FrameLayout>
