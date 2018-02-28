@@ -10,7 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 
 public class MyApolloClient {
-    private static final String BASE_URL = "http://10.128.65.165:8080/graphql";
+    private static final String BASE_URL = "http://96.241.36.16:8081/graphql";
     private static ApolloClient myApolloClient;
 
     public static ApolloClient getMyApolloClient(){

@@ -3,7 +3,13 @@
     ... CharacterData
    }
  }
- 
+
+  query RaceVersionQuery($version :String!){
+    getRacesByVersion(version: $version){
+      ...RaceData
+    }
+  }
+
  fragment CharacterData on Character {
   id
   name

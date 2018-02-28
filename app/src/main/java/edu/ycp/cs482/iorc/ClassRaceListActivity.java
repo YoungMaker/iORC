@@ -10,15 +10,23 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+
 import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of ClassesRaces. This activity
@@ -37,6 +45,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private boolean showRace;
     private String ARG_BOOL_KEY = "RACE_SWITCH";
+    private List<RaceVersionQuery.GetRacesByVersion> RaceResponseData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        getRaces();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +90,29 @@ public class ClassRaceListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
 
     }
+
+    private void getRaces(){
+        MyApolloClient.getMyApolloClient().query(
+            RaceVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
+                RaceResponseData = response.data().getRacesByVersion();
+                Log.d("RESPONSE:","" + RaceResponseData);
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.d("No Response:","No acknowledgment from server");
+            }
+        });
+    }
+
+    //todo create class query after class data is created
+    /*private void getClasses(){
+        MyApolloClient.getMyApolloClient().query(
+                Class
+        )
+    }*/
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, DummyContent.RACE, mTwoPane, showRace));
