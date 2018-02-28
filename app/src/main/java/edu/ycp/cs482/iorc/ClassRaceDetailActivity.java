@@ -73,6 +73,8 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
                     getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
             if(showRace){
                 arguments.putBoolean(ARG_FRAG_BOOL, true);
+                arguments.putString(ClassRaceDetailFragment.ARG_RACE_MAP_ID, getIntent().getStringExtra(ClassRaceDetailFragment.ARG_RACE_MAP_ID));
+                arguments.putSerializable(ClassRaceDetailFragment.ARG_RACE_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_RACE_MAP));
             }else {
                 arguments.putBoolean(ARG_FRAG_BOOL, false);
             }

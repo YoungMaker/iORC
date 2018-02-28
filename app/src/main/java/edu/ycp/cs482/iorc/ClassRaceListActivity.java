@@ -109,8 +109,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
                     public void run() {
                         for(int i = 0; i < raceResponseData.size(); i++){
                             raceResponses.add(raceResponseData.get(i));
-                            raceDetailMap.put(raceResponseData.get(i).fragments().raceData.id(), (new Gson()).toJson(raceResponseData.get(i).fragments().raceData()));
-                            //Log.d("RACE RESPONSE:","" + RaceResponseData.size());
+                            raceDetailMap.put(raceResponseData.get(i).fragments().raceData.id(), (new Gson()).toJson(raceResponseData.get(i)));
+                            Log.d("ADDED TO RACE MAP:","" + raceDetailMap.get(raceResponseData.get(i)));
                         }
                         //Log.d("RESPONSE:","" + raceDetailMap);
                         refreshView();
@@ -146,6 +146,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         private final ClassRaceListActivity mParentActivity;
         private final List<DummyContent.DummyClass> mValues;
         private final List<RaceVersionQuery.GetRacesByVersion> amValues;
+        HashMap<String, String> mRaceMap;
         private final boolean mTwoPane;
         private final boolean showRace;
         private final String ARG_EXTRA_NAME = "isRace";
@@ -166,6 +167,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             amValues = raceItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mRaceMap = raceMap;
             this.showRace = showRace;
         }
 
@@ -185,7 +187,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 holder.itemView.setTag(mValues.get(position));
             }
             else{
-                holder.mIdView.setText(amValues.get(position).fragments().raceData.id());
+                //holder.mIdView.setText(amValues.get(position).fragments().raceData.id());
                 holder.mContentView.setText(amValues.get(position).fragments().raceData.name());
 
                 holder.itemView.setTag(amValues.get(position));
@@ -218,7 +220,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
         public void checkClassRace(View view){
             if(showRace){
-                DummyContent.DummyRace raceItem = (DummyContent.DummyRace) view.getTag();
+                RaceVersionQuery.GetRacesByVersion raceItem = (RaceVersionQuery.GetRacesByVersion) view.getTag();
                 raceTwoPanes(view, raceItem);
             }else if(!showRace){
                 DummyContent.DummyClass classItem = (DummyContent.DummyClass) view.getTag();
@@ -245,10 +247,11 @@ public class ClassRaceListActivity extends AppCompatActivity {
             }
         }
 
-        public void raceTwoPanes(View view, DummyContent.DummyRace item){
+        public void raceTwoPanes(View view, RaceVersionQuery.GetRacesByVersion item){
+            //add our race map and selected id to the arguments
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
+                arguments.putString(ClassRaceDetailFragment.ARG_RACE_MAP_ID, item.fragments().raceData().id());
                 ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
                 fragment.setArguments(arguments);
                 mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -257,8 +260,9 @@ public class ClassRaceListActivity extends AppCompatActivity {
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ClassRaceDetailActivity.class);
-                intent.putExtra(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
+                intent.putExtra(ClassRaceDetailFragment.ARG_RACE_MAP_ID, item.fragments().raceData().id());
                 intent.putExtra(ARG_EXTRA_NAME, true);
+                intent.putExtra(ClassRaceDetailFragment.ARG_RACE_MAP, mRaceMap);
 
                 context.startActivity(intent);
             }
