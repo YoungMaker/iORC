@@ -20,10 +20,12 @@ import android.widget.TextView;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import com.google.gson.Gson;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -42,10 +44,12 @@ public class ClassRaceListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private boolean mTwoPane;
     private boolean showRace;
     private String ARG_BOOL_KEY = "RACE_SWITCH";
     private List<RaceVersionQuery.GetRacesByVersion> RaceResponseData;
+    private HashMap<String, String> raceDetailMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +88,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, RaceResponseData, raceDetailMap, mTwoPane, showRace);
         View recyclerView = findViewById(R.id.classrace_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -97,7 +101,18 @@ public class ClassRaceListActivity extends AppCompatActivity {
             @Override
             public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
                 RaceResponseData = response.data().getRacesByVersion();
-                Log.d("RESPONSE:","" + RaceResponseData);
+                //Log.d("RESPONSE:","" + RaceResponseData);
+                ClassRaceListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        RaceResponseData = RaceResponseData;
+                        for(int i = 0; i < RaceResponseData.size(); i++){
+                            raceDetailMap.put(RaceResponseData.get(i).fragments().raceData.id(), (new Gson()).toJson(RaceResponseData.get(i).fragments().raceData()));
+                        }
+                        Log.d("RESPONSE:","" + raceDetailMap);
+                        refreshView();
+                    }
+                });
             }
 
             @Override
@@ -115,7 +130,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
     }*/
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, DummyContent.RACE, mTwoPane, showRace));
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, RaceResponseData, , mTwoPane, showRace));
         //divide items in list
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
@@ -126,7 +141,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
         private final ClassRaceListActivity mParentActivity;
         private final List<DummyContent.DummyClass> mValues;
-        private final List<DummyContent.DummyRace> amValues;
+        private final List<RaceVersionQuery.GetRacesByVersion> amValues;
         private final boolean mTwoPane;
         private final boolean showRace;
         private final String ARG_EXTRA_NAME = "isRace";
@@ -139,7 +154,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(ClassRaceListActivity parent,
-                                      List<DummyContent.DummyClass> items, List<DummyContent.DummyRace> raceItems,
+                                      List<DummyContent.DummyClass> items, List<RaceVersionQuery.GetRacesByVersion> raceItems, HashMap<String, String> raceMap,
                                       boolean twoPane, boolean showRace) {
             mValues = items;
             amValues = raceItems;
@@ -164,8 +179,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 holder.itemView.setTag(mValues.get(position));
             }
             else{
-                holder.mIdView.setText(amValues.get(position).id);
-                holder.mContentView.setText(amValues.get(position).name);
+                holder.mIdView.setText(amValues.get(position).fragments().raceData.id());
+                holder.mContentView.setText(amValues.get(position).fragments().raceData.name());
 
                 holder.itemView.setTag(amValues.get(position));
             }
@@ -242,5 +257,9 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 context.startActivity(intent);
             }
         }
+    }
+
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }
