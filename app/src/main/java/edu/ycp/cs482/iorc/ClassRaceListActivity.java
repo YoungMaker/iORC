@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,7 +49,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private boolean showRace;
     private String ARG_BOOL_KEY = "RACE_SWITCH";
-    private List<RaceVersionQuery.GetRacesByVersion> RaceResponseData;
+    private List<RaceVersionQuery.GetRacesByVersion> raceResponseData;
+    private List<RaceVersionQuery.GetRacesByVersion> raceResponses = new ArrayList<RaceVersionQuery.GetRacesByVersion>();
     private HashMap<String, String> raceDetailMap = new HashMap<String, String>();
 
     @Override
@@ -88,7 +90,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, RaceResponseData, raceDetailMap, mTwoPane, showRace);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, raceResponses, raceDetailMap, mTwoPane, showRace);
         View recyclerView = findViewById(R.id.classrace_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -100,16 +102,17 @@ public class ClassRaceListActivity extends AppCompatActivity {
             RaceVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
-                RaceResponseData = response.data().getRacesByVersion();
+                raceResponseData = response.data().getRacesByVersion();
                 //Log.d("RESPONSE:","" + RaceResponseData);
                 ClassRaceListActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        RaceResponseData = RaceResponseData;
-                        for(int i = 0; i < RaceResponseData.size(); i++){
-                            raceDetailMap.put(RaceResponseData.get(i).fragments().raceData.id(), (new Gson()).toJson(RaceResponseData.get(i).fragments().raceData()));
+                        for(int i = 0; i < raceResponseData.size(); i++){
+                            raceResponses.add(raceResponseData.get(i));
+                            raceDetailMap.put(raceResponseData.get(i).fragments().raceData.id(), (new Gson()).toJson(raceResponseData.get(i).fragments().raceData()));
+                            //Log.d("RACE RESPONSE:","" + RaceResponseData.size());
                         }
-                        Log.d("RESPONSE:","" + raceDetailMap);
+                        //Log.d("RESPONSE:","" + raceDetailMap);
                         refreshView();
                     }
                 });
@@ -155,9 +158,11 @@ public class ClassRaceListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(ClassRaceListActivity parent,
-                                      List<DummyContent.DummyClass> items, List<RaceVersionQuery.GetRacesByVersion> raceItems, HashMap<String, String> raceMap,
+                                      List<DummyContent.DummyClass> items, List<RaceVersionQuery.GetRacesByVersion> raceItems,
+                                      HashMap<String, String> raceMap,
                                       boolean twoPane, boolean showRace) {
             mValues = items;
+            Log.d("RACELIST LENGTH:","Size: " + raceItems.size());
             amValues = raceItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
