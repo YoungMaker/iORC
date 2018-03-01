@@ -77,6 +77,8 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
                 arguments.putSerializable(ClassRaceDetailFragment.ARG_RACE_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_RACE_MAP));
             }else {
                 arguments.putBoolean(ARG_FRAG_BOOL, false);
+                arguments.putString(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, getIntent().getStringExtra(ClassRaceDetailFragment.ARG_CLASS_MAP_ID));
+                arguments.putSerializable(ClassRaceDetailFragment.ARG_CLASS_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_CLASS_MAP));
             }
             ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
             fragment.setArguments(arguments);

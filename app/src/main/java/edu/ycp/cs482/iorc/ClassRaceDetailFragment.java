@@ -28,6 +28,8 @@ public class ClassRaceDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_CLASS_MAP = "CLASS_MAP";
+    public static final String ARG_CLASS_MAP_ID = "CLASS_MAP_ID";
     public static final String ARG_RACE_MAP = "RACE_MAP";
     public static final String ARG_RACE_MAP_ID = "RACE_MAP_ID";
     public static final String ARG_SHOW_ITEM = "SHOW_RACE";
@@ -35,7 +37,7 @@ public class ClassRaceDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyClass mItem;
+    private ClassVersionQuery.GetClassesByVersion mItem;
     private RaceVersionQuery.GetRacesByVersion amItem;
 
     private boolean showRace = false;
@@ -56,14 +58,22 @@ public class ClassRaceDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.CLASS_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            //mItem = DummyContent.CLASS_MAP.get(getArguments().getString(ARG_ITEM_ID));
             if(getArguments().containsKey(ARG_RACE_MAP)){
                 Bundle bundle = getArguments();
                 HashMap<String, String> raceMap =(HashMap<String, String>)bundle.getSerializable(ARG_RACE_MAP);
                 String raceObj = raceMap.get(bundle.getString((ARG_RACE_MAP_ID)));
+
                 Log.d("RACEOBJ :","Object contents: " + raceObj);
                 amItem = (new Gson()).fromJson(raceObj, RaceVersionQuery.GetRacesByVersion.class);
                 Log.d("RACEOBJ :","Object contents: " + amItem);
+            } else if (getArguments().containsKey(ARG_CLASS_MAP)){
+                Bundle bundle = getArguments();
+                HashMap<String, String> classMap = (HashMap<String, String>)bundle.getSerializable(ARG_CLASS_MAP);
+                String classObj = classMap.get(bundle.getString(ARG_CLASS_MAP_ID));
+
+                Log.d("CLASSOBJ :","Object contents: " + classObj);
+                mItem = (new Gson()).fromJson(classObj, ClassVersionQuery.GetClassesByVersion.class);
             }
             //amItem = DummyContent.RACE_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
@@ -74,7 +84,7 @@ public class ClassRaceDetailFragment extends Fragment {
                     appBarLayout.setTitle(amItem.fragments().raceData.name());
                 }
                 else{
-                    appBarLayout.setTitle(mItem.name);
+                    appBarLayout.setTitle(mItem.fragments().classData.name());
                 }
 
             }
@@ -88,8 +98,8 @@ public class ClassRaceDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (!showRace && mItem != null) {
-            ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(mItem.content);
-            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(mItem.defBonus);
+            ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(mItem.fragments().classData.description());
+            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(mItem.fragments().classData.modifiers().toString());
         }else if (showRace && amItem != null){
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(amItem.fragments().raceData.description());
             ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(amItem.fragments().raceData.modifiers().toString());
