@@ -60,6 +60,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private IdQuery.GetCharacterById.Fragments characterResponseData;
     private List <IdQuery.GetCharacterById.Fragments> characterResponses = new ArrayList<IdQuery.GetCharacterById.Fragments>();
     private HashMap<String, String> characterDetailMap = new HashMap<String, String>();
+    private static final String CREATION_DATA = "CREATION_DATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,14 @@ public class CharacterListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CharacterListActivity.this,ClassRaceListActivity.class));
+                //create a hashmap where each field that is required to create a character will be stored
+                //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
+                //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
+                HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                //pass current character to next stage in flow, continue until hitting the end
+                Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
+                intent.putExtra(CREATION_DATA,characterCreationData);
+                startActivity(intent);
             }
         });
 
