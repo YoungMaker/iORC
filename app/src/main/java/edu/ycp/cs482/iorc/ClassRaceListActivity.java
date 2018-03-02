@@ -77,6 +77,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
 //            }
 //        });
         //get our bundle from when a user is finished selecting class that enables the user to then select race inside the same M/V flow
+        //this will also contain our character creation data
         Bundle extra = getIntent().getExtras();
         if(extra != null){
             if(extra.getBoolean(ARG_BOOL_KEY)){
@@ -97,7 +98,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, classResponses, raceResponses, classDetailMap,raceDetailMap, mTwoPane, showRace);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, classResponses, raceResponses, classDetailMap,raceDetailMap, mTwoPane, showRace, extra);
         View recyclerView = findViewById(R.id.classrace_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -191,7 +192,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
         SimpleItemRecyclerViewAdapter(ClassRaceListActivity parent,
                                       List<ClassVersionQuery.GetClassesByVersion> items, List<RaceVersionQuery.GetRacesByVersion> raceItems,
                                       HashMap<String, String> classMap, HashMap<String, String> raceMap,
-                                      boolean twoPane, boolean showRace) {
+                                      boolean twoPane, boolean showRace,
+                                      Bundle extra) {
             mValues = items;
             Log.d("RACELIST LENGTH:","Size: " + raceItems.size());
             amValues = raceItems;
@@ -200,6 +202,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             mClassMap = classMap;
             mRaceMap = raceMap;
             this.showRace = showRace;
+            Bundle mExtra = extra;
         }
 
         @Override
