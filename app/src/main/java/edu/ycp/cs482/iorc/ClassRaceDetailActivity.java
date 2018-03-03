@@ -38,11 +38,11 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         }else {
             showRace = false;
         }
+        creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
-                creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
                 if(!showRace){
                     String classid = (String) extra.get(ClassRaceDetailFragment.ARG_CLASS_MAP_ID);
                     creationData.put("CLASS ID", classid);
@@ -111,6 +111,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
             Intent intent = new Intent(this, ClassRaceListActivity.class);
+            intent.putExtra(CREATION_DATA, creationData);
             if(showRace){
                 intent.putExtra(ARG_EXTRA_NAME, true);
             }

@@ -112,6 +112,7 @@ public class CharacterDetailFragment extends Fragment {
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
+            //convert the long values (of each ability score) to strings that can be shown as the character ability score values
             CharacterData.AbilityPoints abilityPoints = item.fragments().characterData.abilityPoints();
             mCharacterAbilStr.setText(getResources().getString(R.string.pref_str, longToString(abilityPoints.str())));
             mCharacterAbilCon.setText(getResources().getString(R.string.pref_con, longToString(abilityPoints.con())));
