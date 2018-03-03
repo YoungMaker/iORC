@@ -49,6 +49,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private boolean showRace;
     private String ARG_BOOL_KEY = "RACE_SWITCH";
+    private static final String CREATION_DATA = "CREATION_DATA";
     private List<RaceVersionQuery.GetRacesByVersion> raceResponseData;
     private List<ClassVersionQuery.GetClassesByVersion> classResponseData;
     private List<RaceVersionQuery.GetRacesByVersion> raceResponses = new ArrayList<RaceVersionQuery.GetRacesByVersion>();
@@ -79,13 +80,11 @@ public class ClassRaceListActivity extends AppCompatActivity {
         //get our bundle from when a user is finished selecting class that enables the user to then select race inside the same M/V flow
         //this will also contain our character creation data
         Bundle extra = getIntent().getExtras();
-        if(extra != null){
-            if(extra.getBoolean(ARG_BOOL_KEY)){
-                //indicate a switch in values
-                showRace = true;
-                getRaces();
-                getIntent().removeExtra(ARG_BOOL_KEY);
-            }
+        if(extra.getBoolean(ARG_BOOL_KEY)){
+            //indicate a switch in values
+            showRace = true;
+            getRaces();
+            getIntent().removeExtra(ARG_BOOL_KEY);
         }
         else {
             getClasses();
@@ -98,7 +97,9 @@ public class ClassRaceListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, classResponses, raceResponses, classDetailMap,raceDetailMap, mTwoPane, showRace, extra);
+        HashMap<String, String> creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, classResponses, raceResponses, classDetailMap,raceDetailMap, mTwoPane, showRace, creationMap);
         View recyclerView = findViewById(R.id.classrace_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -181,6 +182,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         private final boolean mTwoPane;
         private final boolean showRace;
         private final String ARG_EXTRA_NAME = "isRace";
+        HashMap<String, String> mCreationData;
 
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -193,16 +195,17 @@ public class ClassRaceListActivity extends AppCompatActivity {
                                       List<ClassVersionQuery.GetClassesByVersion> items, List<RaceVersionQuery.GetRacesByVersion> raceItems,
                                       HashMap<String, String> classMap, HashMap<String, String> raceMap,
                                       boolean twoPane, boolean showRace,
-                                      Bundle extra) {
+                                      HashMap<String, String> creationData) {
             mValues = items;
-            Log.d("RACELIST LENGTH:","Size: " + raceItems.size());
+            //Log.d("CLASSLIST LENGTH:","Size: " + items.size());
+            //Log.d("RACELIST LENGTH:","Size: " + raceItems.size());
             amValues = raceItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
             mClassMap = classMap;
             mRaceMap = raceMap;
             this.showRace = showRace;
-            Bundle mExtra = extra;
+            mCreationData = creationData;
         }
 
         @Override
@@ -274,6 +277,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ClassRaceDetailActivity.class);
+                intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, mCreationData);
                 intent.putExtra(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, item.fragments().classData.id());
                 intent.putExtra(ARG_EXTRA_NAME, false);
                 intent.putExtra(ClassRaceDetailFragment.ARG_CLASS_MAP, mClassMap);
@@ -284,6 +288,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
         public void raceTwoPanes(View view, RaceVersionQuery.GetRacesByVersion item){
             //add our race map and selected id to the arguments
+            Log.d("CHECK RACE ID:","race ID: " + item.fragments().raceData.id());
+
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
                 arguments.putString(ClassRaceDetailFragment.ARG_RACE_MAP_ID, item.fragments().raceData.id());
@@ -295,6 +301,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ClassRaceDetailActivity.class);
+                intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, mCreationData);
                 intent.putExtra(ClassRaceDetailFragment.ARG_RACE_MAP_ID, item.fragments().raceData.id());
                 intent.putExtra(ARG_EXTRA_NAME, true);
                 intent.putExtra(ClassRaceDetailFragment.ARG_RACE_MAP, mRaceMap);

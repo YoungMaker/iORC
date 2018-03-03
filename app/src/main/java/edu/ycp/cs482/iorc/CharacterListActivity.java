@@ -81,7 +81,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 HashMap<String, String> characterCreationData = new HashMap<String, String>();
                 //pass current character to next stage in flow, continue until hitting the end
                 Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
-                intent.putExtra(CREATION_DATA,characterCreationData);
+                intent.putExtra(CREATION_DATA, characterCreationData);
                 startActivity(intent);
             }
         });

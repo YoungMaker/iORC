@@ -33,6 +33,7 @@ public class ClassRaceDetailFragment extends Fragment {
     public static final String ARG_RACE_MAP = "RACE_MAP";
     public static final String ARG_RACE_MAP_ID = "RACE_MAP_ID";
     public static final String ARG_SHOW_ITEM = "SHOW_RACE";
+    public static final String CREATION_DATA = "CREATION_DATA";
 
     /**
      * The dummy content this fragment is presenting.

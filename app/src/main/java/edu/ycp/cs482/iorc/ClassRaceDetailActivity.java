@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
 /**
  * An activity representing a single ClassRace detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -19,6 +21,7 @@ import android.view.MenuItem;
 
 public class ClassRaceDetailActivity extends AppCompatActivity {
     private boolean showRace;
+    private HashMap<String, String> creationData;
     private String ARG_BOOL_KEY = "isRace";
     private String ARG_EXTRA_NAME = "RACE_SWITCH";
     private String ARG_FRAG_BOOL = "SHOW_RACE";
@@ -28,7 +31,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_classrace_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-        Bundle extra = getIntent().getExtras();
+        final Bundle extra = getIntent().getExtras();
         if(extra.getBoolean(ARG_BOOL_KEY)){
             showRace = true;
         }else {
@@ -38,13 +41,18 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
+                creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
                 if(!showRace){
+                    creationData.put("CLASS", "TEST CLASS");
                     Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
                     intent.putExtra(ARG_EXTRA_NAME, true);
+                    intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
 
                 } else if(showRace){
+                    creationData.put("RACE", "TEST RACE");
                     Intent intent = new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class);
+                    intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
                 }
             }
@@ -69,6 +77,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            //arguments.putSerializable(ClassRaceDetailFragment.CREATION_DATA, getIntent().getSerializableExtra(ClassRaceDetailFragment.CREATION_DATA));
             arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
             if(showRace){
