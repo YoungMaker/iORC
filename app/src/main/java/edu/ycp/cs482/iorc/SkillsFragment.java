@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,12 +29,16 @@ public class SkillsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_skills, container, false);
 
-        String[] skillItems = {"Insight", "Religion", "Stealth"};
+        //String[] skillItems = {"Insight", "Religion", "Stealth"};
+        ArrayList<String> skillItems = new ArrayList<>();
+        skillItems.add("Insight");
+        skillItems.add("Religion");
+        skillItems.add("Stealth");
+
+        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_list_item_1, skillItems);
 
         ListView listView = view.findViewById(R.id.skillList);
-
-        ArrayAdapter<String> listViewAdapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_list_item_1, skillItems);
 
         listView.setAdapter(listViewAdapter);
 

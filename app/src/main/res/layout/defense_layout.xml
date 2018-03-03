@@ -8,6 +8,20 @@
     >
 
     <TextView
+        style="?android:attr/textAppearanceListItemSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:gravity="center_vertical"
+        android:text="AC:"
+
+        android:layout_row="0"
+        android:layout_column="0"
+        />
+    <TextView
         android:id="@+id/character_abil_ac"
         style="?android:attr/textAppearanceListItemSmall"
         android:layout_width="wrap_content"
@@ -17,10 +31,9 @@
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
         android:gravity="center_vertical"
-        android:text="@string/pref_ac"
         
         android:layout_row="0"
-        android:layout_column="0"
+        android:layout_column="1"
         />
 
     <include
@@ -29,7 +42,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="0"
-        android:layout_column="1"
+        android:layout_column="2"
+        />
+    <TextView
+        style="?android:attr/textAppearanceListItemSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="FORT:"
+
+        android:layout_row="1"
+        android:layout_column="0"
+
         />
 
     <TextView
@@ -41,10 +68,9 @@
         android:paddingEnd="0dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="@string/pref_fort"
         
         android:layout_row="1"
-        android:layout_column="0"
+        android:layout_column="1"
 
         />
 
@@ -54,7 +80,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="1"
-        android:layout_column="1"
+        android:layout_column="2"
+        />
+
+    <TextView
+        style="?android:attr/textAppearanceListItemSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="REF:"
+
+        android:layout_row="2"
+        android:layout_column="0"
+
         />
 
     <TextView
@@ -66,10 +107,9 @@
         android:paddingEnd="0dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="@string/pref_ref"
         
         android:layout_row="2"
-        android:layout_column="0"
+        android:layout_column="1"
 
         />
 
@@ -79,7 +119,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="2"
-        android:layout_column="1"
+        android:layout_column="2"
+        />
+
+    <TextView
+        style="?android:attr/textAppearanceListItemSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="WILL:"
+
+        android:layout_row="3"
+        android:layout_column="0"
         />
     
     <TextView
@@ -91,10 +145,9 @@
         android:paddingEnd="0dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="@string/pref_will"
         
         android:layout_row="3"
-        android:layout_column="0"
+        android:layout_column="1"
         />
 
     <include
@@ -103,7 +156,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_row="3"
-        android:layout_column="1"
+        android:layout_column="2"
         />
 
 </GridLayout>

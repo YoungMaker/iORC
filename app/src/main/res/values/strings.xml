@@ -210,10 +210,10 @@
     <string name="Cha">CHA:</string>
 
     <!--defense_layout.xml-->
-    <string name="pref_ac">AC: %1$s</string>
-    <string name="pref_fort">FORT: %1$s</string>
-    <string name="pref_ref">REF: %1$s</string>
-    <string name="pref_will">WILL: %1$s</string>
+    <string name="pref_ac">%1$s</string>
+    <string name="pref_fort">%1$s</string>
+    <string name="pref_ref">%1$s</string>
+    <string name="pref_will">%1$s</string>
     <string name="double_placeholder">--</string>
 
     <!--modifier_table.xml-->
