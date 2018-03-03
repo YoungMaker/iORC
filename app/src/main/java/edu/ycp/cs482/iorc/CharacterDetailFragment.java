@@ -34,7 +34,7 @@ public class CharacterDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private IdQuery.GetCharacterById.Fragments mItem;
+    private CharacterVersionQuery.GetCharactersByVersion mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,14 +58,14 @@ public class CharacterDetailFragment extends Fragment {
 
             HashMap<String, String> charMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
             String charObj = charMap.get(bundle.getString((ARG_ITEM_ID)));
-            mItem = (new Gson()).fromJson(charObj, IdQuery.GetCharacterById.Fragments.class);
+            mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
             Log.d("mItem CHECK: ", "" + mItem);
 
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.characterData.name());
+                appBarLayout.setTitle(mItem.fragments().characterData.name());
             }
         }
         Log.d("mItem CHECK: ", "Finished Loading Map");
@@ -111,8 +111,8 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilCha = (TextView)rootView.findViewById(R.id.character_abil_cha);
         }
 
-        private void updateCharView(IdQuery.GetCharacterById.Fragments item) {
-            CharacterData.AbilityPoints abilityPoints = item.characterData().abilityPoints();
+        private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
+            CharacterData.AbilityPoints abilityPoints = item.fragments().characterData.abilityPoints();
             mCharacterAbilStr.setText(getResources().getString(R.string.pref_str, longToString(abilityPoints.str())));
             mCharacterAbilCon.setText(getResources().getString(R.string.pref_con, longToString(abilityPoints.con())));
             mCharacterAbilDex.setText(getResources().getString(R.string.pref_dex, longToString(abilityPoints.dex())));

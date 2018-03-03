@@ -4,6 +4,12 @@
    }
  }
 
+ query CharacterVersionQuery($version :String!){
+   getCharactersByVersion(version:$version){
+     ...CharacterData
+   }
+ }
+
   query RaceVersionQuery($version :String!){
     getRacesByVersion(version: $version){
       ...RaceData
@@ -16,19 +22,24 @@
     }
   }
 
- fragment CharacterData on Character {
+
+fragment CharacterData on Character{
   id
   name
-  abilityPoints {
+  version
+  abilityPoints{
     str
-    con
-    dex
     int
     wis
     cha
-   }
-  race {
-	  ...RaceData
+    con
+    dex
+  }
+  race{
+    ...RaceData
+  }
+  classql{
+    ...ClassData
   }
 }
 
