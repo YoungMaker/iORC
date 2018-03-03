@@ -2,10 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_sheet"
+        android:enabled="true"
+        android:icon="@drawable/human_male_female"
+        android:title="@string/character"
+        android:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_skills"
         android:enabled="true"
         android:icon="@drawable/ic_build_black_24dp"
-        android:title="@string/text_skills"
+        android:title="@string/Skills"
         android:iconTint="@android:color/white"
         app:showAsAction="ifRoom" />
     <item

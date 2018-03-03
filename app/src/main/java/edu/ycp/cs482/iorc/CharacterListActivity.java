@@ -237,6 +237,10 @@ public class CharacterListActivity extends AppCompatActivity {
             case R.id.dice:
                 Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
                 startActivity(diceIntent);
+
+            case R.id.login:
+                Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
         }
         return super.onOptionsItemSelected(item);
     }
