@@ -165,13 +165,13 @@ public class CharacterListActivity extends AppCompatActivity {
                 .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
-                Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
+                Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
                 getIds();
             }
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-
+                Log.d("CREATION FAILED", "SERVER NOT RESPONDING");
             }
         });
     }
