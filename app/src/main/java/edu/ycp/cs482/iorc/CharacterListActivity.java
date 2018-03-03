@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.type.AbilityInput;
 //import fragment.CharacterData;
@@ -152,13 +153,15 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void createCharacter(HashMap<String, String> creationData){
+        RandAbilityGenerator randAbils = new RandAbilityGenerator();
+        randAbils.generateAbilitiesScores();
         AbilityInput.Builder abilityScores = AbilityInput.builder();
-        abilityScores.str(13);
-        abilityScores.con(13);
-        abilityScores.dex(13);
-        abilityScores._int(13);
-        abilityScores.wis(13);
-        abilityScores.cha(13);
+        abilityScores.str(randAbils.getStr());
+        abilityScores.con(randAbils.getCon());
+        abilityScores.dex(randAbils.getDex());
+        abilityScores._int(randAbils.get_int());
+        abilityScores.wis(randAbils.getWis());
+        abilityScores.cha(randAbils.getCha());
         AbilityInput staticAbil = abilityScores.build();
 
         MyApolloClient.getMyApolloClient().mutate(
