@@ -43,14 +43,16 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
                 if(!showRace){
-                    creationData.put("CLASS", "TEST CLASS");
+                    String classid = (String) extra.get(ClassRaceDetailFragment.ARG_CLASS_MAP_ID);
+                    creationData.put("CLASS ID", classid);
                     Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
                     intent.putExtra(ARG_EXTRA_NAME, true);
                     intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
 
                 } else if(showRace){
-                    creationData.put("RACE", "TEST RACE");
+                    String raceid = (String) extra.get(ClassRaceDetailFragment.ARG_RACE_MAP_ID);
+                    creationData.put("RACE ID", raceid);
                     Intent intent = new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class);
                     intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);

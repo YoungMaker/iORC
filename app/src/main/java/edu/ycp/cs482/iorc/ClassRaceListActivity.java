@@ -266,6 +266,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         }
 
         public void classTwoPanes(View view, ClassVersionQuery.GetClassesByVersion item){
+            Log.d("CHECK CLASS ID:","class ID: " + item.fragments().classData.id());
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
                 arguments.putString(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, item.fragments().classData.id());
