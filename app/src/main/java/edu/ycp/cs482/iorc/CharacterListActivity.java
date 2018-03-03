@@ -131,6 +131,8 @@ public class CharacterListActivity extends AppCompatActivity {
                         //characterResponses.add(characterResponseData);
                         // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
                         //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                        //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+                        characterResponses.clear();
                         //add each character into map and list
                         for(int i = 0; i < characterResponseData.size(); i++){
                             characterResponses.add(characterResponseData.get(i));
