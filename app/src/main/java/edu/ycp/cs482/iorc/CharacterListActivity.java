@@ -79,6 +79,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
                 //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
                 HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                characterCreationData.put("version", "4e");
                 //pass current character to next stage in flow, continue until hitting the end
                 Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
                 intent.putExtra(CREATION_DATA, characterCreationData);
@@ -147,6 +148,10 @@ public class CharacterListActivity extends AppCompatActivity {
 
     }
 
+    private void createCharacter(){
+        //MyApolloClient.getMyApolloClient().mutate()
+    }
+
     private void popInputDialog(String title ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
@@ -165,6 +170,9 @@ public class CharacterListActivity extends AppCompatActivity {
                 //TODO: Move this to when the network response has been received.
                 Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                HashMap<String, String> creationData = (HashMap<String, String>) getIntent().getSerializableExtra(CREATION_DATA);
+                creationData.put("Name", mText);
+                Log.d("CHARACTER CREATION DATA","DATA: " + creationData);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
 /**
  * An activity representing a single AlignmentReligion detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -18,16 +20,20 @@ import android.view.MenuItem;
  */
 public class AlignmentReligionDetailActivity extends AppCompatActivity {
     private boolean showReligion;
+    private static final String CREATION_DATA = "CREATION_DATA";
     private String ARG_BOOL_KEY = "isReligion";
     private String ARG_EXTRA_NAME = "RELIGION_SWITCH";
     private String ARG_FRAG_BOOL = "SHOW_RELIGION";
+    private HashMap<String, String> creationData;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alignmentreligion_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-        Bundle extra = getIntent().getExtras();
+        final Bundle extra = getIntent().getExtras();
         if(extra.getBoolean(ARG_BOOL_KEY)){
             showReligion = true;
         } else {
@@ -39,14 +45,19 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
+                creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
                 Intent intent;
                 if(!showReligion){
+                    creationData.put("TEST ALIGNMENT","SOME ALIGNMENT");
                     intent = new Intent(AlignmentReligionDetailActivity.this, AlignmentReligionListActivity.class);
                     intent.putExtra(ARG_EXTRA_NAME, true);
+                    intent.putExtra(CREATION_DATA, creationData);
                     startActivity(intent);
 
                 }else if(showReligion){
                     intent = new Intent(AlignmentReligionDetailActivity.this, ItemListActivity.class);
+                    intent.putExtra(CREATION_DATA, creationData);
+                    creationData.put("TEST RELIGION","SOME RELIGION");
                     startActivity(intent);
                 }
             }

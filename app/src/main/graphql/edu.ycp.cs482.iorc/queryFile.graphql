@@ -1,3 +1,4 @@
+
  query IdQuery($id: ID!) {
  	getCharacterById(id : $id ) {
     ... CharacterData
@@ -22,6 +23,11 @@
     }
   }
 
+ mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!){
+     createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid){
+       ...CharacterData
+     }
+ }
 
 fragment CharacterData on Character{
   id

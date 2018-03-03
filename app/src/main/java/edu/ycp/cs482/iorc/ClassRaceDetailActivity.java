@@ -25,6 +25,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
     private String ARG_BOOL_KEY = "isRace";
     private String ARG_EXTRA_NAME = "RACE_SWITCH";
     private String ARG_FRAG_BOOL = "SHOW_RACE";
+    private static final String CREATION_DATA = "CREATION_DATA";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
