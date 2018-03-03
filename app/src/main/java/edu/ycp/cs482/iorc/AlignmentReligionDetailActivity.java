@@ -39,13 +39,16 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
         } else {
            showReligion = false;
         }
+
+        //retrieve our character creation data
+        creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+                //handle selection of alignment/religion being made
                 Intent intent;
                 if(!showReligion){
                     creationData.put("TEST ALIGNMENT","SOME ALIGNMENT");
@@ -107,6 +110,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
+            //pass our creation data and alignment/religion boolean to the parent activity
             Intent intent = new Intent(this, AlignmentReligionListActivity.class);
             if(showReligion){
                 intent.putExtra(ARG_EXTRA_NAME, true);
