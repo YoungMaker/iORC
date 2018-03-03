@@ -36,6 +36,7 @@ public class ItemListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private static final String CREATION_DATA = "CREATION_DATA";
     private boolean mTwoPane;
     private HashMap<String, String> creationMap;
@@ -77,15 +78,16 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-
-
+        //create our simple item recycler adapter add to recycler view
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane, creationMap);
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(mSimpleAdapter);
         //divide items in list
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
@@ -98,6 +100,7 @@ public class ItemListActivity extends AppCompatActivity {
         private final ItemListActivity mParentActivity;
         private final List<DummyContent.DummyItem> mValues;
         private final boolean mTwoPane;
+        private final HashMap<String, String> mCreationData;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +117,7 @@ public class ItemListActivity extends AppCompatActivity {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
-
+                    intent.putExtra(CREATION_DATA, mCreationData);
                     context.startActivity(intent);
                 }
             }
@@ -122,10 +125,11 @@ public class ItemListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
                                       List<DummyContent.DummyItem> items,
-                                      boolean twoPane) {
+                                      boolean twoPane, HashMap<String, String> creationData) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mCreationData = creationData;
         }
 
         @Override

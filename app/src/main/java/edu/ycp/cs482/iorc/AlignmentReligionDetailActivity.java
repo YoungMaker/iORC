@@ -112,6 +112,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             //
             //pass our creation data and alignment/religion boolean to the parent activity
             Intent intent = new Intent(this, AlignmentReligionListActivity.class);
+            intent.putExtra(CREATION_DATA, creationData);
             if(showReligion){
                 intent.putExtra(ARG_EXTRA_NAME, true);
             }
