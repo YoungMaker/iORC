@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
 /**
  * An activity representing a single ClassRace detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -19,32 +21,44 @@ import android.view.MenuItem;
 
 public class ClassRaceDetailActivity extends AppCompatActivity {
     private boolean showRace;
+    private HashMap<String, String> creationData;
     private String ARG_BOOL_KEY = "isRace";
     private String ARG_EXTRA_NAME = "RACE_SWITCH";
     private String ARG_FRAG_BOOL = "SHOW_RACE";
+    private static final String CREATION_DATA = "CREATION_DATA";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classrace_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
-        Bundle extra = getIntent().getExtras();
+        final Bundle extra = getIntent().getExtras();
         if(extra.getBoolean(ARG_BOOL_KEY)){
             showRace = true;
         }else {
             showRace = false;
         }
+
+        //retrieve the character creation data
+        creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
+                //handle selection of class/race being made
                 if(!showRace){
+                    String classid = (String) extra.get(ClassRaceDetailFragment.ARG_CLASS_MAP_ID);
+                    creationData.put("CLASS ID", classid);
                     Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
                     intent.putExtra(ARG_EXTRA_NAME, true);
+                    intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
 
                 } else if(showRace){
+                    String raceid = (String) extra.get(ClassRaceDetailFragment.ARG_RACE_MAP_ID);
+                    creationData.put("RACE ID", raceid);
                     Intent intent = new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class);
+                    intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
                 }
             }
@@ -69,12 +83,17 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            //arguments.putSerializable(ClassRaceDetailFragment.CREATION_DATA, getIntent().getSerializableExtra(ClassRaceDetailFragment.CREATION_DATA));
             arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
             if(showRace){
                 arguments.putBoolean(ARG_FRAG_BOOL, true);
+                arguments.putString(ClassRaceDetailFragment.ARG_RACE_MAP_ID, getIntent().getStringExtra(ClassRaceDetailFragment.ARG_RACE_MAP_ID));
+                arguments.putSerializable(ClassRaceDetailFragment.ARG_RACE_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_RACE_MAP));
             }else {
                 arguments.putBoolean(ARG_FRAG_BOOL, false);
+                arguments.putString(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, getIntent().getStringExtra(ClassRaceDetailFragment.ARG_CLASS_MAP_ID));
+                arguments.putSerializable(ClassRaceDetailFragment.ARG_CLASS_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_CLASS_MAP));
             }
             ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
             fragment.setArguments(arguments);
@@ -94,7 +113,9 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
+            //pass our creation data and class/race boolean to the parent activity
             Intent intent = new Intent(this, ClassRaceListActivity.class);
+            intent.putExtra(CREATION_DATA, creationData);
             if(showRace){
                 intent.putExtra(ARG_EXTRA_NAME, true);
             }

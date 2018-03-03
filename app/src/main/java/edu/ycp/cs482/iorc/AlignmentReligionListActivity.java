@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,8 +36,10 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private boolean mTwoPane;
     private boolean showReligion;
+    private static final String CREATION_DATA = "CREATION_DATA";
     private String ARG_BOOL_KEY = "RELIGION_SWITCH";
 
     @Override
@@ -73,13 +77,21 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        HashMap<String, String> creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
+
+        //create new simple adapter for recycler view
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion, creationMap);
+
         View recyclerView = findViewById(R.id.alignmentreligion_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion));
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion));
+        //set adapter
+        recyclerView.setAdapter(mSimpleAdapter);
         //divide items in list
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
@@ -95,6 +107,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         private final boolean mTwoPane;
         private final boolean isReligion;
         private final String ARG_EXTRA_NAME = "isReligion";
+        private final HashMap<String, String> mCreationData;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,12 +124,13 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(AlignmentReligionListActivity parent,
                                       List<DummyContent.DummyAlignment> items, List<DummyContent.DummyReligion> religionItems,
-                                      boolean twoPane, boolean isReligion) {
+                                      boolean twoPane, boolean isReligion, HashMap<String, String> creationMap) {
             mValues = items;
             amValues = religionItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
             this.isReligion = isReligion;
+            mCreationData = creationMap;
         }
 
         @Override
@@ -178,7 +192,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
                 intent.putExtra(ARG_EXTRA_NAME,false);
-
+                intent.putExtra(CREATION_DATA, mCreationData);
                 context.startActivity(intent);
             }
         }
@@ -197,7 +211,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
                 intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
                 intent.putExtra(ARG_EXTRA_NAME,true);
-
+                intent.putExtra(CREATION_DATA, mCreationData);
                 context.startActivity(intent);
             }
         }

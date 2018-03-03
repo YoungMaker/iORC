@@ -1,0 +1,73 @@
+
+ query IdQuery($id: ID!) {
+ 	getCharacterById(id : $id ) {
+    ... CharacterData
+   }
+ }
+
+ query CharacterVersionQuery($version :String!){
+   getCharactersByVersion(version:$version){
+     ...CharacterData
+   }
+ }
+
+  query RaceVersionQuery($version :String!){
+    getRacesByVersion(version: $version){
+      ...RaceData
+    }
+  }
+
+  query ClassVersionQuery($version :String!) {
+    getClassesByVersion(version: $version) {
+      ...ClassData
+    }
+  }
+
+ mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!){
+     createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid){
+       ...CharacterData
+     }
+ }
+
+fragment CharacterData on Character{
+  id
+  name
+  version
+  abilityPoints{
+    str
+    int
+    wis
+    cha
+    con
+    dex
+  }
+  race{
+    ...RaceData
+  }
+  classql{
+    ...ClassData
+  }
+}
+
+
+fragment RaceData on Race {
+  id
+  name
+  description
+  version
+  modifiers {
+    key
+    value
+  }
+}
+
+fragment ClassData on Class {
+     id
+     name
+     version
+     description
+     modifiers {
+       key
+       value
+     }
+}

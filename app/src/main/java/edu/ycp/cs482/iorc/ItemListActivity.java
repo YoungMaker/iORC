@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -34,12 +36,22 @@ public class ItemListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
+    private static final String CREATION_DATA = "CREATION_DATA";
     private boolean mTwoPane;
+    private HashMap<String, String> creationMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
+
+        //create a bundle of extras
+        Bundle extra = getIntent().getExtras();
+
+        //create our character creation data map
+        creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,6 +65,7 @@ public class ItemListActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
                 Intent intent = new Intent(ItemListActivity.this, CharacterListActivity.class);
                 intent.putExtra("SET_CHAR_NAME", true); //this is so we can pop the dialog in the char activity
+                intent.putExtra(CREATION_DATA, creationMap);
                 startActivity(intent);  //TODO: Instead package the character here?
             }
         });
@@ -65,13 +78,16 @@ public class ItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        //create our simple item recycler adapter add to recycler view
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane, creationMap);
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(mSimpleAdapter);
         //divide items in list
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
@@ -84,6 +100,7 @@ public class ItemListActivity extends AppCompatActivity {
         private final ItemListActivity mParentActivity;
         private final List<DummyContent.DummyItem> mValues;
         private final boolean mTwoPane;
+        private final HashMap<String, String> mCreationData;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,7 +117,7 @@ public class ItemListActivity extends AppCompatActivity {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
-
+                    intent.putExtra(CREATION_DATA, mCreationData);
                     context.startActivity(intent);
                 }
             }
@@ -108,10 +125,11 @@ public class ItemListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
                                       List<DummyContent.DummyItem> items,
-                                      boolean twoPane) {
+                                      boolean twoPane, HashMap<String, String> creationData) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mCreationData = creationData;
         }
 
         @Override
