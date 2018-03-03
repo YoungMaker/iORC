@@ -57,9 +57,10 @@ public class CharacterListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
-    private IdQuery.GetCharacterById.Fragments characterResponseData;
-    private List <IdQuery.GetCharacterById.Fragments> characterResponses = new ArrayList<IdQuery.GetCharacterById.Fragments>();
+    private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
+    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<CharacterVersionQuery.GetCharactersByVersion>();
     private HashMap<String, String> characterDetailMap = new HashMap<String, String>();
+    private static final String CREATION_DATA = "CREATION_DATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,14 @@ public class CharacterListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CharacterListActivity.this,ClassRaceListActivity.class));
+                //create a hashmap where each field that is required to create a character will be stored
+                //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
+                //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
+                HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                //pass current character to next stage in flow, continue until hitting the end
+                Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
+                intent.putExtra(CREATION_DATA, characterCreationData);
+                startActivity(intent);
             }
         });
 
@@ -109,20 +117,23 @@ public class CharacterListActivity extends AppCompatActivity {
         MyApolloClient.getMyApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
-                IdQuery.builder().id("58ff414b-f945-44bd-b20f-4a2ad3440254").build()).enqueue(new ApolloCall.Callback<IdQuery.Data>() {
+                CharacterVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
             @Override
-            public void onResponse(@Nonnull Response<IdQuery.Data> response) {
+            public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
 
-                characterResponseData = response.data().getCharacterById().fragments();
-                Log.d("BEFORE UI THREAD","Line before new runnable");
+                characterResponseData = response.data().getCharactersByVersion;
+                //Log.d("BEFORE UI THREAD","Line before new runnable");
                 CharacterListActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         //characterResponses.add(characterResponseData);
                         // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-                        Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
-                        characterResponses.add(characterResponseData);
-                        characterDetailMap.put("58ff414b-f945-44bd-b20f-4a2ad3440254",(new Gson()).toJson(characterResponseData));
+                        //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                        //add each character into map and list
+                        for(int i = 0; i < characterResponseData.size(); i++){
+                            characterResponses.add(characterResponseData.get(i));
+                            characterDetailMap.put(characterResponseData.get(i).fragments().characterData.id(),(new Gson()).toJson(characterResponseData.get(i)));
+                        }
                         refreshView();
                     }
                 });
@@ -197,18 +208,18 @@ public class CharacterListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<IdQuery.GetCharacterById.Fragments> mValues;
+        private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;
         private final HashMap<String, String> mMap;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                IdQuery.GetCharacterById.Fragments item = (IdQuery.GetCharacterById.Fragments) view.getTag();
+                CharacterVersionQuery.GetCharactersByVersion item = (CharacterVersionQuery.GetCharactersByVersion) view.getTag();
 
                 //TODO bundle the queried character data and pass it on to the detail activity
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.characterData.id());
+                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -217,7 +228,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
-                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.characterData.id());
+                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
 
                     context.startActivity(intent);
@@ -226,7 +237,7 @@ public class CharacterListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
-                                      List<IdQuery.GetCharacterById.Fragments> items,
+                                      List<CharacterVersionQuery.GetCharactersByVersion> items,
                                       HashMap<String, String> characterDetailMap, boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -244,7 +255,7 @@ public class CharacterListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //holder.mIdView.setText(mValues.get(position).characterData.id());
-            holder.mContentView.setText(mValues.get(position).characterData.name());
+            holder.mContentView.setText(mValues.get(position).fragments().characterData.name());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
