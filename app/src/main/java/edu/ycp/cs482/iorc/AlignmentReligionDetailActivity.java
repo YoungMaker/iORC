@@ -3,7 +3,6 @@ package edu.ycp.cs482.iorc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -31,10 +30,10 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alignmentreligion_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
         final Bundle extra = getIntent().getExtras();
-        if(extra.getBoolean(ARG_BOOL_KEY)){
+        if(extra != null && extra.getBoolean(ARG_BOOL_KEY)){
             showReligion = true;
         } else {
            showReligion = false;
@@ -42,7 +41,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
 
         //retrieve our character creation data
         creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

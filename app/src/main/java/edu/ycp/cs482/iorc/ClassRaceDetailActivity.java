@@ -3,7 +3,6 @@ package edu.ycp.cs482.iorc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -30,18 +29,21 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classrace_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
         final Bundle extra = getIntent().getExtras();
-        if(extra.getBoolean(ARG_BOOL_KEY)){
-            showRace = true;
+        if(extra != null){
+            if(extra.getBoolean(ARG_BOOL_KEY)){
+                showRace = true;
+            }
         }else {
             showRace = false;
         }
 
+
         //retrieve the character creation data
         creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
