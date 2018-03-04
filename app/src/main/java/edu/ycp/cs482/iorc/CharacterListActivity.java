@@ -13,16 +13,34 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
+import edu.ycp.cs482.iorc.fragment.CharacterData;
+import edu.ycp.cs482.iorc.type.AbilityInput;
+//import fragment.CharacterData;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of Characters. This activity
@@ -40,6 +58,11 @@ public class CharacterListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private String mText;
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
+    private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
+    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<CharacterVersionQuery.GetCharactersByVersion>();
+    private HashMap<String, String> characterDetailMap = new HashMap<String, String>();
+    private static final String CREATION_DATA = "CREATION_DATA";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +77,20 @@ public class CharacterListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Create new Character Action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
-                startActivity(new Intent(CharacterListActivity.this, ClassRaceListActivity.class));
+                //create a hashmap where each field that is required to create a character will be stored
+                //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
+                //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
+                HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                characterCreationData.put("version", "4e");
+                //pass current character to next stage in flow, continue until hitting the end
+                Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
+                intent.putExtra(CREATION_DATA, characterCreationData);
+                startActivity(intent);
             }
         });
 
+        getIds();
+        Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
         if (findViewById(R.id.character_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -68,6 +99,8 @@ public class CharacterListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -79,6 +112,73 @@ public class CharacterListActivity extends AppCompatActivity {
                 getIntent().removeExtra("SET_CHAR_NAME");
             }
         }
+    }
+
+    //test query
+    private void getIds(){
+
+        MyApolloClient.getMyApolloClient().query(
+                //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
+                //Boii:    b9704025-b811-426b-af3a-461dd40866e3
+                CharacterVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
+
+                characterResponseData = response.data().getCharactersByVersion;
+                //Log.d("BEFORE UI THREAD","Line before new runnable");
+                CharacterListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //characterResponses.add(characterResponseData);
+                        // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+                        //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                        //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+                        characterResponses.clear();
+                        //add each character into map and list
+                        for(int i = 0; i < characterResponseData.size(); i++){
+                            characterResponses.add(characterResponseData.get(i));
+                            characterDetailMap.put(characterResponseData.get(i).fragments().characterData.id(),(new Gson()).toJson(characterResponseData.get(i)));
+                        }
+                        refreshView();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.e("ERROR: ", e.toString());
+            }
+        });
+
+    }
+
+    private void createCharacter(HashMap<String, String> creationData){
+        RandAbilityGenerator randAbils = new RandAbilityGenerator();
+        randAbils.generateAbilitiesScores();
+        AbilityInput.Builder abilityScores = AbilityInput.builder();
+        abilityScores.str(randAbils.getStr());
+        abilityScores.con(randAbils.getCon());
+        abilityScores.dex(randAbils.getDex());
+        abilityScores._int(randAbils.get_int());
+        abilityScores.wis(randAbils.getWis());
+        abilityScores.cha(randAbils.getCha());
+        AbilityInput staticAbil = abilityScores.build();
+
+        MyApolloClient.getMyApolloClient().mutate(
+
+            CreateCharacterMutation.builder().name(creationData.get("Name")).version(creationData.get("version")).abil(staticAbil).raceid(creationData.get("RACE ID")).classid(creationData.get("CLASS ID")).build())
+                .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
+                Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
+                getIds();
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.d("CREATION FAILED", "SERVER NOT RESPONDING");
+            }
+        });
     }
 
     private void popInputDialog(String title ) {
@@ -99,6 +199,10 @@ public class CharacterListActivity extends AppCompatActivity {
                 //TODO: Move this to when the network response has been received.
                 Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                HashMap<String, String> creationData = (HashMap<String, String>) getIntent().getSerializableExtra(CREATION_DATA);
+                creationData.put("Name", mText);
+                Log.d("CHARACTER CREATION DATA","DATA: " + creationData);
+                createCharacter(creationData);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -113,27 +217,51 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CHARACTERS, mTwoPane));
-        //TODO: Apply this to other M/D Flows
+        recyclerView.setAdapter(mSimpleAdapter);
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
                 DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
         recyclerView.addItemDecoration(itemDecor);
-
     }
+
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_character_list_activity,menu);
+        return true;
+    }
+
+    //Select in menu button to move to another activity
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.dice:
+                Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
+                startActivity(diceIntent);
+
+            case R.id.login:
+                Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<DummyContent.DummyCharacter> mValues;
+        private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;
+        private final HashMap<String, String> mMap;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyCharacter item = (DummyContent.DummyCharacter) view.getTag();
+                CharacterVersionQuery.GetCharactersByVersion item = (CharacterVersionQuery.GetCharactersByVersion) view.getTag();
+
+                //TODO bundle the queried character data and pass it on to the detail activity
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -142,7 +270,8 @@ public class CharacterListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
-                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
+                    intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
 
                     context.startActivity(intent);
                 }
@@ -150,11 +279,12 @@ public class CharacterListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
-                                      List<DummyContent.DummyCharacter> items,
-                                      boolean twoPane) {
+                                      List<CharacterVersionQuery.GetCharactersByVersion> items,
+                                      HashMap<String, String> characterDetailMap, boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mMap = characterDetailMap;
         }
 
         @Override
@@ -166,8 +296,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).name);
+            //holder.mIdView.setText(mValues.get(position).characterData.id());
+            holder.mContentView.setText(mValues.get(position).fragments().characterData.name());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -188,5 +318,9 @@ public class CharacterListActivity extends AppCompatActivity {
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
         }
+    }
+
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }
