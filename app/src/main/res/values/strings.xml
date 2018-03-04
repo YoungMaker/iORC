@@ -238,6 +238,8 @@
     <string name="initiative">Initiative:</string>
     <string name="hitpoints">Hitpoints:</string>
     <string name="speed">Speed:</string>
-
+    
+    <!-- fragment_modifier_list.xml!-->
+    <string name="modifiers">Modifiers:</string>
 
 </resources>
