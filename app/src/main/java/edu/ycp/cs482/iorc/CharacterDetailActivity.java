@@ -5,6 +5,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.View;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBar;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
+import org.w3c.dom.Text;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
@@ -16,7 +25,6 @@ import android.view.MenuItem;
  * in a {@link CharacterListActivity}.
  */
 public class CharacterDetailActivity extends AppCompatActivity {
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -71,6 +79,17 @@ public class CharacterDetailActivity extends AppCompatActivity {
         BottomNavigationView Bottom_navigation_main = findViewById(R.id.character_bottom);
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(getApplicationContext(), "TODO: Implement Editing", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        });
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -110,19 +129,84 @@ public class CharacterDetailActivity extends AppCompatActivity {
         }
     }
 
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_character_detail_activity,menu);
+        return true;
+    }
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
+        switch(item.getItemId()){
+            case R.id.home:
+                Intent Intent = new Intent(CharacterDetailActivity.this, CharacterListActivity.class);
+                startActivity(Intent);
+
+            case R.id.deleteCheck:
+                Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
+                startActivity(deleteIntent);
+        }
+        //int id = item.getItemId();
+        //if (id == android.R.id.home) {
             // This ID represents the Home or Up button. In the case of this
             // activity, the Up button is shown. For
             // more details, see the Navigation pattern on Android Design:
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, CharacterListActivity.class));
-            return true;
-        }
+          //  navigateUpTo(new Intent(this, CharacterListActivity.class));
+            //return true;
+        //}
+        //else if(id == R.id.deleteCheck){
+          //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
+            //startActivity(deleteIntent);
+        //}
         return super.onOptionsItemSelected(item);
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.action_sheet:
+                    Bundle arguments = new Bundle();
+                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
+                            getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+                    CharacterDetailFragment fragment = new CharacterDetailFragment();
+                    fragment.setArguments(arguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.character_detail_container, fragment)
+                            .commit();
+                    break;
+
+
+                case R.id.action_skills:
+                    SkillsFragment fragment2 = new SkillsFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
+                    fragmentTransaction2.commit();
+                    break;
+
+                case R.id.action_equipment:
+                    EquipmentFragment fragment3 = new EquipmentFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
+                    fragmentTransaction3.commit();
+                    break;
+
+                case R.id.action_magic:
+                    MagicFragment fragment4 = new MagicFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
+                    fragmentTransaction4.commit();
+                    break;
+
+            }
+            return true;
+        }
+    };
+
 }
