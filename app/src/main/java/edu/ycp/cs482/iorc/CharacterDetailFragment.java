@@ -41,6 +41,7 @@ public class CharacterDetailFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public CharacterDetailFragment() {
+
     }
 
     @Override
