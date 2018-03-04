@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -11,12 +12,7 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
-import org.w3c.dom.Text;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.view.MenuItem;
 
 /**
  * An activity representing a single Character detail screen. This
@@ -25,50 +21,6 @@ import android.view.MenuItem;
  * in a {@link CharacterListActivity}.
  */
 public class CharacterDetailActivity extends AppCompatActivity {
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()){
-                case R.id.action_sheet:
-                    Bundle arguments = new Bundle();
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                            getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
-                    CharacterDetailFragment fragment = new CharacterDetailFragment();
-                    fragment.setArguments(arguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.character_detail_container, fragment)
-                            .commit();
-                    break;
-
-
-                case R.id.action_skills:
-                    SkillsFragment fragment2 = new SkillsFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
-                    fragmentTransaction2.commit();
-                    break;
-
-                case R.id.action_equipment:
-                    EquipmentFragment fragment3 = new EquipmentFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
-                    fragmentTransaction3.commit();
-                    break;
-
-                case R.id.action_magic:
-                    MagicFragment fragment4 = new MagicFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
-                    fragmentTransaction4.commit();
-                    break;
-
-            }
-            return true;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +32,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.edit_button);
+        FloatingActionButton fab = findViewById(R.id.edit_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
