@@ -238,6 +238,7 @@
     <string name="initiative">Initiative:</string>
     <string name="hitpoints">Hitpoints:</string>
     <string name="speed">Speed:</string>
+    <string name="delete_page">Delete Page</string>
 
 
 </resources>
