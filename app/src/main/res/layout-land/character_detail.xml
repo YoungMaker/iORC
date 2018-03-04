@@ -4,89 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_column="0"
-        android:layout_row="2"
-        >
-        <TextView
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@string/initiative"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            />
-
-        <TextView
-            android:id="@+id/character_detail_initiative"
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            />
-
-        <TextView
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@string/hitpoints"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            />
-
-        <TextView
-            android:id="@+id/character_detail_hp"
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            />
-
-        <TextView
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingEnd="0dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="@string/speed"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            />
-
-        <TextView
-            android:id="@+id/character_detail_spd"
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            />
-    </LinearLayout>
-
+    
 
     <TextView
         android:id="@+id/character_abil_title"
@@ -106,26 +24,28 @@
         android:layout_row="0"
         />
 
+
+
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="0"
         android:layout_row="1"
         android:columnCount="6"
-        android:rowCount="4"
+        android:rowCount="6"
         >
 
         <TextView
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
             android:text="@string/Str"
-            
+
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="0"
             android:layout_row="0"
-            android:layout_gravity=""
+            android:layout_gravity="end"
             />
 
         <TextView
@@ -133,7 +53,7 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
@@ -144,12 +64,13 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
             android:text="@string/Con"
-            
+
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
             android:layout_row="0"
+            android:layout_gravity="end"
             />
 
         <TextView
@@ -157,7 +78,7 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="3"
@@ -168,12 +89,13 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
             android:text="@string/Dex"
-            
+
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="4"
-            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_row="1"
+            android:layout_gravity="end"
             />
 
         <TextView
@@ -181,31 +103,7 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
-
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="5"
-            android:layout_row="0"
-            />
-
-        <TextView
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
-            android:text="@string/Int"
-            
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="0"
-            android:layout_row="1"
-            />
-
-        <TextView
-            android:id="@+id/character_abil_int"
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
@@ -216,20 +114,21 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
-            android:text="@string/Wis"
-            
+            android:padding="8dp"
+            android:text="@string/Int"
+
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
             android:layout_row="1"
+            android:layout_gravity="end"
             />
 
         <TextView
-            android:id="@+id/character_abil_wis"
+            android:id="@+id/character_abil_int"
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="3"
@@ -240,12 +139,38 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
-            android:text="@string/Cha"
-            
+            android:padding="8dp"
+            android:text="@string/Wis"
+
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="4"
-            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_row="2"
+            android:layout_gravity="end"
+            />
+
+        <TextView
+            android:id="@+id/character_abil_wis"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="2"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/Cha"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="2"
+            android:layout_row="2"
+            android:layout_gravity="end"
             />
 
         <TextView
@@ -253,11 +178,83 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
+            android:padding="8dp"
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:layout_column="5"
-            android:layout_row="1"
+            android:layout_column="3"
+            android:layout_row="2"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/initiative"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="3"
+            />
+
+        <TextView
+            android:id="@+id/character_detail_initiative"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="2"
+            android:layout_row="3"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/hitpoints"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="4"
+            />
+
+        <TextView
+            android:id="@+id/character_detail_hp"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="2"
+            android:layout_row="4"
+            />
+
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/speed"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="5"
+            />
+
+        <TextView
+            android:id="@+id/character_detail_spd"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="2"
+            android:layout_row="5"
             />
 
     </GridLayout>
@@ -276,15 +273,16 @@
         android:layout_gravity="center_horizontal"
         
         tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-        android:layout_column="0"
-        android:layout_row="3"
+        android:layout_column="1"
+        android:layout_row="0"
         />
 
     <include layout="@layout/defense_layout"
-        android:layout_column="0"
-        android:layout_row="4"
+        android:layout_column="1"
+        android:layout_row="1"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_gravity="center"
         />
 
 

@@ -80,7 +80,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         //get our bundle from when a user is finished selecting class that enables the user to then select race inside the same M/V flow
         //this will also contain our character creation data
         Bundle extra = getIntent().getExtras();
-        if(extra.getBoolean(ARG_BOOL_KEY)){
+        if(extra != null && extra.getBoolean(ARG_BOOL_KEY)){
             //indicate a switch in values
             showRace = true;
             getRaces();

@@ -1847,7 +1847,7 @@
               "defaultValue": null
             },
             {
-              "name": "int",
+              "name": "_int",
               "description": "",
               "type": {
                 "kind": "NON_NULL",

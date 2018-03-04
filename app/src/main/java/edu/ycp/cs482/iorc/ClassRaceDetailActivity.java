@@ -25,6 +25,7 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
     private String ARG_BOOL_KEY = "isRace";
     private String ARG_EXTRA_NAME = "RACE_SWITCH";
     private String ARG_FRAG_BOOL = "SHOW_RACE";
+    private static final String CREATION_DATA = "CREATION_DATA";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +38,14 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         }else {
             showRace = false;
         }
+
+        //retrieve the character creation data
+        creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override //TODO: save the selected Class or Race.
             public void onClick(View view) {
-                creationData = (HashMap<String, String>) extra.getSerializable(ClassRaceDetailFragment.CREATION_DATA);
+                //handle selection of class/race being made
                 if(!showRace){
                     String classid = (String) extra.get(ClassRaceDetailFragment.ARG_CLASS_MAP_ID);
                     creationData.put("CLASS ID", classid);
@@ -109,7 +113,9 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
+            //pass our creation data and class/race boolean to the parent activity
             Intent intent = new Intent(this, ClassRaceListActivity.class);
+            intent.putExtra(CREATION_DATA, creationData);
             if(showRace){
                 intent.putExtra(ARG_EXTRA_NAME, true);
             }

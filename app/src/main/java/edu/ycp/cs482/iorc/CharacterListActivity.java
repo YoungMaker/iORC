@@ -31,7 +31,9 @@ import com.google.gson.Gson;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
+import edu.ycp.cs482.iorc.type.AbilityInput;
 //import fragment.CharacterData;
 
 import java.util.ArrayList;
@@ -79,6 +81,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
                 //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
                 HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                characterCreationData.put("version", "4e");
                 //pass current character to next stage in flow, continue until hitting the end
                 Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
                 intent.putExtra(CREATION_DATA, characterCreationData);
@@ -129,6 +132,8 @@ public class CharacterListActivity extends AppCompatActivity {
                         //characterResponses.add(characterResponseData);
                         // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
                         //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                        //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+                        characterResponses.clear();
                         //add each character into map and list
                         for(int i = 0; i < characterResponseData.size(); i++){
                             characterResponses.add(characterResponseData.get(i));
@@ -145,6 +150,35 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void createCharacter(HashMap<String, String> creationData){
+        RandAbilityGenerator randAbils = new RandAbilityGenerator();
+        randAbils.generateAbilitiesScores();
+        AbilityInput.Builder abilityScores = AbilityInput.builder();
+        abilityScores.str(randAbils.getStr());
+        abilityScores.con(randAbils.getCon());
+        abilityScores.dex(randAbils.getDex());
+        abilityScores._int(randAbils.get_int());
+        abilityScores.wis(randAbils.getWis());
+        abilityScores.cha(randAbils.getCha());
+        AbilityInput staticAbil = abilityScores.build();
+
+        MyApolloClient.getMyApolloClient().mutate(
+
+            CreateCharacterMutation.builder().name(creationData.get("Name")).version(creationData.get("version")).abil(staticAbil).raceid(creationData.get("RACE ID")).classid(creationData.get("CLASS ID")).build())
+                .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
+                Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
+                getIds();
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.d("CREATION FAILED", "SERVER NOT RESPONDING");
+            }
+        });
     }
 
     private void popInputDialog(String title ) {
@@ -165,6 +199,10 @@ public class CharacterListActivity extends AppCompatActivity {
                 //TODO: Move this to when the network response has been received.
                 Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                HashMap<String, String> creationData = (HashMap<String, String>) getIntent().getSerializableExtra(CREATION_DATA);
+                creationData.put("Name", mText);
+                Log.d("CHARACTER CREATION DATA","DATA: " + creationData);
+                createCharacter(creationData);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -199,6 +237,10 @@ public class CharacterListActivity extends AppCompatActivity {
             case R.id.dice:
                 Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
                 startActivity(diceIntent);
+
+            case R.id.login:
+                Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
         }
         return super.onOptionsItemSelected(item);
     }
