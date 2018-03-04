@@ -76,7 +76,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 //create a hashmap where each field that is required to create a character will be stored
                 //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
                 //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
-                HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                HashMap<String, String> characterCreationData = new HashMap<>();
                 characterCreationData.put("version", "4e");
                 //pass current character to next stage in flow, continue until hitting the end
                 Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);

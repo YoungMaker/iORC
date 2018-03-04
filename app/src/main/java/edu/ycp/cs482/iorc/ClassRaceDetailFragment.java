@@ -11,13 +11,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import java.util.HashMap;
 import java.util.List;
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.fragment.ClassData;
 import edu.ycp.cs482.iorc.fragment.RaceData;
 
@@ -65,19 +62,24 @@ public class ClassRaceDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             //mItem = DummyContent.CLASS_MAP.get(getArguments().getString(ARG_ITEM_ID));
-            if(getArguments().containsKey(ARG_RACE_MAP)){
-                Bundle bundle = getArguments();
-                HashMap<String, String> raceMap =(HashMap<String, String>)bundle.getSerializable(ARG_RACE_MAP);
-                String raceObj = raceMap.get(bundle.getString((ARG_RACE_MAP_ID)));
+            Bundle bundle = getArguments();
+            if(bundle != null && bundle.containsKey(ARG_RACE_MAP) && bundle.containsKey(ARG_RACE_MAP_ID)){
 
-                Log.d("RACEOBJ :","Object contents: " + raceObj);
+                String raceObj = "";
+                HashMap<String, String> raceMap =(HashMap<String, String>)bundle.getSerializable(ARG_RACE_MAP);
+                if (raceMap != null) {
+                    raceObj = raceMap.get(bundle.getString(ARG_RACE_MAP_ID));
+                }
+
+                //Log.d("RACEOBJ :","Object contents: " + raceObj);
                 amItem = (new Gson()).fromJson(raceObj, RaceVersionQuery.GetRacesByVersion.class);
                 Log.d("RACEOBJ :","Object contents: " + amItem);
-            } else if (getArguments().containsKey(ARG_CLASS_MAP)){
-                Bundle bundle = getArguments();
+            } else if (bundle != null && bundle.containsKey(ARG_CLASS_MAP) && bundle.containsKey(ARG_CLASS_MAP_ID)){
                 HashMap<String, String> classMap = (HashMap<String, String>)bundle.getSerializable(ARG_CLASS_MAP);
-                String classObj = classMap.get(bundle.getString(ARG_CLASS_MAP_ID));
-
+                String classObj = "";
+                if(classMap != null){
+                   classObj = classMap.get(bundle.getString(ARG_CLASS_MAP_ID));
+                }
                 Log.d("CLASSOBJ :","Object contents: " + classObj);
                 mItem = (new Gson()).fromJson(classObj, ClassVersionQuery.GetClassesByVersion.class);
             }
@@ -105,36 +107,45 @@ public class ClassRaceDetailFragment extends Fragment {
         //number of values in each row
         int rowLength = 3;
         if (!showRace && mItem != null) {
+            StringBuilder stringBuilder = new StringBuilder();
             List<ClassData.Modifier> bonusList = mItem.fragments().classData.modifiers();
-            String classMods = "";
-            for(int i = 0; i < bonusList.size(); i++){
-                ClassData.Modifier listItem = bonusList.get(i);
-                String toAdd = listItem.key() + " " + listItem.value();
-                classMods += toAdd;
-                if(i%rowLength == rowLength-1){
-                    classMods += "\n";
-                }else{
-                    classMods += "  ";
+            String classMods;
+            if(bonusList != null) {
+                for (int i = 0; i < bonusList.size(); i++) {
+                    ClassData.Modifier listItem = bonusList.get(i);
+                    String toAdd = listItem.key() + " " + listItem.value();
+                    stringBuilder.append(toAdd);
+                    if (i % rowLength == rowLength - 1) {
+                        stringBuilder.append("\n");
+                    } else {
+                        stringBuilder.append("  ");
+                    }
                 }
             }
+            classMods = stringBuilder.toString();
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(mItem.fragments().classData.description());
             ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(classMods);
 
         }else if (showRace && amItem != null){
+            StringBuilder stringBuilder = new StringBuilder();
             //go through list and extract each value
             List<RaceData.Modifier> bonusList = amItem.fragments().raceData.modifiers();
-            String raceMods = "";
-            for(int i = 0; i < bonusList.size(); i++){
-                RaceData.Modifier listItem = bonusList.get(i);
-                String toAdd = listItem.key() + " " + listItem.value();
-                raceMods += toAdd;
-                //three values per row with a double space between each key/value pair
-                if(i%rowLength == rowLength-1){
-                    raceMods += "\n";
-                }else{
-                    raceMods += "  ";
+            String raceMods;
+            //add each value key pair to the list that will be printed
+            if(bonusList != null) {
+                for (int i = 0; i < bonusList.size(); i++) {
+                    RaceData.Modifier listItem = bonusList.get(i);
+                    String toAdd = listItem.key() + " " + listItem.value();
+                    stringBuilder.append(toAdd);
+                    if (i % rowLength == rowLength - 1) {
+                        stringBuilder.append("\n");
+                    } else {
+                        stringBuilder.append("  ");
+                    }
                 }
+
             }
+            raceMods = stringBuilder.toString();
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(amItem.fragments().raceData.description());
             ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(raceMods);
         }
