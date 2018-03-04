@@ -11,10 +11,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.HashMap;
+import java.util.List;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.fragment.ClassData;
+import edu.ycp.cs482.iorc.fragment.RaceData;
 
 /**
  * A fragment representing a single ClassRace detail screen.
@@ -97,13 +102,41 @@ public class ClassRaceDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.classrace_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
+        //number of values in each row
+        int rowLength = 3;
         if (!showRace && mItem != null) {
+            List<ClassData.Modifier> bonusList = mItem.fragments().classData.modifiers();
+            String classMods = "";
+            for(int i = 0; i < bonusList.size(); i++){
+                ClassData.Modifier listItem = bonusList.get(i);
+                String toAdd = listItem.key() + " " + listItem.value();
+                classMods += toAdd;
+                if(i%rowLength == rowLength-1){
+                    classMods += "\n";
+                }else{
+                    classMods += "  ";
+                }
+            }
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(mItem.fragments().classData.description());
-            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(mItem.fragments().classData.modifiers().toString());
+            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(classMods);
+
         }else if (showRace && amItem != null){
+            //go through list and extract each value
+            List<RaceData.Modifier> bonusList = amItem.fragments().raceData.modifiers();
+            String raceMods = "";
+            for(int i = 0; i < bonusList.size(); i++){
+                RaceData.Modifier listItem = bonusList.get(i);
+                String toAdd = listItem.key() + " " + listItem.value();
+                raceMods += toAdd;
+                //three values per row with a double space between each key/value pair
+                if(i%rowLength == rowLength-1){
+                    raceMods += "\n";
+                }else{
+                    raceMods += "  ";
+                }
+            }
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(amItem.fragments().raceData.description());
-            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(amItem.fragments().raceData.modifiers().toString());
+            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(raceMods);
         }
 
         return rootView;

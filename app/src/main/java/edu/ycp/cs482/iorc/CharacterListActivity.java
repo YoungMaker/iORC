@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 
@@ -29,12 +28,9 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
-import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.type.AbilityInput;
-//import fragment.CharacterData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,8 +56,8 @@ public class CharacterListActivity extends AppCompatActivity {
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
-    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<CharacterVersionQuery.GetCharactersByVersion>();
-    private HashMap<String, String> characterDetailMap = new HashMap<String, String>();
+    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
+    private HashMap<String, String> characterDetailMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
 
     @Override
