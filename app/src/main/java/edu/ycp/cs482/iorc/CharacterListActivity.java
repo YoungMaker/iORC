@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 
@@ -29,12 +28,9 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
-import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.type.AbilityInput;
-//import fragment.CharacterData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,8 +56,8 @@ public class CharacterListActivity extends AppCompatActivity {
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
-    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<CharacterVersionQuery.GetCharactersByVersion>();
-    private HashMap<String, String> characterDetailMap = new HashMap<String, String>();
+    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
+    private HashMap<String, String> characterDetailMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
 
     @Override
@@ -69,18 +65,18 @@ public class CharacterListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //create a hashmap where each field that is required to create a character will be stored
                 //as the user progresses through the flow the selected race, class, etc. will be stored in the map with the type of data as the key
                 //when the character creation is finalized the data from the hash map will be taken out and inserted into the character object
-                HashMap<String, String> characterCreationData = new HashMap<String, String>();
+                HashMap<String, String> characterCreationData = new HashMap<>();
                 characterCreationData.put("version", "4e");
                 //pass current character to next stage in flow, continue until hitting the end
                 Intent intent = new Intent(CharacterListActivity.this,ClassRaceListActivity.class);
@@ -314,8 +310,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
             ViewHolder(View view) {
                 super(view);
-                mIdView = (TextView) view.findViewById(R.id.id_text);
-                mContentView = (TextView) view.findViewById(R.id.content);
+                mIdView = view.findViewById(R.id.id_text);
+                mContentView = view.findViewById(R.id.content);
             }
         }
     }

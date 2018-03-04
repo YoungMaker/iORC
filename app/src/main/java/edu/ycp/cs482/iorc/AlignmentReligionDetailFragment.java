@@ -53,7 +53,7 @@ public class AlignmentReligionDetailFragment extends Fragment {
             amItem = DummyContent.RELIGION_MAP.get((getArguments().getString(ARG_ITEM_ID)));
 
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 if(showReligion){
                     appBarLayout.setTitle(amItem.name);
