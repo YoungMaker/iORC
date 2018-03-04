@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -98,6 +101,18 @@ public class ClassRaceDetailFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        HashMap<String, Float> map = new HashMap<>();
+        map.put("ac", 2f); //TODO: REPLACE THESE WITH MOD DATA FROM THE GRAPHQL CONTENT
+        map.put("wis", 2f);
+        map.put("con", -2f);
+        Fragment childFragment = ModifierFragment.Companion.newInstance(2, map);
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.modifier_frag_container, childFragment).commit();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
