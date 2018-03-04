@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 
 import java.util.HashMap;
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 
 /**
@@ -57,14 +56,16 @@ public class CharacterDetailFragment extends Fragment {
             Bundle bundle = getArguments();
 
             HashMap<String, String> charMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
-            String charObj = charMap.get(bundle.getString((ARG_ITEM_ID)));
+            String charObj = "";
+            if(charMap != null){
+                charObj = charMap.get(bundle.getString((ARG_ITEM_ID)));
+            }
             mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
             Log.d("mItem CHECK: ", "" + mItem);
 
-
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+            if (appBarLayout != null && mItem != null) {
                 appBarLayout.setTitle(mItem.fragments().characterData.name());
             }
         }
@@ -77,7 +78,9 @@ public class CharacterDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.character_detail, container, false);
 
         CharacterView mCharView = new CharacterView(rootView);
-        mCharView.updateCharView(mItem);
+        if(mItem != null){
+            mCharView.updateCharView(mItem);
+        }
         return rootView;
     }
 
@@ -86,8 +89,8 @@ public class CharacterDetailFragment extends Fragment {
 
 //        private TextView mCharacterDetailInitiative;
 //        private TextView mCharacterDetailHp;
-        private TextView mCharacterDetailFort;
-        private TextView mCharacterDetailRef;
+        //private TextView mCharacterDetailFort;
+        //private TextView mCharacterDetailRef;
        // private TextView mCharacterDetailSpd;
         private TextView mCharacterAbilStr;
         private TextView mCharacterAbilCon;
@@ -100,15 +103,15 @@ public class CharacterDetailFragment extends Fragment {
         private CharacterView(View rootView){
 //            mCharacterDetailInitiative = (TextView)rootView.findViewById(R.id.character_detail_initiative);
            // mCharacterDetailHp = (TextView)rootView.findViewById(R.id.character_abil_hp);
-            mCharacterDetailFort = (TextView)rootView.findViewById(R.id.character_abil_fort);
-            mCharacterDetailRef = (TextView)rootView.findViewById(R.id.character_abil_ref);
+            //mCharacterDetailFort = rootView.findViewById(R.id.character_abil_fort);
+            //mCharacterDetailRef = rootView.findViewById(R.id.character_abil_ref);
            // mCharacterDetailSpd = (TextView)rootView.findViewById(R.id.character_detail_spd);
-            mCharacterAbilStr = (TextView)rootView.findViewById(R.id.character_abil_str);
-            mCharacterAbilCon = (TextView)rootView.findViewById(R.id.character_abil_con);
-            mCharacterAbilDex = (TextView)rootView.findViewById(R.id.character_abil_dex);
-            mCharacterAbilInt = (TextView)rootView.findViewById(R.id.character_abil_int);
-            mCharacterAbilWis = (TextView)rootView.findViewById(R.id.character_abil_wis);
-            mCharacterAbilCha = (TextView)rootView.findViewById(R.id.character_abil_cha);
+            mCharacterAbilStr = rootView.findViewById(R.id.character_abil_str);
+            mCharacterAbilCon = rootView.findViewById(R.id.character_abil_con);
+            mCharacterAbilDex = rootView.findViewById(R.id.character_abil_dex);
+            mCharacterAbilInt = rootView.findViewById(R.id.character_abil_int);
+            mCharacterAbilWis = rootView.findViewById(R.id.character_abil_wis);
+            mCharacterAbilCha = rootView.findViewById(R.id.character_abil_cha);
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
