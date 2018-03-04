@@ -105,9 +105,27 @@ public class ClassRaceDetailFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         HashMap<String, Float> map = new HashMap<>();
-        map.put("ac", 2f); //TODO: REPLACE THESE WITH MOD DATA FROM THE GRAPHQL CONTENT
+        if(!showRace) {
+            List<ClassData.Modifier> bonusList = mItem.fragments().classData.modifiers();
+            if (bonusList != null) {
+                for (int i = 0; i < bonusList.size(); i++) {
+                    ClassData.Modifier listItem = bonusList.get(i);
+                    map.put(listItem.key(), (float)listItem.value());
+                }
+            }
+        }else if(showRace){
+            List<RaceData.Modifier> bonusList = amItem.fragments().raceData.modifiers();
+            if (bonusList != null) {
+                for (int i = 0; i < bonusList.size(); i++) {
+                    RaceData.Modifier listItem = bonusList.get(i);
+                    map.put(listItem.key(), (float)listItem.value());
+                }
+            }
+        }
+
+        /*map.put("ac", 2f); //TODO: REPLACE THESE WITH MOD DATA FROM THE GRAPHQL CONTENT
         map.put("wis", 2f);
-        map.put("con", -2f);
+        map.put("con", -2f);*/
         Fragment childFragment = ModifierFragment.Companion.newInstance(2, map);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.modifier_frag_container, childFragment).commit();
