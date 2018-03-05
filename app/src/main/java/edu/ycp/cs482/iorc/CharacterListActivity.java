@@ -95,7 +95,8 @@ public class CharacterListActivity extends AppCompatActivity {
             if(extras.getBoolean(DO_DELETE)){
                 //TODO trigger delete muation
                 String toDel = extras.getString(DEL_ID);
-                Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+                deleteCharacter(toDel);
+                //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
             }
         }
 
@@ -189,6 +190,22 @@ public class CharacterListActivity extends AppCompatActivity {
                 Log.d("CREATION FAILED", "SERVER NOT RESPONDING");
             }
         });
+    }
+
+    private void deleteCharacter(String toDel){
+        MyApolloClient.getMyApolloClient().mutate(
+                DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+                Log.d("CHARACTER DELETED", "");
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+
+            }
+        });
+
     }
 
 

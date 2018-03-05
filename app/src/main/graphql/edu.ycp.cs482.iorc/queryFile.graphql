@@ -29,6 +29,10 @@
      }
  }
 
+ mutation DeleteCharacterMutation($id:String!){
+   deleteCharacter(id:$id)
+ }
+
  mutation EditCharacterMutation($id:ID!, $name:String!, $abil:AbilityInput!, $raceid:String!, $classid:String!){
    updateCharacter(id:$id, name:$name, abilityPoints:$abil, raceid:$raceid, classid:$classid){
      ...CharacterData
