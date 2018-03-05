@@ -188,4 +188,58 @@
     <string name="title_classrace_detail">ClassRace Detail</string>
     <string name="title_alignmentreligion_list">AlignmentsReligions</string>
     <string name="title_alignmentreligion_detail">AlignmentReligion Detail</string>
+
+    <!-- character_detail.xml - fragment -->
+    <string name="empty_char_name">Character Name</string>
+    <string name="abil_title">Ability Points:</string>
+    <string name="pref_dex">%1$s</string>
+    <string name="pref_con">%1$s</string>
+    <string name="pref_str">%1$s</string>
+    <string name="pref_int">%1$s</string>
+    <string name="pref_wis">%1$s</string>
+    <string name="pref_cha">%1$s</string>
+    <string name="def_title">Defense:</string>
+    <string name="pref_speed">Speed: %1$s</string>
+    <string name="pref_hp">HP: %1$s</string>
+    <string name="pref_init">Initiative: %1$s</string>
+    <string name="Con">CON:</string>
+    <string name="Str">STR:</string>
+    <string name="Dex">DEX:</string>
+    <string name="Int">INT:</string>
+    <string name="Wis">WIS:</string>
+    <string name="Cha">CHA:</string>
+
+    <!--defense_layout.xml-->
+    <string name="pref_ac">%1$s</string>
+    <string name="pref_fort">%1$s</string>
+    <string name="pref_ref">%1$s</string>
+    <string name="pref_will">%1$s</string>
+    <string name="double_placeholder">--</string>
+
+    <!--modifier_table.xml-->
+    <string name="desc_abil">ABIL</string>
+    <string name="desc_class">CLASS</string>
+    <string name="desc_enh">ENH</string>
+    <string name="desc_feat">FEAT</string>
+
+    <!--dice_widget_activity.xml-->
+    <string name="roll_dice">Roll Dice</string>
+    <string name="hello_world">Hello World</string>
+    <string name="roll_a_die">Roll a Die</string>
+    <string name="dice">Dice</string>
+    <string name="roll_result">Roll Result</string>
+    <string name="description">Description:</string>
+    <string name="name">Name:</string>
+    <string name="text_skills">skills</string>
+    <string name="text_equipment">Equipment</string>
+    <string name="text_magic">Magic</string>
+    <string name="Skills">Skills</string>
+    <string name="character">Character</string>
+    <string name="initiative">Initiative:</string>
+    <string name="hitpoints">Hitpoints:</string>
+    <string name="speed">Speed:</string>
+    <string name="delete_page">Delete Page</string>
+    <!-- fragment_modifier_list.xml!-->
+    <string name="modifiers">Modifiers:</string>
+
 </resources>

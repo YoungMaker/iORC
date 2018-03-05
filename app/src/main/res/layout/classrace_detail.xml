@@ -1,9 +1,41 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/classrace_detail"
-    style="?android:attr/textAppearanceLarge"
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context="edu.ycp.cs482.iorc.ClassRaceDetailFragment" />
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/classrace_defBonus"
+        style="?android:attr/textAppearanceLarge"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/classrace_detail"
+        style="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textIsSelectable="true"
+        tools:context="edu.ycp.cs482.iorc.ClassRaceDetailFragment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray">
+
+        <FrameLayout
+            android:id="@+id/modifier_frag_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@color/fadeGrey">
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+</android.support.v7.widget.LinearLayoutCompat>
+

@@ -5,19 +5,31 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of ClassesRaces. This activity
@@ -33,7 +45,17 @@ public class ClassRaceListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private boolean mTwoPane;
+    private boolean showRace;
+    private String ARG_BOOL_KEY = "RACE_SWITCH";
+    private static final String CREATION_DATA = "CREATION_DATA";
+    private List<RaceVersionQuery.GetRacesByVersion> raceResponseData;
+    private List<ClassVersionQuery.GetClassesByVersion> classResponseData;
+    private List<RaceVersionQuery.GetRacesByVersion> raceResponses = new ArrayList<RaceVersionQuery.GetRacesByVersion>();
+    private List<ClassVersionQuery.GetClassesByVersion> classResponses = new ArrayList<ClassVersionQuery.GetClassesByVersion>();
+    private HashMap<String, String> raceDetailMap = new HashMap<String, String>();
+    private HashMap<String, String> classDetailMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +66,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+       // getRaces();
+
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -53,6 +77,18 @@ public class ClassRaceListActivity extends AppCompatActivity {
 //                startActivity(new Intent(ClassRaceListActivity.this, AlignmentReligionListActivity.class));
 //            }
 //        });
+        //get our bundle from when a user is finished selecting class that enables the user to then select race inside the same M/V flow
+        //this will also contain our character creation data
+        Bundle extra = getIntent().getExtras();
+        if(extra != null && extra.getBoolean(ARG_BOOL_KEY)){
+            //indicate a switch in values
+            showRace = true;
+            getRaces();
+            getIntent().removeExtra(ARG_BOOL_KEY);
+        }
+        else {
+            getClasses();
+        }
 
         if (findViewById(R.id.classrace_detail_container) != null) {
             // The detail container view will be present only in the
@@ -61,50 +97,115 @@ public class ClassRaceListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
+        HashMap<String, String> creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, classResponses, raceResponses, classDetailMap,raceDetailMap, mTwoPane, showRace, creationMap);
         View recyclerView = findViewById(R.id.classrace_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+    }
+
+    private void getRaces(){
+        MyApolloClient.getMyApolloClient().query(
+            RaceVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
+                raceResponseData = response.data().getRacesByVersion();
+                //Log.d("RESPONSE:","" + RaceResponseData);
+                ClassRaceListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i = 0; i < raceResponseData.size(); i++){
+                            raceResponses.add(raceResponseData.get(i));
+                            raceDetailMap.put(raceResponseData.get(i).fragments().raceData.id(), (new Gson()).toJson(raceResponseData.get(i)));
+                            //Log.d("ADDED TO RACE MAP:","" + raceDetailMap.get(raceResponseData.get(i)));
+                        }
+                        //Log.d("RESPONSE:","" + raceDetailMap);
+                        refreshView();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.d("No Response:","No acknowledgment from server");
+            }
+        });
+    }
+
+    //todo create class query after class data is created
+    private void getClasses(){
+        MyApolloClient.getMyApolloClient().query(
+                ClassVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<ClassVersionQuery.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<ClassVersionQuery.Data> response) {
+                classResponseData = response.data().getClassesByVersion;
+                Log.d("CLASS RESPONSE:","" + classResponseData);
+                ClassRaceListActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i = 0; i < classResponseData.size(); i++){
+                            classResponses.add(classResponseData.get(i));
+                            classDetailMap.put(classResponseData.get(i).fragments().classData.id(), (new Gson()).toJson(classResponseData.get(i)));
+                            //Log.d("ADDED TO RACE MAP:","" + raceDetailMap.get(raceResponseData.get(i)));
+                        }
+                        //Log.d("RESPONSE:","" + raceDetailMap);
+                        refreshView();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+                Log.d("No Response:","No acknowledgment from server");
+            }
+        });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, mTwoPane));
+        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.CLASSES, RaceResponseData, , mTwoPane, showRace));
+        recyclerView.setAdapter(mSimpleAdapter);
+        //divide items in list
+        DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
+                DividerItemDecoration.VERTICAL); //this should probably get the layoutManager's preference.
+        recyclerView.addItemDecoration(itemDecor);
     }
 
-    public static class SimpleItemRecyclerViewAdapter
+    public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-
         private final ClassRaceListActivity mParentActivity;
-        private final List<DummyContent.DummyClass> mValues;
+        private final List<ClassVersionQuery.GetClassesByVersion> mValues;
+        private final List<RaceVersionQuery.GetRacesByVersion> amValues;
+        HashMap<String, String> mClassMap;
+        HashMap<String, String> mRaceMap;
         private final boolean mTwoPane;
+        private final boolean showRace;
+        private final String ARG_EXTRA_NAME = "isRace";
+        HashMap<String, String> mCreationData;
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyClass item = (DummyContent.DummyClass) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
-                    ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.classrace_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, ClassRaceDetailActivity.class);
-                    intent.putExtra(ClassRaceDetailFragment.ARG_ITEM_ID, item.id);
-
-                    context.startActivity(intent);
-                }
+                checkClassRace(view);
             }
         };
 
         SimpleItemRecyclerViewAdapter(ClassRaceListActivity parent,
-                                      List<DummyContent.DummyClass> items,
-                                      boolean twoPane) {
+                                      List<ClassVersionQuery.GetClassesByVersion> items, List<RaceVersionQuery.GetRacesByVersion> raceItems,
+                                      HashMap<String, String> classMap, HashMap<String, String> raceMap,
+                                      boolean twoPane, boolean showRace,
+                                      HashMap<String, String> creationData) {
             mValues = items;
+            //Log.d("CLASSLIST LENGTH:","Size: " + items.size());
+            //Log.d("RACELIST LENGTH:","Size: " + raceItems.size());
+            amValues = raceItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mClassMap = classMap;
+            mRaceMap = raceMap;
+            this.showRace = showRace;
+            mCreationData = creationData;
         }
 
         @Override
@@ -116,16 +217,31 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).name);
+            if(!showRace){
+                //holder.mIdView.setText(mValues.get(position).id);
+                holder.mContentView.setText(mValues.get(position).fragments().classData.name());
 
-            holder.itemView.setTag(mValues.get(position));
+                holder.itemView.setTag(mValues.get(position));
+            }
+            else{
+                //holder.mIdView.setText(amValues.get(position).fragments().raceData.id());
+                holder.mContentView.setText(amValues.get(position).fragments().raceData.name());
+
+                holder.itemView.setTag(amValues.get(position));
+            }
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            //count the number of class or race items in the list
+            int itemCount = 0;
+            if(showRace) {
+                itemCount = amValues.size();
+            }else if(!showRace){
+                itemCount = mValues.size();
+            }
+            return itemCount;
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -138,5 +254,65 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
         }
+
+        public void checkClassRace(View view){
+            if(showRace){
+                RaceVersionQuery.GetRacesByVersion raceItem = (RaceVersionQuery.GetRacesByVersion) view.getTag();
+                raceTwoPanes(view, raceItem);
+            }else if(!showRace){
+                ClassVersionQuery.GetClassesByVersion classItem = (ClassVersionQuery.GetClassesByVersion) view.getTag();
+                classTwoPanes(view, classItem);
+            }
+        }
+
+        public void classTwoPanes(View view, ClassVersionQuery.GetClassesByVersion item){
+            Log.d("CHECK CLASS ID:","class ID: " + item.fragments().classData.id());
+            if (mTwoPane) {
+                Bundle arguments = new Bundle();
+                arguments.putString(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, item.fragments().classData.id());
+                ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
+                fragment.setArguments(arguments);
+                mParentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.classrace_detail_container, fragment)
+                        .commit();
+            } else {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ClassRaceDetailActivity.class);
+                intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, mCreationData);
+                intent.putExtra(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, item.fragments().classData.id());
+                intent.putExtra(ARG_EXTRA_NAME, false);
+                intent.putExtra(ClassRaceDetailFragment.ARG_CLASS_MAP, mClassMap);
+
+                context.startActivity(intent);
+            }
+        }
+
+        public void raceTwoPanes(View view, RaceVersionQuery.GetRacesByVersion item){
+            //add our race map and selected id to the arguments
+            Log.d("CHECK RACE ID:","race ID: " + item.fragments().raceData.id());
+
+            if (mTwoPane) {
+                Bundle arguments = new Bundle();
+                arguments.putString(ClassRaceDetailFragment.ARG_RACE_MAP_ID, item.fragments().raceData.id());
+                ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
+                fragment.setArguments(arguments);
+                mParentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.classrace_detail_container, fragment)
+                        .commit();
+            } else {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ClassRaceDetailActivity.class);
+                intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, mCreationData);
+                intent.putExtra(ClassRaceDetailFragment.ARG_RACE_MAP_ID, item.fragments().raceData.id());
+                intent.putExtra(ARG_EXTRA_NAME, true);
+                intent.putExtra(ClassRaceDetailFragment.ARG_RACE_MAP, mRaceMap);
+
+                context.startActivity(intent);
+            }
+        }
+    }
+
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }

@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
 /**
  * An activity representing a single Item detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -18,14 +20,20 @@ import android.view.MenuItem;
  */
 public class ItemDetailActivity extends AppCompatActivity {
 
+    private static final String CREATION_DATA = "CREATION_DATA";
+    private HashMap<String, String> creationData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+        Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //get extras from item list activity
+        final Bundle extra = getIntent().getExtras();
+        creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //TODO: this should add the item in detail to the character
@@ -73,7 +81,9 @@ public class ItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, ItemListActivity.class));
+            Intent intent = new Intent(this, ItemListActivity.class);
+            intent.putExtra(CREATION_DATA, creationData);
+            navigateUpTo(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
