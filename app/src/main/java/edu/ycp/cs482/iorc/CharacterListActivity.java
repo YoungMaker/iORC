@@ -177,6 +177,24 @@ public class CharacterListActivity extends AppCompatActivity {
         });
     }
 
+
+    //TODO implement this with the edit character interface
+    /*private void editCharacter(){
+        MyApolloClient.getMyApolloClient().mutate(
+            EditCharacterMutation.builder().id().name().abil().classid().raceid().build()).enqueue(new ApolloCall.Callback<EditCharacterMutation.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<EditCharacterMutation.Data> response) {
+                Log.d("CHARACTER EDITED", "CHARACTER HAS BEEN EDITED");
+                getIds();
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+
+            }
+        });
+    }*/
+
     private void popInputDialog(String title ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(title);
