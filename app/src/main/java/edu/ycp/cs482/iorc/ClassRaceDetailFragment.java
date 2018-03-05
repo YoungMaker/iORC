@@ -13,8 +13,6 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -123,7 +121,7 @@ public class ClassRaceDetailFragment extends Fragment {
             }
         }
 
-        /*map.put("ac", 2f); //TODO: REPLACE THESE WITH MOD DATA FROM THE GRAPHQL CONTENT
+        /*map.put("ac", 2f); //REPLACE THESE WITH MOD DATA FROM THE GRAPHQL CONTENT
         map.put("wis", 2f);
         map.put("con", -2f);*/
         Fragment childFragment = ModifierFragment.Companion.newInstance(2, map);
@@ -136,51 +134,12 @@ public class ClassRaceDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.classrace_detail, container, false);
-
-        //number of values in each row
-        int rowLength = 3;
+        //print descriptions of the selected race or class
         if (!showRace && mItem != null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            List<ClassData.Modifier> bonusList = mItem.fragments().classData.modifiers();
-            String classMods;
-            if(bonusList != null) {
-                for (int i = 0; i < bonusList.size(); i++) {
-                    ClassData.Modifier listItem = bonusList.get(i);
-                    String toAdd = listItem.key() + " " + listItem.value();
-                    stringBuilder.append(toAdd);
-                    if (i % rowLength == rowLength - 1) {
-                        stringBuilder.append("\n");
-                    } else {
-                        stringBuilder.append("  ");
-                    }
-                }
-            }
-            classMods = stringBuilder.toString();
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(mItem.fragments().classData.description());
-            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(classMods);
 
         }else if (showRace && amItem != null){
-            StringBuilder stringBuilder = new StringBuilder();
-            //go through list and extract each value
-            List<RaceData.Modifier> bonusList = amItem.fragments().raceData.modifiers();
-            String raceMods;
-            //add each value key pair to the list that will be printed
-            if(bonusList != null) {
-                for (int i = 0; i < bonusList.size(); i++) {
-                    RaceData.Modifier listItem = bonusList.get(i);
-                    String toAdd = listItem.key() + " " + listItem.value();
-                    stringBuilder.append(toAdd);
-                    if (i % rowLength == rowLength - 1) {
-                        stringBuilder.append("\n");
-                    } else {
-                        stringBuilder.append("  ");
-                    }
-                }
-
-            }
-            raceMods = stringBuilder.toString();
             ((TextView) rootView.findViewById(R.id.classrace_detail)).setText(amItem.fragments().raceData.description());
-            ((TextView) rootView.findViewById(R.id.classrace_defBonus)).setText(raceMods);
         }
 
         return rootView;
