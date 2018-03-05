@@ -52,6 +52,8 @@ public class CharacterListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private static final String DO_DELETE = "DO_DELETE";
+    private static final String DEL_ID = "DEL_ID";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
@@ -69,6 +71,9 @@ public class CharacterListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        //get extras
+        Bundle extras = getIntent().getExtras();
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +89,15 @@ public class CharacterListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //check for character to delete
+        if(extras != null){
+            if(extras.getBoolean(DO_DELETE)){
+                //TODO trigger delete muation
+                String toDel = extras.getString(DEL_ID);
+                Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+            }
+        }
 
         getIds();
         Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
@@ -101,7 +115,7 @@ public class CharacterListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        Bundle extras = getIntent().getExtras();
+
         if(extras != null) {
             if(extras.getBoolean("SET_CHAR_NAME")) {
                 popInputDialog("Character Name:");
@@ -176,6 +190,24 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    //TODO implement this with the edit character interface
+    /*private void editCharacter(){
+        MyApolloClient.getMyApolloClient().mutate(
+            EditCharacterMutation.builder().id().name().abil().classid().raceid().build()).enqueue(new ApolloCall.Callback<EditCharacterMutation.Data>() {
+            @Override
+            public void onResponse(@Nonnull Response<EditCharacterMutation.Data> response) {
+                Log.d("CHARACTER EDITED", "CHARACTER HAS BEEN EDITED");
+                getIds();
+            }
+
+            @Override
+            public void onFailure(@Nonnull ApolloException e) {
+
+            }
+        });
+    }*/
 
     private void popInputDialog(String title ) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

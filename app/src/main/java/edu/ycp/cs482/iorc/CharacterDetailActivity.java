@@ -1,10 +1,12 @@
 package edu.ycp.cs482.iorc;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
@@ -14,6 +16,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+
 /**
  * An activity representing a single Character detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -21,6 +24,10 @@ import android.widget.Toast;
  * in a {@link CharacterListActivity}.
  */
 public class CharacterDetailActivity extends AppCompatActivity {
+
+    private static final String DO_DELETE = "DO_DELETE";
+    private static final String DEL_ID = "DEL_ID";
+    private String CHARCTER_ID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +77,9 @@ public class CharacterDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            CHARCTER_ID = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
             arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+                    CHARCTER_ID);
             arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
             CharacterDetailFragment fragment = new CharacterDetailFragment();
             fragment.setArguments(arguments);
@@ -97,8 +105,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                 startActivity(Intent);
 
             case R.id.deleteCheck:
-                Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
-                startActivity(deleteIntent);
+                confirmDeleteBox();
         }
         //int id = item.getItemId();
         //if (id == android.R.id.home) {
@@ -127,6 +134,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
@@ -160,5 +168,31 @@ public class CharacterDetailActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    private void confirmDeleteBox(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Delete?");
+        // Set up the buttons
+        builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                //Log.d("DELETE CHARACTER","DELETEING CHARACTER");
+                //TODO handle character deletion
+                Intent intent = new Intent(CharacterDetailActivity.this, CharacterListActivity.class);
+                intent.putExtra(DO_DELETE, true);
+                intent.putExtra(DEL_ID, CHARCTER_ID);
+                startActivity(intent);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 
 }
