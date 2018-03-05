@@ -52,6 +52,8 @@ public class CharacterListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private static final String DO_DELETE = "DO_DELETE";
+    private static final String DEL_ID = "DEL_ID";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
@@ -69,6 +71,9 @@ public class CharacterListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
+        //get extras
+        Bundle extras = getIntent().getExtras();
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +89,15 @@ public class CharacterListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //check for character to delete
+        if(extras != null){
+            if(extras.getBoolean(DO_DELETE)){
+                //TODO trigger delete muation
+                String toDel = extras.getString(DEL_ID);
+                Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+            }
+        }
 
         getIds();
         Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
@@ -101,7 +115,7 @@ public class CharacterListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
 
-        Bundle extras = getIntent().getExtras();
+
         if(extras != null) {
             if(extras.getBoolean("SET_CHAR_NAME")) {
                 popInputDialog("Character Name:");
