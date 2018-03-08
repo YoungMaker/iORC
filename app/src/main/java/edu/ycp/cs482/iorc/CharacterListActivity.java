@@ -90,17 +90,18 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
-        //check for character to delete
-        if(extras != null){
-            if(extras.getBoolean(DO_DELETE)){
-                //TODO trigger delete muation
-                String toDel = extras.getString(DEL_ID);
-                deleteCharacter(toDel);
-                //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
-            }
+        //check if character is being deleted
+        if(extras != null && extras.getBoolean(DO_DELETE)){
+            //trigger delete muation
+            String toDel = extras.getString(DEL_ID);
+            deleteCharacter(toDel);
+            //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+        } else{
+            //get character list if now character is being deleted
+            getIds();
         }
 
-        getIds();
+
         Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
         if (findViewById(R.id.character_detail_container) != null) {
             // The detail container view will be present only in the
@@ -195,9 +196,11 @@ public class CharacterListActivity extends AppCompatActivity {
     private void deleteCharacter(String toDel){
         MyApolloClient.getMyApolloClient().mutate(
                 DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
+            //on character deletion get the character list
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
                 Log.d("CHARACTER DELETED", "");
+                getIds();
             }
 
             @Override
