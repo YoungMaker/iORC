@@ -6,6 +6,9 @@ import com.apollographql.apollo.api.cache.http.HttpCacheRecordEditor;
 import com.apollographql.apollo.api.cache.http.HttpCacheStore;
 import com.apollographql.apollo.cache.http.ApolloHttpCache;
 import com.apollographql.apollo.cache.http.DiskLruHttpCacheStore;
+
+import org.junit.Rule;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -27,7 +30,8 @@ public class MyApolloClient {
     //private static File characterCache = new File();
     private static int characterCacheSize = 1024*1024;
     private static CharacterHttpCacheStore characterCacheStore;
-    public static FileSystem inMemoryFileSystem;
+    @Rule
+    public static InMemoryFileSystem inMemoryFileSystem = new InMemoryFileSystem();
 
     public static ApolloClient getMyApolloClient(){
 
@@ -50,13 +54,17 @@ public class MyApolloClient {
 
         characterCacheStore = new CharacterHttpCacheStore();
 
-        characterCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/cache/"), characterCacheSize);
+        //TODO properly implement caching
+        //characterCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/cache/"), characterCacheSize);
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(loggingInterceptor)
+                //Network interceptor or interceptor???
+                .addNetworkInterceptor(loggingInterceptor)
+                //.addInterceptor(new TrackingInterceptor())
+                //.addInterceptor(cache.interceptor())
                 .build();
 
         ApolloClient characterApolloClient = ApolloClient.builder()
