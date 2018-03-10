@@ -1,8 +1,20 @@
 package edu.ycp.cs482.iorc.dummy;
 
 import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.api.cache.http.HttpCacheRecord;
+import com.apollographql.apollo.api.cache.http.HttpCacheRecordEditor;
+import com.apollographql.apollo.api.cache.http.HttpCacheStore;
+import com.apollographql.apollo.cache.http.ApolloHttpCache;
+import com.apollographql.apollo.cache.http.DiskLruHttpCacheStore;
+import java.io.File;
+import java.io.IOException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import okhttp3.OkHttpClient;
+import okhttp3.internal.io.*;
+import okhttp3.internal.io.FileSystem;
+import okhttp3.internal.cache.DiskLruCache;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
@@ -10,8 +22,12 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 
 public class MyApolloClient {
-    private static final String BASE_URL = "http://10.64.12.31:8080/graphql";
+    private static final String BASE_URL = "http://10.64.12.31:8081/graphql";
     private static ApolloClient myApolloClient;
+    //private static File characterCache = new File();
+    private static int characterCacheSize = 1024*1024;
+    private static CharacterHttpCacheStore characterCacheStore;
+    public static FileSystem inMemoryFileSystem;
 
     public static ApolloClient getMyApolloClient(){
 
@@ -28,6 +44,28 @@ public class MyApolloClient {
                 .build();
 
         return myApolloClient;
+    }
+
+    public static ApolloClient getCharacterApolloClient(){
+
+        characterCacheStore = new CharacterHttpCacheStore();
+
+        characterCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/cache/"), characterCacheSize);
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(loggingInterceptor)
+                .build();
+
+        ApolloClient characterApolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .httpCache(new ApolloHttpCache(characterCacheStore))
+                .okHttpClient(okHttpClient)
+                .build();
+
+        return characterApolloClient;
     }
 }
 

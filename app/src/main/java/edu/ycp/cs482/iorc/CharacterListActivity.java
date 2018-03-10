@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
@@ -129,10 +130,12 @@ public class CharacterListActivity extends AppCompatActivity {
     //test query
     private void getIds(){
 
-        MyApolloClient.getMyApolloClient().query(
+        MyApolloClient.getCharacterApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
-                CharacterVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
+                CharacterVersionQuery.builder().version("4e").build())
+                .httpCachePolicy(HttpCachePolicy.CACHE_FIRST)
+                .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
 
