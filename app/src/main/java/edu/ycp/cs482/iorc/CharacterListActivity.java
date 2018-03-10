@@ -14,6 +14,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.apollographql.apollo.ApolloCall;
@@ -65,6 +67,7 @@ public class CharacterListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         setContentView(R.layout.activity_character_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -99,6 +102,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
             }
         }
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
         getIds();
         Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
@@ -127,13 +131,14 @@ public class CharacterListActivity extends AppCompatActivity {
 
     //test query
     private void getIds(){
-
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
         MyApolloClient.getMyApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
                 CharacterVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
                 characterResponseData = response.data().getCharactersByVersion;
                 //Log.d("BEFORE UI THREAD","Line before new runnable");
@@ -157,6 +162,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 Log.e("ERROR: ", e.toString());
             }
         });
@@ -175,33 +183,44 @@ public class CharacterListActivity extends AppCompatActivity {
         abilityScores.cha(randAbils.getCha());
         AbilityInput staticAbil = abilityScores.build();
 
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+
         MyApolloClient.getMyApolloClient().mutate(
 
             CreateCharacterMutation.builder().name(creationData.get("Name")).version(creationData.get("version")).abil(staticAbil).raceid(creationData.get("RACE ID")).classid(creationData.get("CLASS ID")).build())
                 .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
                 getIds();
             }
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 Log.d("CREATION FAILED", "SERVER NOT RESPONDING");
             }
         });
     }
 
     private void deleteCharacter(String toDel){
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
         MyApolloClient.getMyApolloClient().mutate(
                 DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 Log.d("CHARACTER DELETED", "");
             }
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
 
             }
         });

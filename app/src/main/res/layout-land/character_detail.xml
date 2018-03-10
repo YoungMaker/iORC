@@ -4,25 +4,67 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-    
 
-    <TextView
-        android:id="@+id/character_abil_title"
-        style="@style/Base.DialogWindowTitle.AppCompat"
-        android:textSize="14sp"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/abil_title"
+        android:layout_width="wrap_content"
         android:layout_gravity="center_horizontal"
-        
-        tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
         android:layout_column="0"
-        android:layout_row="0"
-        />
+        android:layout_row="0">
+
+        <TextView
+            android:id="@+id/character_race_title"
+            style="@style/Base.DialogWindowTitle.AppCompat"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="0dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:text="Race:"/>
+
+        <TextView
+            android:id="@+id/character_race"
+            style="@style/Base.DialogWindowTitle.AppCompat"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"/>
+
+        <TextView
+            android:id="@+id/character_class_name"
+            style="@style/Base.DialogWindowTitle.AppCompat"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="0dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:text="Class:"/>
+
+        <TextView
+            android:id="@+id/character_class"
+            style="@style/Base.DialogWindowTitle.AppCompat"
+            android:textSize="16sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"/>
+    </LinearLayout>
 
 
 
@@ -32,8 +74,26 @@
         android:layout_column="0"
         android:layout_row="1"
         android:columnCount="6"
-        android:rowCount="6"
+        android:rowCount="7"
         >
+        <TextView
+            android:id="@+id/character_abil_title"
+            style="@style/Base.DialogWindowTitle.AppCompat"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@string/abil_title"
+            android:layout_gravity="center_horizontal"
+
+            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            android:layout_column="1"
+            android:layout_row="0"
+            />
+
 
         <TextView
             style="?android:attr/textAppearanceListItemSmall"
@@ -44,7 +104,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="0"
-            android:layout_row="0"
+            android:layout_row="1"
             android:layout_gravity="end"
             />
 
@@ -57,7 +117,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
-            android:layout_row="0"
+            android:layout_row="1"
             />
 
         <TextView
@@ -69,7 +129,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
-            android:layout_row="0"
+            android:layout_row="1"
             android:layout_gravity="end"
             />
 
@@ -82,7 +142,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="3"
-            android:layout_row="0"
+            android:layout_row="1"
             />
 
         <TextView
@@ -94,7 +154,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="0"
-            android:layout_row="1"
+            android:layout_row="2"
             android:layout_gravity="end"
             />
 
@@ -107,7 +167,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
-            android:layout_row="1"
+            android:layout_row="2"
             />
 
         <TextView
@@ -119,7 +179,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
-            android:layout_row="1"
+            android:layout_row="2"
             android:layout_gravity="end"
             />
 
@@ -132,7 +192,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="3"
-            android:layout_row="1"
+            android:layout_row="2"
             />
 
         <TextView
@@ -144,7 +204,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="0"
-            android:layout_row="2"
+            android:layout_row="3"
             android:layout_gravity="end"
             />
 
@@ -157,7 +217,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
-            android:layout_row="2"
+            android:layout_row="3"
             />
 
         <TextView
@@ -169,7 +229,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
-            android:layout_row="2"
+            android:layout_row="3"
             android:layout_gravity="end"
             />
 
@@ -182,7 +242,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="3"
-            android:layout_row="2"
+            android:layout_row="3"
             />
 
         <TextView
@@ -194,7 +254,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
-            android:layout_row="3"
+            android:layout_row="4"
             />
 
         <TextView
@@ -206,7 +266,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
-            android:layout_row="3"
+            android:layout_row="4"
             />
 
         <TextView
@@ -218,7 +278,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
-            android:layout_row="4"
+            android:layout_row="5"
             />
 
         <TextView
@@ -230,7 +290,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
-            android:layout_row="4"
+            android:layout_row="5"
             />
 
         <TextView
@@ -242,7 +302,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="1"
-            android:layout_row="5"
+            android:layout_row="6"
             />
 
         <TextView
@@ -254,7 +314,7 @@
 
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
             android:layout_column="2"
-            android:layout_row="5"
+            android:layout_row="6"
             />
 
     </GridLayout>
