@@ -11,10 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.apollographql.apollo.ApolloCall;
@@ -65,7 +67,8 @@ public class ClassRaceListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
+        View loadingView = findViewById(R.id.loadingIcon);
+        loadingView.setVisibility(View.GONE);
        // getRaces();
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -97,20 +100,22 @@ public class ClassRaceListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
         HashMap<String, String> creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
         Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
         mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, classResponses, raceResponses, classDetailMap,raceDetailMap, mTwoPane, showRace, creationMap);
         View recyclerView = findViewById(R.id.classrace_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
-
     }
 
     private void getRaces(){
+        final View loadingView = findViewById(R.id.loadingIcon);
         MyApolloClient.getMyApolloClient().query(
             RaceVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
+                loadingView.setVisibility(View.GONE);
                 raceResponseData = response.data().getRacesByVersion();
                 //Log.d("RESPONSE:","" + RaceResponseData);
                 ClassRaceListActivity.this.runOnUiThread(new Runnable() {
@@ -129,6 +134,9 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 Log.d("No Response:","No acknowledgment from server");
             }
         });
@@ -136,10 +144,12 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
     //todo create class query after class data is created
     private void getClasses(){
+        final View loadingView = findViewById(R.id.loadingIcon);
         MyApolloClient.getMyApolloClient().query(
                 ClassVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<ClassVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<ClassVersionQuery.Data> response) {
+                loadingView.setVisibility(View.GONE);
                 classResponseData = response.data().getClassesByVersion;
                 Log.d("CLASS RESPONSE:","" + classResponseData);
                 ClassRaceListActivity.this.runOnUiThread(new Runnable() {
@@ -158,6 +168,9 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
+                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
                 Log.d("No Response:","No acknowledgment from server");
             }
         });

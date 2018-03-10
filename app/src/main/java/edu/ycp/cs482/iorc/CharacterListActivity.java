@@ -102,7 +102,8 @@ public class CharacterListActivity extends AppCompatActivity {
                 //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
             }
         }
-        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        //View loadingView = findViewById(R.id.loadingPanel);
+        //loadingView.setVisibility(View.GONE);
 
         getIds();
         Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
@@ -131,15 +132,14 @@ public class CharacterListActivity extends AppCompatActivity {
 
     //test query
     private void getIds(){
-        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+        //final View loadingView = findViewById(R.id.loadingPanel);
+        //loadingView.setVisibility(View.VISIBLE);
         MyApolloClient.getMyApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
                 CharacterVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
-                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
-
                 characterResponseData = response.data().getCharactersByVersion;
                 //Log.d("BEFORE UI THREAD","Line before new runnable");
                 CharacterListActivity.this.runOnUiThread(new Runnable() {
@@ -156,15 +156,16 @@ public class CharacterListActivity extends AppCompatActivity {
                             characterDetailMap.put(characterResponseData.get(i).fragments().characterData.id(),(new Gson()).toJson(characterResponseData.get(i)));
                         }
                         refreshView();
+                        //loadingView.setVisibility(View.GONE);
                     }
                 });
             }
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                //toast.setGravity(Gravity.CENTER, 0, 0);
+                //toast.show();
                 Log.e("ERROR: ", e.toString());
             }
         });
@@ -183,7 +184,7 @@ public class CharacterListActivity extends AppCompatActivity {
         abilityScores.cha(randAbils.getCha());
         AbilityInput staticAbil = abilityScores.build();
 
-        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+        //final View loadingView = findViewById(R.id.loadingPanel);
 
         MyApolloClient.getMyApolloClient().mutate(
 
@@ -191,7 +192,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
-                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                //loadingView.setVisibility(View.GONE);
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
                 getIds();
             }
@@ -207,12 +208,12 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void deleteCharacter(String toDel){
-        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+        //final View loadingView = findViewById(R.id.loadingPanel);
         MyApolloClient.getMyApolloClient().mutate(
                 DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
-                findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+                //loadingView.setVisibility(View.GONE);
                 Log.d("CHARACTER DELETED", "");
             }
 
