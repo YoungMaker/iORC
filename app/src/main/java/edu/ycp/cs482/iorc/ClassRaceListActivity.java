@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
@@ -100,8 +101,11 @@ public class ClassRaceListActivity extends AppCompatActivity {
     }
 
     private void getRaces(){
-        MyApolloClient.getMyApolloClient().query(
-            RaceVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
+        MyApolloClient.getRaceApolloClient().query(
+            RaceVersionQuery
+                    .builder().version("4e").build())
+                .httpCachePolicy(HttpCachePolicy.CACHE_FIRST)
+                .enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
                 raceResponseData = response.data().getRacesByVersion();
@@ -129,8 +133,10 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
     //todo create class query after class data is created
     private void getClasses(){
-        MyApolloClient.getMyApolloClient().query(
-                ClassVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<ClassVersionQuery.Data>() {
+        MyApolloClient.getClassApolloClient().query(
+                ClassVersionQuery.builder().version("4e").build())
+                .httpCachePolicy(HttpCachePolicy.CACHE_FIRST)
+                .enqueue(new ApolloCall.Callback<ClassVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<ClassVersionQuery.Data> response) {
                 classResponseData = response.data().getClassesByVersion;

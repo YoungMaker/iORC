@@ -152,7 +152,9 @@ public class CharacterListActivity extends AppCompatActivity {
                         //add each character into map and list
                         for(int i = 0; i < characterResponseData.size(); i++){
                             characterResponses.add(characterResponseData.get(i));
-                            characterDetailMap.put(characterResponseData.get(i).fragments().characterData.id(),(new Gson()).toJson(characterResponseData.get(i)));
+                            characterDetailMap.put(
+                                    characterResponseData.get(i).fragments().characterData.id(),
+                                    (new Gson()).toJson(characterResponseData.get(i)));
                         }
                         refreshView();
                     }
