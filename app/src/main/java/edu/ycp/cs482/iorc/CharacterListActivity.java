@@ -99,7 +99,8 @@ public class CharacterListActivity extends AppCompatActivity {
             //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
         } else{
             //get character list if now character is being deleted
-            getIds();
+            HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
+            getIds(policy);
         }
 
 
@@ -128,13 +129,12 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     //test query
-    private void getIds(){
-
+    private void getIds(HttpCachePolicy.Policy policy){
         MyApolloClient.getCharacterApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
                 CharacterVersionQuery.builder().version("4e").build())
-                .httpCachePolicy(HttpCachePolicy.CACHE_FIRST)
+                .httpCachePolicy(policy)
                 .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
@@ -186,7 +186,8 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
-                getIds();
+                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                getIds(policy);
             }
 
             @Override
@@ -203,7 +204,8 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
                 Log.d("CHARACTER DELETED", "");
-                getIds();
+                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                getIds(policy);
             }
 
             @Override
