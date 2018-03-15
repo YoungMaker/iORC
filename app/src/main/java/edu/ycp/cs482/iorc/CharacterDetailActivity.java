@@ -144,11 +144,22 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
 
                 case R.id.action_skills:
-                    SkillsFragment fragment2 = new SkillsFragment();
+                    Bundle skillArgument = new Bundle();
+                    skillArgument.putString(SkillsFragment.ARG_ITEM_ID,
+                            getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+                    skillArgument.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
+                    SkillsFragment skillFragment = new SkillsFragment();
+                    skillFragment.setArguments(skillArgument);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.character_detail_container, skillFragment)
+                            .commit();
+                    break;
+
+                    /*SkillsFragment fragment2 = new SkillsFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
-                    fragmentTransaction2.commit();
-                    break;
+                    fragmentTransaction2.commit();*/
+
 
                 case R.id.action_equipment:
                     EquipmentFragment fragment3 = new EquipmentFragment();

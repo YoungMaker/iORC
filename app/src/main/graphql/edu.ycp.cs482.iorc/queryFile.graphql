@@ -23,6 +23,12 @@
     }
   }
 
+  query SkillVersionQuery($version: String!){
+    getVersionSkills(version: $version){
+      ... SkillData
+    }
+  }
+
  mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!){
      createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid){
        ...CharacterData
@@ -80,4 +86,16 @@ fragment ClassData on Class {
        key
        value
      }
+}
+
+fragment SkillData on Version{
+  stats{
+    name
+    skill
+    key
+    modifiers{
+      key
+      value
+    }
+  }
 }
