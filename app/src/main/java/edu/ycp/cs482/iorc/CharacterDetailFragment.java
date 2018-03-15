@@ -135,11 +135,12 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilWis.setText(getResources().getString(R.string.pref_wis, longToString(abilityPoints.wis())));
             mCharacterAbilCha.setText(getResources().getString(R.string.pref_cha, longToString(abilityPoints.cha())));
 
-            //CharacterData.Race Races = item.fragments().characterData.race();
-            //mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.__typename()));
+            CharacterData.Race Races = item.fragments().characterData.race();
+            //Log.d("RACE DATA", Races.toString());
+            mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.fragments().raceData().name()));
 
-            //CharacterData.Classql Classes = item.fragments().characterData.classql();
-            //mCharacterClass.setText(getResources().getString(R.string.pref_class, Classes.__typename()));
+            CharacterData.Classql Classes = item.fragments().characterData.classql();
+            mCharacterClass.setText(getResources().getString(R.string.pref_class, Classes.fragments().classData().name()));
             //mCharacterDetailRef.setText(getResources().getString(R.string.pref_ref, item.ref));
 
 
