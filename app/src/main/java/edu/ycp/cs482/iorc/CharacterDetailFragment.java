@@ -171,6 +171,14 @@ public class CharacterDetailFragment extends Fragment {
         List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
         Log.d("VERSION STATS", stats.toString());
 
+        HashMap<String, VersionSheetData.Stat> statMap = new HashMap<>();
+
+        //loop through stats list and add to hashmap with the key being the name of the stat
+        for(int i = 0; i < stats.size(); i++){
+            VersionSheetData.Stat stat = stats.get(i);
+
+            statMap.put(stat.name(), stat);
+        }
     }
 
 }
