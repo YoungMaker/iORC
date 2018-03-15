@@ -99,6 +99,8 @@ public class CharacterDetailFragment extends Fragment {
         private TextView mCharacterAbilInt;
         private TextView mCharacterAbilWis;
         private TextView mCharacterAbilCha;
+        private TextView mCharacterRace;
+        private TextView mCharacterClass;
 
 
         private CharacterView(View rootView){
@@ -113,6 +115,8 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilInt = rootView.findViewById(R.id.character_abil_int);
             mCharacterAbilWis = rootView.findViewById(R.id.character_abil_wis);
             mCharacterAbilCha = rootView.findViewById(R.id.character_abil_cha);
+            mCharacterRace = rootView.findViewById(R.id.character_race);
+            mCharacterClass = rootView.findViewById(R.id.character_class);
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
@@ -124,7 +128,15 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilInt.setText(getResources().getString(R.string.pref_int, longToString(abilityPoints.int_())));
             mCharacterAbilWis.setText(getResources().getString(R.string.pref_wis, longToString(abilityPoints.wis())));
             mCharacterAbilCha.setText(getResources().getString(R.string.pref_cha, longToString(abilityPoints.cha())));
+
+            //CharacterData.Race Races = item.fragments().characterData.race();
+            //mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.__typename()));
+
+            //CharacterData.Classql Classes = item.fragments().characterData.classql();
+            //mCharacterClass.setText(getResources().getString(R.string.pref_class, Classes.__typename()));
             //mCharacterDetailRef.setText(getResources().getString(R.string.pref_ref, item.ref));
+
+
             //mCharacterDetailFort.setText(getResources().getString(R.string.pref_fort, item.fort));
            // mCharacterDetailSpd.setText(getResources().getString(R.string.pref_cha, item.sp));
 

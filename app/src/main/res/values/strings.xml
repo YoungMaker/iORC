@@ -208,6 +208,13 @@
     <string name="Int">INT:</string>
     <string name="Wis">WIS:</string>
     <string name="Cha">CHA:</string>
+    <string name="race">Race:</string>
+    <string name="Class">Class:</string>
+    <string name="initiative">Initiative:</string>
+    <string name="hitpoints">Hitpoints:</string>
+    <string name="speed">Speed:</string>
+    <string name="pref_race">%1$s</string>
+    <string name="pref_class">%1$s</string>
 
     <!--defense_layout.xml-->
     <string name="pref_ac">%1$s</string>
@@ -235,9 +242,6 @@
     <string name="text_magic">Magic</string>
     <string name="Skills">Skills</string>
     <string name="character">Character</string>
-    <string name="initiative">Initiative:</string>
-    <string name="hitpoints">Hitpoints:</string>
-    <string name="speed">Speed:</string>
     <string name="delete_page">Delete Page</string>
     <!-- fragment_modifier_list.xml!-->
     <string name="modifiers">Modifiers:</string>
