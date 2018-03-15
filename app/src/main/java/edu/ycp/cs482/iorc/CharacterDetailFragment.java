@@ -38,12 +38,12 @@ public class CharacterDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_MAP_ID = "map_id";
     private static final String V_DATA = "VERSION_DATA";
-
     /**
      * The dummy content this fragment is presenting.
      */
     private CharacterVersionQuery.GetCharactersByVersion mItem;
     private VersionSheetQuery.GetVersionSheet versionData;
+    private HashMap<String, Integer> charStatMap = new HashMap<>();
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -169,15 +169,17 @@ public class CharacterDetailFragment extends Fragment {
 
     public void generateCharacterStats(){
         List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
+        CharacterData charData = mItem.fragments().characterData;
         Log.d("VERSION STATS", stats.toString());
+        Log.d("Character Data", charData.toString());
 
         HashMap<String, VersionSheetData.Stat> statMap = new HashMap<>();
 
         //loop through stats list and add to hashmap with the key being the name of the stat
         for(int i = 0; i < stats.size(); i++){
             VersionSheetData.Stat stat = stats.get(i);
-
             statMap.put(stat.name(), stat);
+            charStatMap.put(stat.name(), 0);
         }
     }
 
