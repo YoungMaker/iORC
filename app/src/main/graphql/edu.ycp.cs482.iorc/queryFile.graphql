@@ -5,6 +5,12 @@
    }
  }
 
+ query VersionSheetQuery($version: String!){
+     getVersionSheet(version : $version){
+         ...VersionSheetData
+     }
+  }
+
  query CharacterVersionQuery($version :String!){
    getCharactersByVersion(version:$version){
      ...CharacterData
@@ -80,4 +86,16 @@ fragment ClassData on Class {
        key
        value
      }
+}
+
+fragment VersionSheetData on Version{
+  version
+    stats{
+      name
+      description
+      modifiers{
+        key
+        value
+      }
+    }
 }

@@ -10,10 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 
+import javax.annotation.Nonnull;
+
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 
 /**
@@ -34,7 +40,7 @@ public class CharacterDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
     private CharacterVersionQuery.GetCharactersByVersion mItem;
-
+    private VersionSheetQuery.GetVersionSheet versionData;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -46,7 +52,7 @@ public class CharacterDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getVersionInfo();
         //TODO receive map from character list activity
         Log.d("mItem CHECK: ", "Loading Map");
         if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_MAP_ID)) {
@@ -145,7 +151,28 @@ public class CharacterDetailFragment extends Fragment {
         private String longToString(long longValue){
             return String.valueOf(longValue);
         }
+
     }
+
+    public void getVersionInfo(){
+        MyApolloClient.getMyApolloClient().query(
+                VersionSheetQuery.builder().version("4e").build()
+        )
+                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
+                        versionData = response.data().getVersionSheet;
+                        Log.d("VERSION DATA", versionData.toString());
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.d("QUERY FAILED", "NO RESPONSE");
+                    }
+                });
+    }
+
+
 
 }
 
