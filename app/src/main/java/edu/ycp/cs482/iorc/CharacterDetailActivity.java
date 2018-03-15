@@ -27,6 +27,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
+    private static final String V_DATA = "VERSION_DATA";
     private String CHARCTER_ID = "";
 
     @Override
@@ -80,6 +81,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
             CHARCTER_ID = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
             arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                     CHARCTER_ID);
+            arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
             arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
             CharacterDetailFragment fragment = new CharacterDetailFragment();
             fragment.setArguments(arguments);

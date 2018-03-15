@@ -16,11 +16,13 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
+import edu.ycp.cs482.iorc.fragment.VersionSheetData;
 
 /**
  * A fragment representing a single Character detail screen.
@@ -35,6 +37,7 @@ public class CharacterDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_MAP_ID = "map_id";
+    private static final String V_DATA = "VERSION_DATA";
 
     /**
      * The dummy content this fragment is presenting.
@@ -52,7 +55,7 @@ public class CharacterDetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getVersionInfo();
+
         //TODO receive map from character list activity
         Log.d("mItem CHECK: ", "Loading Map");
         if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_MAP_ID)) {
@@ -75,7 +78,16 @@ public class CharacterDetailFragment extends Fragment {
             if (appBarLayout != null && mItem != null) {
                 appBarLayout.setTitle(mItem.fragments().characterData.name());
             }
+
+            if(bundle.containsKey(V_DATA)){
+                HashMap<String, String> vDataMap = (HashMap<String, String>)bundle.getSerializable(V_DATA);
+                if(vDataMap != null){
+                    versionData = (new Gson()).fromJson(vDataMap.get(V_DATA), VersionSheetQuery.GetVersionSheet.class);
+                }
+            }
+
         }
+        generateCharacterStats();
         Log.d("mItem CHECK: ", "Finished Loading Map");
     }
 
@@ -155,25 +167,11 @@ public class CharacterDetailFragment extends Fragment {
 
     }
 
-    public void getVersionInfo(){
-        MyApolloClient.getMyApolloClient().query(
-                VersionSheetQuery.builder().version("4e").build()
-        )
-                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
-                        versionData = response.data().getVersionSheet;
-                        Log.d("VERSION DATA", versionData.toString());
-                    }
+    public void generateCharacterStats(){
+        List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
+        Log.d("VERSION STATS", stats.toString());
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        Log.d("QUERY FAILED", "NO RESPONSE");
-                    }
-                });
     }
-
-
 
 }
 
