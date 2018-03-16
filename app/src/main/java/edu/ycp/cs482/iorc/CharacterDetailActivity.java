@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -134,6 +135,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+                    Log.d("CHAR_ARG", arguments.toString());
                     arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
@@ -144,12 +146,14 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
 
                 case R.id.action_skills:
-                    Bundle skillArgument = new Bundle();
-                    skillArgument.putString(SkillsFragment.ARG_ITEM_ID,
+                    Bundle skillArguments = new Bundle();
+                    skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
-                    skillArgument.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
+                    Log.d("SKILL_ARG", skillArguments.toString());
+                    //Log.d("SKILL", getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID).toString());
+                    skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
                     SkillsFragment skillFragment = new SkillsFragment();
-                    skillFragment.setArguments(skillArgument);
+                    skillFragment.setArguments(skillArguments);
                     getSupportFragmentManager().beginTransaction()
                             .replace(R.id.character_detail_container, skillFragment)
                             .commit();

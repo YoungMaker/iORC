@@ -32,8 +32,8 @@ import edu.ycp.cs482.iorc.fragment.SkillData;
  */
 public class SkillsFragment extends Fragment {
 
-    public static final String ARG_ITEM_ID = "item_id";
-    public static final String ARG_MAP_ID = "map_id";
+    public static final String ARG_ITEM_ID = "skill_id";
+    public static final String ARG_MAP_ID = "skillmap_id";
 
     private SkillVersionQuery.GetVersionSkills mItem;
 
@@ -54,10 +54,12 @@ public class SkillsFragment extends Fragment {
                 // to load content from a content provider.
                 //mItem = DummyContent.CHARACTER_MAP.get(getArguments().getString(ARG_ITEM_ID));
                 Bundle bundle = getArguments();
-
+                Log.d("ARGUMENTS", getArguments().toString());
                 HashMap<String, String> skillMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
                 String skillObj = "";
+                //Log.d("SKILL_OBJ", skillMap.toString());
                 if(skillMap != null){
+                    Log.d("SKILL_OBJ", skillMap.get(bundle.getString((ARG_ITEM_ID))).toString());
                     skillObj = skillMap.get(bundle.getString((ARG_ITEM_ID)));
                 }
                 mItem = (new Gson()).fromJson(skillObj, SkillVersionQuery.GetVersionSkills.class);
@@ -89,16 +91,24 @@ public class SkillsFragment extends Fragment {
         private SkillView(View rootView){
 
             mCharacterSkill = rootView.findViewById(R.id.skill_text);
-            mCharacterSkillContent = rootView.findViewById(R.id.skill_content);
+            //mCharacterSkillContent = rootView.findViewById(R.id.skill_content);
         }
 
         private void updateSkillView(SkillVersionQuery.GetVersionSkills item) {
             //convert the long values (of each ability score) to strings that can be shown as the character ability score values
+            Log.d("THING: ", mItem.fragments().skillData.stats().toString());
+            if(item.fragments().skillData().stats() != null){
+                SkillData.Stat SkillStats = (SkillData.Stat) item.fragments().skillData().stats();
+                //SkillData.Modifier SkillMods = (SkillData.Modifier) item.fragments().skillData().stats();
+                //CharacterData.AbilityPoints abilityPoints = item.fragments().characterData.abilityPoints();
 
-            List<SkillData.Stat> SkillStats = mItem.fragments().skillData().stats();
+                mCharacterSkill.setText(getResources().getString(R.string.pref_skill, SkillStats));
+                //mCharacterSkillContent.setText(getResources().getString(R.string.pref_skill, SkillMods));
+            }
+            else {
+                Log.d("NULL STAT: ", "STAT IS NULL");
+            }
 
-            mCharacterSkill.setText(getResources().getString(R.string.pref_skill, SkillStats));
-            mCharacterSkillContent.setText(getResources().getString(R.string.pref_skill, SkillStats));
 
 
             //mCharacterAbilStr.setText(getResources().getString(R.string.pref_str, longToString(abilityPoints.str())));

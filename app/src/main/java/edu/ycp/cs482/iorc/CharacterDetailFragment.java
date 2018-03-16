@@ -30,6 +30,8 @@ public class CharacterDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_MAP_ID = "map_id";
 
+
+
     /**
      * The dummy content this fragment is presenting.
      */
@@ -55,7 +57,7 @@ public class CharacterDetailFragment extends Fragment {
             // to load content from a content provider.
             //mItem = DummyContent.CHARACTER_MAP.get(getArguments().getString(ARG_ITEM_ID));
             Bundle bundle = getArguments();
-
+            Log.d("CHAR_ARGUMENTS", getArguments().toString());
             HashMap<String, String> charMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
             String charObj = "";
             if(charMap != null){

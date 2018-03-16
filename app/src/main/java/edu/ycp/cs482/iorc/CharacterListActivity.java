@@ -62,8 +62,10 @@ public class CharacterListActivity extends AppCompatActivity {
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
     private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
-    private List<SkillVersionQuery.GetVersionSkills> skillResponseData;
+
+    public SkillVersionQuery.GetVersionSkills skillResponseData;
     private List <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
+
     private HashMap<String, String> characterDetailMap = new HashMap<>();
     private HashMap<String, String> skillDetailMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
@@ -106,11 +108,12 @@ public class CharacterListActivity extends AppCompatActivity {
             //get character list if now character is being deleted
             HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
             getIds(policy);
+            getSkillsList(policy);
         }
 
 
         Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
-        if (findViewById(R.id.character_detail_container) != null) {
+        if (findViewById(R.id.character_detail_container) != null && findViewById(R.id.skillList) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -119,7 +122,7 @@ public class CharacterListActivity extends AppCompatActivity {
         }
 
 
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, skillDetailMap, mTwoPane);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -180,34 +183,35 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     //test query
-    public void getSkillsList(){
-        //(HttpCachePolicy.Policy policy)
+    public void getSkillsList(HttpCachePolicy.Policy policy){
         //final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getCharacterApolloClient().query(
+        MyApolloClient.getSkillApolloClient().query(
                 SkillVersionQuery.builder().version("4e").build())
-                //.httpCachePolicy(policy)
+                .httpCachePolicy(policy)
                 .enqueue(new ApolloCall.Callback<SkillVersionQuery.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<SkillVersionQuery.Data> response) {
 
-                        skillResponseData = (List<SkillVersionQuery.GetVersionSkills>) response.data().getVersionSkills();
+                        //SkillVersionQuery.GetVersionSkills skillResponseDataTemp = response.data().getVersionSkills;
+                        skillResponseData = response.data().getVersionSkills;
 
                         //Log.d("BEFORE UI THREAD","Line before new runnable");
                         CharacterListActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //characterResponses.add(characterResponseData);
-                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+
                                 //clear list of skills so that when the query is called for a list update duplicate skills do not appear
                                 skillResponses.clear();
-                                //add each character into map and list
-                                for(int i = 0; i < skillResponseData.size(); i++){
-                                    skillResponses.add(skillResponseData.get(i));
+                                //add each skill into map and list
+                                //for(int i = 0; i < skillResponseData.size(); i++){
+                                    skillResponses.add(skillResponseData);
+                                Log.d("THING",skillResponseData.fragments().skillData.stats().toString());
                                     skillDetailMap.put(
-                                            skillResponseData.get(i).fragments().skillData.stats().toString(),
-                                            (new Gson()).toJson(skillResponseData.get(i)));
-                                }
+                                            skillResponseData.fragments().skillData.stats().toString(),
+                                            (new Gson()).toJson(skillResponseData));
+                                    Log.d("NEXT_THING", skillDetailMap.toString());
+                                //}
+
                                 refreshView();
                                 //loadingView.setVisibility(View.GONE);
                             }
@@ -372,7 +376,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
         private final CharacterListActivity mParentActivity;
         private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;
+        //private final List<SkillVersionQuery.GetVersionSkills> mSkillValues;
         private final HashMap<String, String> mMap;
+        private final HashMap<String, String> mSkillMap;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -383,16 +389,36 @@ public class CharacterListActivity extends AppCompatActivity {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
+
+
+                    //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
+
+                    //Bundle skillArguments = new Bundle();
+                    //Log.d("SKILL_ITEM", skillItem.toString());
+                    arguments.putString(SkillsFragment.ARG_ITEM_ID, );
+
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
+
+                    SkillsFragment skillFragment = new SkillsFragment();
+
+                    skillFragment.setArguments(arguments);
+
                     mParentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.character_detail_container, fragment)
                             .commit();
+
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.skillList, skillFragment)
+                            .commit();
                 } else {
+                    //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
                     intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
+                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData);
+                    intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
 
                     context.startActivity(intent);
                 }
@@ -401,11 +427,14 @@ public class CharacterListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
                                       List<CharacterVersionQuery.GetCharactersByVersion> items,
-                                      HashMap<String, String> characterDetailMap, boolean twoPane) {
+                                      HashMap<String, String> characterDetailMap, HashMap<String, String> skillDetailMap, boolean twoPane) {
+            //List<SkillVersionQuery.GetVersionSkills> skillItems
             mValues = items;
+            //mSkillValues = skillItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
             mMap = characterDetailMap;
+            mSkillMap = skillDetailMap;
         }
 
         @Override
