@@ -19,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -180,6 +181,7 @@ public class CharacterDetailFragment extends Fragment {
 
         CharacterData.Classql charClass = charData.classql();
         CharacterData.Race charRace = charData.race();
+        CharacterData.AbilityPoints abilityScores = mItem.fragments().characterData.abilityPoints();
 
         //loop through stats list and add to hashmap with the key being the name of the stat
         for(int i = 0; i < stats.size(); i++){
@@ -220,6 +222,25 @@ public class CharacterDetailFragment extends Fragment {
                 charStatMap.put(mod.key(), mapItem);
             }
         }
+
+        //add ability points from character data
+        for(Method m: abilityScores.getClass().getMethods()){
+            String abilKey = m.getName().replaceAll("_", "");
+            if(charStatMap.containsKey(abilKey)){
+                Log.d("ADD_FROM_METHOD", abilKey);
+                try {
+                     long abilityVal = (long) m.invoke(abilityScores);
+                     double val = charStatMap.get(abilKey);
+                     val += abilityVal;
+                     charStatMap.put(abilKey, val);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
     }
 
