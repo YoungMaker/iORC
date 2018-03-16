@@ -181,15 +181,12 @@ public class CharacterDetailFragment extends Fragment {
         CharacterData.Classql charClass = charData.classql();
         CharacterData.Race charRace = charData.race();
 
-
-        HashMap<String, VersionSheetData.Stat> statMap = new HashMap<>();
-
         //loop through stats list and add to hashmap with the key being the name of the stat
         for(int i = 0; i < stats.size(); i++){
 
             //get version sheet stats and add each one to a map
             VersionSheetData.Stat stat = stats.get(i);
-            charStatMap.put(stat.name().toLowerCase(), 0d);
+            charStatMap.put(keyFilter(stat), 0d);
         }
 
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
@@ -226,9 +223,23 @@ public class CharacterDetailFragment extends Fragment {
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
     }
 
-    public String keyFilter(String statName){
 
-        return "";
+    public String keyFilter(VersionSheetData.Stat stat){
+        String statName = stat.name();
+        String statDescription = stat.description();
+        String keyName;
+
+        //abilities have themselves as the description
+        //if a stat is an ability get the first 3 characters of the string
+        //then make the substring the string name
+        if(statName.equals(statDescription)){
+            statName = statName.substring(0, 3);
+        }
+
+        //make sure the key is all lowercase
+        keyName = statName.toLowerCase();
+
+        return keyName;
     }
 
 }
