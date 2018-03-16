@@ -15,6 +15,11 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +27,8 @@ import javax.annotation.Nonnull;
 
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
+import edu.ycp.cs482.iorc.fragment.ClassData;
+import edu.ycp.cs482.iorc.fragment.RaceData;
 import edu.ycp.cs482.iorc.fragment.VersionSheetData;
 
 /**
@@ -43,7 +50,7 @@ public class CharacterDetailFragment extends Fragment {
      */
     private CharacterVersionQuery.GetCharactersByVersion mItem;
     private VersionSheetQuery.GetVersionSheet versionData;
-    private HashMap<String, Integer> charStatMap = new HashMap<>();
+    private HashMap<String, Double> charStatMap = new HashMap<>();
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -170,17 +177,58 @@ public class CharacterDetailFragment extends Fragment {
     public void generateCharacterStats(){
         List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
         CharacterData charData = mItem.fragments().characterData;
-        Log.d("VERSION STATS", stats.toString());
-        Log.d("Character Data", charData.toString());
+
+        CharacterData.Classql charClass = charData.classql();
+        CharacterData.Race charRace = charData.race();
+
 
         HashMap<String, VersionSheetData.Stat> statMap = new HashMap<>();
 
         //loop through stats list and add to hashmap with the key being the name of the stat
         for(int i = 0; i < stats.size(); i++){
+
+            //get version sheet stats and add each one to a map
             VersionSheetData.Stat stat = stats.get(i);
-            statMap.put(stat.name(), stat);
-            charStatMap.put(stat.name(), 0);
+            charStatMap.put(stat.name().toLowerCase(), 0d);
         }
+
+        Log.d("CHARACTER_ABILITIES", charStatMap.toString());
+
+        //add race values to map
+        for(int i = 0; i < charRace.fragments().raceData().modifiers().size(); i++){
+
+            //get racedata modifiers
+            RaceData.Modifier mod = charRace.fragments().raceData().modifiers().get(i);
+
+            //check if the modifier key is in the map if so add the value to the existing
+            //value in the map
+            if(charStatMap.containsKey(mod.key())){
+                Double mapItem = charStatMap.get(mod.key());
+                mapItem += mod.value();
+                charStatMap.put(mod.key(), mapItem);
+            }
+        }
+
+        //add class values to map
+        for(int i = 0; i < charClass.fragments().classData().modifiers().size(); i++){
+
+            //get racedata modifiers
+            ClassData.Modifier mod = charClass.fragments().classData().modifiers().get(i);
+
+            //check if the modifier key is in the map if so add the value to the existing
+            //value in the map
+            if(charStatMap.containsKey(mod.key())){
+                Double mapItem = charStatMap.get(mod.key());
+                mapItem += mod.value();
+                charStatMap.put(mod.key(), mapItem);
+            }
+        }
+        Log.d("CHARACTER_ABILITIES", charStatMap.toString());
+    }
+
+    public String keyFilter(String statName){
+
+        return "";
     }
 
 }
