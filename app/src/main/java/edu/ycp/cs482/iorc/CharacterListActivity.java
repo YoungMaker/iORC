@@ -63,11 +63,11 @@ public class CharacterListActivity extends AppCompatActivity {
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
     private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
 
-    public SkillVersionQuery.GetVersionSkills skillResponseData;
+    public static SkillVersionQuery.GetVersionSkills skillResponseData;
     private List <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
 
     private HashMap<String, String> characterDetailMap = new HashMap<>();
-    private HashMap<String, String> skillDetailMap = new HashMap<>();
+    private static HashMap<String, String> skillDetailMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
 
     @Override
@@ -395,7 +395,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     //Bundle skillArguments = new Bundle();
                     //Log.d("SKILL_ITEM", skillItem.toString());
-                    arguments.putString(SkillsFragment.ARG_ITEM_ID, );
+                    arguments.putString(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
 
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
@@ -417,7 +417,7 @@ public class CharacterListActivity extends AppCompatActivity {
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
                     intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
-                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData);
+                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
                     intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
 
                     context.startActivity(intent);

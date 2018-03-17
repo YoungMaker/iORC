@@ -91,6 +91,7 @@ fragment ClassData on Class {
 fragment SkillData on Version{
   stats{
     name
+    description
     skill
     key
     modifiers{

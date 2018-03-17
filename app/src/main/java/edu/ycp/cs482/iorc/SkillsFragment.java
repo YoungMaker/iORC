@@ -57,9 +57,9 @@ public class SkillsFragment extends Fragment {
                 Log.d("ARGUMENTS", getArguments().toString());
                 HashMap<String, String> skillMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
                 String skillObj = "";
-                //Log.d("SKILL_OBJ", skillMap.toString());
+                Log.d("SKILL_OBJ", skillMap.get(bundle.getString(ARG_ITEM_ID)));
                 if(skillMap != null){
-                    Log.d("SKILL_OBJ", skillMap.get(bundle.getString((ARG_ITEM_ID))).toString());
+                    //Log.d("SKILL_OBJ", skillMap.get(bundle.getString((ARG_ITEM_ID))).toString());
                     skillObj = skillMap.get(bundle.getString((ARG_ITEM_ID)));
                 }
                 mItem = (new Gson()).fromJson(skillObj, SkillVersionQuery.GetVersionSkills.class);
@@ -73,36 +73,54 @@ public class SkillsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_skills, container, false);
+        View rootView = inflater.inflate(R.layout.skill_list_content, container, false);
 
-        SkillView mSkillView = new SkillView(view);
+        SkillView mSkillView = new SkillView(rootView);
         if(mItem != null){
             mSkillView.updateSkillView(mItem);
         }
-        return view;
+        return rootView;
     }
 
     private class SkillView {
 
         private TextView mCharacterSkill;
-        private TextView mCharacterSkillContent;
+        private TextView mCharacterSkillDescription;
 
 
         private SkillView(View rootView){
 
+            //Log.d("SKILL_TEXT: ", mCharacterSkill.toString());
             mCharacterSkill = rootView.findViewById(R.id.skill_text);
-            //mCharacterSkillContent = rootView.findViewById(R.id.skill_content);
+            mCharacterSkillDescription = rootView.findViewById(R.id.skill_description);
         }
 
         private void updateSkillView(SkillVersionQuery.GetVersionSkills item) {
             //convert the long values (of each ability score) to strings that can be shown as the character ability score values
-            Log.d("THING: ", mItem.fragments().skillData.stats().toString());
-            if(item.fragments().skillData().stats() != null){
-                SkillData.Stat SkillStats = (SkillData.Stat) item.fragments().skillData().stats();
+            Log.d("THING: ", item.fragments().skillData.stats().toString());
+            if(item.fragments().skillData.stats() != null){
+                List<SkillData.Stat> SkillStats = item.fragments().skillData.stats();
+                Log.d("SKILL_THING: ", SkillStats.toString());
                 //SkillData.Modifier SkillMods = (SkillData.Modifier) item.fragments().skillData().stats();
                 //CharacterData.AbilityPoints abilityPoints = item.fragments().characterData.abilityPoints();
 
-                mCharacterSkill.setText(getResources().getString(R.string.pref_skill, SkillStats));
+                //mCharacterSkill.setText(SkillStats.toString());
+//                for(int j = 0; j < SkillStats.size(); j++){
+//                    Log.d("SKILL_NAME: ", SkillStats.get(j).name());
+//                }
+
+                //for(int i = 0; i < SkillStats.size(); i++){
+                   // mCharacterSkill.setText(getResources().getString(R.string.pref_skill_history, SkillStats.get(i).name()));
+                    //mCharacterSkillDescription.setText(getResources().getString(R.string.pref_skill__history_description, SkillStats.get(i).description()));
+                //}
+                mCharacterSkill.setText(getResources().getString(R.string.pref_skill_history, SkillStats.get(0).name()));
+                mCharacterSkillDescription.setText(getResources().getString(R.string.pref_skill__history_description, SkillStats.get(0).description()));
+
+                mCharacterSkill.setText(getResources().getString(R.string.pref_skill_acrobatics, SkillStats.get(1).name()));
+                mCharacterSkillDescription.setText(getResources().getString(R.string.pref_skill_acrobatics_description, SkillStats.get(1).description()));
+
+
+
                 //mCharacterSkillContent.setText(getResources().getString(R.string.pref_skill, SkillMods));
             }
             else {
