@@ -182,6 +182,7 @@ public class CharacterDetailFragment extends Fragment {
 
         List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
         List<String> abilityList = new ArrayList<>();
+        List<String> modifierList = new ArrayList<>();
         CharacterData charData = mItem.fragments().characterData;
         HashMap<String, VersionSheetData.Stat> statObjMap = new HashMap<>();
 
@@ -271,6 +272,7 @@ public class CharacterDetailFragment extends Fragment {
                         Log.d("KEY", mod.key());
                         abilModVal = charStatMap.get(mod.key());
                         abilModVal += mod.value();
+                        modifierList.add(key);
                     }
                     if(mod.key().equals("*")){
                         mulVal = mod.value();
@@ -286,6 +288,35 @@ public class CharacterDetailFragment extends Fragment {
             }
 
         }
+
+
+        for(String key : statObjMap.keySet()){
+            VersionSheetData.Stat statObj = statObjMap.get(key);
+            List<VersionSheetData.Modifier> statMods = statObj.modifiers();
+
+            Double skillValue;
+
+            if(statMods != null){
+                String statName = statObj.name();
+                for(VersionSheetData.Modifier mod : statMods){
+
+                    //create skill values
+                    if(modifierList.contains(mod.key())){
+                        //Log.d("MOD_KEY", mod.key() + statName);
+                        skillValue = charStatMap.get(statName.toLowerCase());
+                        skillValue += charStatMap.get(mod.key());
+                        charStatMap.put(statName.toLowerCase(), skillValue);
+                    }
+
+                    //TODO create defense values
+
+                    //TODO create health stats (move to ability mod loop?)
+
+                }
+            }
+        }
+
+
 
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
     }
