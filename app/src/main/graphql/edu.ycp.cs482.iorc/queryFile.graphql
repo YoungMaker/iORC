@@ -29,6 +29,12 @@
     }
   }
 
+  query VerionInfoTypeQuery($version :String!, $type :String!){
+    getVersionInfoType(version: $version, type: $type){
+      ...VersionInfoData
+    }
+  }
+
  mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!){
      createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid){
        ...CharacterData
@@ -97,5 +103,15 @@ fragment VersionSheetData on Version{
         key
         value
       }
+    }
+}
+
+fragment VersionInfoData on Version{
+  version
+    infoList{
+      id
+      name
+      type
+      value
     }
 }

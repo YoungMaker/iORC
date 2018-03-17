@@ -15,10 +15,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+
 import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
 
 import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of AlignmentsReligions. This activity
@@ -84,6 +91,23 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.alignmentreligion_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+    }
+
+    //query for getting alignment/deities
+    private void getAlignDeity(){
+        MyApolloClient.getMyApolloClient().query(
+                VerionInfoTypeQuery.builder().version("4e").type("alignment").build())
+                .enqueue(new ApolloCall.Callback<VerionInfoTypeQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<VerionInfoTypeQuery.Data> response) {
+                         
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+
+                    }
+                });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
