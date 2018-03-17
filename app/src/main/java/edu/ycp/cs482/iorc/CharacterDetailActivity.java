@@ -82,7 +82,8 @@ public class CharacterDetailActivity extends AppCompatActivity {
             arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                     CHARCTER_ID);
             arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
-            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
+                    getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
             CharacterDetailFragment fragment = new CharacterDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -134,9 +135,11 @@ public class CharacterDetailActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
+                    arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
+                            getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
