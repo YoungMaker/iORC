@@ -84,15 +84,33 @@ public class SkillsFragment extends Fragment {
 
     private class SkillView {
 
-        private TextView mCharacterSkill;
-        private TextView mCharacterSkillDescription;
+        private TextView mCharacterSkillHis;
+        private TextView mCharacterSkillAcro;
+        private TextView mCharacterSkillArcana;
+        private TextView mCharacterSkillAthl;
+        private TextView mCharacterSkillBluff;
+
+        private TextView mCharacterSkillHisDescription;
+        private TextView mCharacterSkillAcroDescription;
+        private TextView mCharacterSkillArcanaDescription;
+        private TextView mCharacterSkillAthlDescription;
+        private TextView mCharacterSkillBluffDescription;
 
 
         private SkillView(View rootView){
 
             //Log.d("SKILL_TEXT: ", mCharacterSkill.toString());
-            mCharacterSkill = rootView.findViewById(R.id.skill_text);
-            mCharacterSkillDescription = rootView.findViewById(R.id.skill_description);
+            mCharacterSkillHis = rootView.findViewById(R.id.skill_his_text);
+            mCharacterSkillAcro = rootView.findViewById(R.id.skill_acro_text);
+            mCharacterSkillArcana = rootView.findViewById(R.id.skill_arcana_text);
+            mCharacterSkillAthl = rootView.findViewById(R.id.skill_athl_text);
+            mCharacterSkillBluff = rootView.findViewById(R.id.skill_bluff_text);
+
+            mCharacterSkillHisDescription = rootView.findViewById(R.id.skill_his_description);
+            mCharacterSkillAcroDescription = rootView.findViewById(R.id.skill_acro_description);
+            mCharacterSkillArcanaDescription = rootView.findViewById(R.id.skill_arcana_description);
+            mCharacterSkillAthlDescription = rootView.findViewById(R.id.skill_athl_description);
+            mCharacterSkillBluffDescription = rootView.findViewById(R.id.skill_bluff_description);
         }
 
         private void updateSkillView(SkillVersionQuery.GetVersionSkills item) {
@@ -113,12 +131,20 @@ public class SkillsFragment extends Fragment {
                    // mCharacterSkill.setText(getResources().getString(R.string.pref_skill_history, SkillStats.get(i).name()));
                     //mCharacterSkillDescription.setText(getResources().getString(R.string.pref_skill__history_description, SkillStats.get(i).description()));
                 //}
-                mCharacterSkill.setText(getResources().getString(R.string.pref_skill_history, SkillStats.get(0).name()));
-                mCharacterSkillDescription.setText(getResources().getString(R.string.pref_skill__history_description, SkillStats.get(0).description()));
+                mCharacterSkillHis.setText(getResources().getString(R.string.pref_skill_history, SkillStats.get(0).name()));
+                mCharacterSkillHisDescription.setText(getResources().getString(R.string.pref_skill__history_description, SkillStats.get(0).description()));
 
-                mCharacterSkill.setText(getResources().getString(R.string.pref_skill_acrobatics, SkillStats.get(1).name()));
-                mCharacterSkillDescription.setText(getResources().getString(R.string.pref_skill_acrobatics_description, SkillStats.get(1).description()));
+                mCharacterSkillAcro.setText(getResources().getString(R.string.pref_skill_acrobatics, SkillStats.get(1).name()));
+                mCharacterSkillAcroDescription.setText(getResources().getString(R.string.pref_skill_acrobatics_description, SkillStats.get(1).description()));
 
+                mCharacterSkillArcana.setText(getResources().getString(R.string.pref_skill_arcana, SkillStats.get(2).name()));
+                mCharacterSkillArcanaDescription.setText(getResources().getString(R.string.pref_skill_arcana_description, SkillStats.get(2).description()));
+
+                mCharacterSkillAthl.setText(getResources().getString(R.string.pref_skill_athletics, SkillStats.get(3).name()));
+                mCharacterSkillAthlDescription.setText(getResources().getString(R.string.pref_skill_athletics_description, SkillStats.get(3).description()));
+
+                mCharacterSkillBluff.setText(getResources().getString(R.string.pref_skill_bluff, SkillStats.get(4).name()));
+                mCharacterSkillBluffDescription.setText(getResources().getString(R.string.pref_skill_bluff_description, SkillStats.get(4).description()));
 
 
                 //mCharacterSkillContent.setText(getResources().getString(R.string.pref_skill, SkillMods));

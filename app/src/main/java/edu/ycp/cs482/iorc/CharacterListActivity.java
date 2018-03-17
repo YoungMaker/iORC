@@ -202,15 +202,13 @@ public class CharacterListActivity extends AppCompatActivity {
 
                                 //clear list of skills so that when the query is called for a list update duplicate skills do not appear
                                 skillResponses.clear();
-                                //add each skill into map and list
-                                //for(int i = 0; i < skillResponseData.size(); i++){
-                                    skillResponses.add(skillResponseData);
+                                //add skills into map and list
+                                skillResponses.add(skillResponseData);
                                 Log.d("THING",skillResponseData.fragments().skillData.stats().toString());
-                                    skillDetailMap.put(
-                                            skillResponseData.fragments().skillData.stats().toString(),
-                                            (new Gson()).toJson(skillResponseData));
-                                    Log.d("NEXT_THING", skillDetailMap.toString());
-                                //}
+                                skillDetailMap.put(
+                                        skillResponseData.fragments().skillData.stats().toString(),
+                                        (new Gson()).toJson(skillResponseData));
+                                Log.d("NEXT_THING", skillDetailMap.toString());
 
                                 refreshView();
                                 //loadingView.setVisibility(View.GONE);
@@ -428,9 +426,8 @@ public class CharacterListActivity extends AppCompatActivity {
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
                                       List<CharacterVersionQuery.GetCharactersByVersion> items,
                                       HashMap<String, String> characterDetailMap, HashMap<String, String> skillDetailMap, boolean twoPane) {
-            //List<SkillVersionQuery.GetVersionSkills> skillItems
+
             mValues = items;
-            //mSkillValues = skillItems;
             mParentActivity = parent;
             mTwoPane = twoPane;
             mMap = characterDetailMap;
