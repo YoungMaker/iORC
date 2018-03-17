@@ -98,7 +98,10 @@ public class CharacterDetailFragment extends Fragment {
             }
 
         }
-        generateCharacterStats();
+        if(versionData != null){
+            generateCharacterStats();
+        }
+
         Log.d("mItem CHECK: ", "Finished Loading Map");
     }
 
@@ -311,6 +314,10 @@ public class CharacterDetailFragment extends Fragment {
 
                     //TODO create defense values
                     if(mod.key().contains("||")){
+                        String[] options = mod.key().split("\\|\\|");
+
+                        Log.d("OPTIONS", options[0] + " " + options[1]);
+                        Log.d("DEFENSE", statName.toLowerCase());
 
                     }
                     //TODO create health stats (move to ability mod loop?)
@@ -341,6 +348,13 @@ public class CharacterDetailFragment extends Fragment {
         keyName = statName.toLowerCase();
 
         return keyName;
+    }
+
+    public String selectDefMod(){
+
+        String highest = "";
+
+        return highest;
     }
 
 }
