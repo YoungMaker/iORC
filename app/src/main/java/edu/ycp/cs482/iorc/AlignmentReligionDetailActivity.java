@@ -49,8 +49,9 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();
                 //handle selection of alignment/religion being made
                 Intent intent;
+                String insertData = (String) extra.get(AlignmentReligionDetailFragment.ARG_ITEM);
                 if(!showReligion){
-                    creationData.put("TEST ALIGNMENT","SOME ALIGNMENT");
+                    creationData.put("ALIGNMENT", insertData);
                     intent = new Intent(AlignmentReligionDetailActivity.this, AlignmentReligionListActivity.class);
                     intent.putExtra(ARG_EXTRA_NAME, true);
                     intent.putExtra(CREATION_DATA, creationData);
@@ -59,7 +60,7 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
                 }else if(showReligion){
                     intent = new Intent(AlignmentReligionDetailActivity.this, ItemListActivity.class);
                     intent.putExtra(CREATION_DATA, creationData);
-                    creationData.put("TEST RELIGION","SOME RELIGION");
+                    creationData.put("DEITY",insertData);
                     startActivity(intent);
                 }
             }
@@ -86,6 +87,8 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID));
+            arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM,
+                    extra.getString(AlignmentReligionDetailFragment.ARG_ITEM));
             if(showReligion){
                 arguments.putBoolean(ARG_FRAG_BOOL, true);
             }else{

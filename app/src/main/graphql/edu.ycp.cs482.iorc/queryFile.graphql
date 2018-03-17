@@ -29,7 +29,7 @@
     }
   }
 
-  query VerionInfoTypeQuery($version :String!, $type :String!){
+  query VersionInfoTypeQuery($version :String!, $type :String!){
     getVersionInfoType(version: $version, type: $type){
       ...VersionInfoData
     }

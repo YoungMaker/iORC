@@ -110,7 +110,7 @@ public class CharacterListActivity extends AppCompatActivity {
             getIds(policy);
         }
 
-        Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
+        //Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
         if (findViewById(R.id.character_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).

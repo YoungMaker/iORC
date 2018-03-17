@@ -309,7 +309,9 @@ public class CharacterDetailFragment extends Fragment {
                     }
 
                     //TODO create defense values
-
+                    if(mod.key().contains("||")){
+                        
+                    }
                     //TODO create health stats (move to ability mod loop?)
 
                 }

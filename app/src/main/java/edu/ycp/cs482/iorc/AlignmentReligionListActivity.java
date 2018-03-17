@@ -18,10 +18,13 @@ import android.widget.TextView;
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
+import com.google.gson.Gson;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.fragment.VersionInfoData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +49,8 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
     private boolean showReligion;
     private static final String CREATION_DATA = "CREATION_DATA";
     private String ARG_BOOL_KEY = "RELIGION_SWITCH";
+    private VersionInfoTypeQuery.GetVersionInfoType versionInfoData;
+    private List<VersionInfoData.InfoList> infoDataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,6 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 //                        .setAction("Action", null).show();*/
 //            }
 //        });
-
         Bundle extra = getIntent().getExtras();
         if(extra != null){
             if(extra.getBoolean(ARG_BOOL_KEY)){
@@ -73,6 +77,13 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 getIntent().removeExtra(ARG_BOOL_KEY);
             }
         }
+
+        if(!showReligion){
+            getAlignDeity("4e", "alignment");
+        }else if(showReligion){
+            getAlignDeity("4e", "deity");
+        }
+
 
         if (findViewById(R.id.alignmentreligion_detail_container) != null) {
             // The detail container view will be present only in the
@@ -86,7 +97,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
         //create new simple adapter for recycler view
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion, creationMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, infoDataList, mTwoPane, showReligion, creationMap);
 
         View recyclerView = findViewById(R.id.alignmentreligion_list);
         assert recyclerView != null;
@@ -94,13 +105,29 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
     }
 
     //query for getting alignment/deities
-    private void getAlignDeity(){
+    private void getAlignDeity(String version, String type){
         MyApolloClient.getMyApolloClient().query(
-                VerionInfoTypeQuery.builder().version("4e").type("alignment").build())
-                .enqueue(new ApolloCall.Callback<VerionInfoTypeQuery.Data>() {
+                VersionInfoTypeQuery.builder().version(version).type(type).build())
+                .enqueue(new ApolloCall.Callback<VersionInfoTypeQuery.Data>() {
                     @Override
-                    public void onResponse(@Nonnull Response<VerionInfoTypeQuery.Data> response) {
-                         
+                    public void onResponse(@Nonnull Response<VersionInfoTypeQuery.Data> response) {
+                        versionInfoData = response.data().getVersionInfoType;
+                        AlignmentReligionListActivity.this.runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+
+                                 for(int i = 0; i <
+                                         versionInfoData.fragments()
+                                                 .versionInfoData.infoList().size();
+                                     i++){
+                                     infoDataList.add(versionInfoData.fragments()
+                                             .versionInfoData.infoList().get(i));
+                                 }
+                                 Log.d("INFO_LIST", infoDataList.toString());
+                                 refreshView();
+                             }
+
+                        });
                     }
 
                     @Override
@@ -111,8 +138,6 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion));
-        //set adapter
         recyclerView.setAdapter(mSimpleAdapter);
         //divide items in list
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
@@ -124,8 +149,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final AlignmentReligionListActivity mParentActivity;
-        private final List<DummyContent.DummyAlignment> mValues;
-        private final List<DummyContent.DummyReligion> amValues;
+        private final List<VersionInfoData.InfoList> mValues;
         private final boolean mTwoPane;
         private final boolean isReligion;
         private final String ARG_EXTRA_NAME = "isReligion";
@@ -134,21 +158,16 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (isReligion) {
-                    DummyContent.DummyReligion item = (DummyContent.DummyReligion) view.getTag();
-                    religionPanes(view, item);
-                } else if (!isReligion) {
-                    DummyContent.DummyAlignment item = (DummyContent.DummyAlignment) view.getTag();
-                    alignmentPanes(view, item);
-                }
+                VersionInfoData.InfoList item = (VersionInfoData.InfoList) view.getTag();
+                Panes(view, item);
             }
         };
 
         SimpleItemRecyclerViewAdapter(AlignmentReligionListActivity parent,
-                                      List<DummyContent.DummyAlignment> items, List<DummyContent.DummyReligion> religionItems,
-                                      boolean twoPane, boolean isReligion, HashMap<String, String> creationMap) {
-            mValues = items;
-            amValues = religionItems;
+                                      List<VersionInfoData.InfoList> infoLists,
+                                      boolean twoPane, boolean isReligion,
+                                      HashMap<String, String> creationMap) {
+            mValues = infoLists;
             mParentActivity = parent;
             mTwoPane = twoPane;
             this.isReligion = isReligion;
@@ -164,29 +183,16 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            if(!isReligion){
-                holder.mIdView.setText(mValues.get(position).id);
-                holder.mContentView.setText(mValues.get(position).name);
+            holder.mContentView.setText(mValues.get(position).name());
 
-                holder.itemView.setTag(mValues.get(position));
-            } else if(isReligion){
-                holder.mIdView.setText(amValues.get(position).id);
-                holder.mContentView.setText(amValues.get(position).name);
-
-                holder.itemView.setTag(amValues.get(position));
-            }
+            holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
         @Override
         public int getItemCount() {
-            int itemCount = 0;
-            if(!isReligion){
-                itemCount = mValues.size();
-            } else if(isReligion){
-                itemCount = amValues.size();
-            }
-            return itemCount;
+            Log.d("PASSED_LIST", "" + mValues.size());
+            return mValues.size();
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
@@ -200,10 +206,17 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             }
         }
 
-        public void alignmentPanes(View view, DummyContent.DummyAlignment item){
+        public void Panes(View view, VersionInfoData.InfoList item){
             if (mTwoPane) {
                 Bundle arguments = new Bundle();
-                arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
+                arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id());
+                arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM,
+                        (new Gson()).toJson(item));
+                if(isReligion){
+                    arguments.putBoolean(ARG_EXTRA_NAME,true);
+                }else{
+                    arguments.putBoolean(ARG_EXTRA_NAME,false);
+                }
                 AlignmentReligionDetailFragment fragment = new AlignmentReligionDetailFragment();
                 fragment.setArguments(arguments);
                 mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -212,30 +225,24 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             } else {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
-                intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra(ARG_EXTRA_NAME,false);
+                intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id());
+                intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM,
+                        (new Gson()).toJson(item));
+                if(isReligion){
+                    intent.putExtra(ARG_EXTRA_NAME,true);
+                }else{
+                    intent.putExtra(ARG_EXTRA_NAME,false);
+                }
+
                 intent.putExtra(CREATION_DATA, mCreationData);
                 context.startActivity(intent);
             }
         }
 
-        public void religionPanes(View view, DummyContent.DummyReligion item){
-            if (mTwoPane) {
-                Bundle arguments = new Bundle();
-                arguments.putString(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                AlignmentReligionDetailFragment fragment = new AlignmentReligionDetailFragment();
-                fragment.setArguments(arguments);
-                mParentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.alignmentreligion_detail_container, fragment)
-                        .commit();
-            } else {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, AlignmentReligionDetailActivity.class);
-                intent.putExtra(AlignmentReligionDetailFragment.ARG_ITEM_ID, item.id);
-                intent.putExtra(ARG_EXTRA_NAME,true);
-                intent.putExtra(CREATION_DATA, mCreationData);
-                context.startActivity(intent);
-            }
-        }
+
+    }
+
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }
