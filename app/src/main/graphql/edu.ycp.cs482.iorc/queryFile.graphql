@@ -41,7 +41,7 @@
      }
  }
 
- mutation DeleteCharacterMutation($id:String!){
+ mutation DeleteCharacterMutation($id:ID!){
    deleteCharacter(id:$id)
  }
 

@@ -92,7 +92,8 @@ public class CharacterDetailFragment extends Fragment {
             if(bundle.containsKey(V_DATA)){
                 HashMap<String, String> vDataMap = (HashMap<String, String>)bundle.getSerializable(V_DATA);
                 if(vDataMap != null){
-                    versionData = (new Gson()).fromJson(vDataMap.get(V_DATA), VersionSheetQuery.GetVersionSheet.class);
+                    versionData = (new Gson()).fromJson(vDataMap
+                            .get(V_DATA), VersionSheetQuery.GetVersionSheet.class);
                 }
             }
 
@@ -310,7 +311,7 @@ public class CharacterDetailFragment extends Fragment {
 
                     //TODO create defense values
                     if(mod.key().contains("||")){
-                        
+
                     }
                     //TODO create health stats (move to ability mod loop?)
 
