@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,6 +53,7 @@ public class CharacterDetailFragment extends Fragment {
     private CharacterVersionQuery.GetCharactersByVersion mItem;
     private VersionSheetQuery.GetVersionSheet versionData;
     private HashMap<String, Double> charStatMap = new HashMap<>();
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -176,8 +178,14 @@ public class CharacterDetailFragment extends Fragment {
     }
 
     public void generateCharacterStats(){
+        //TODO unspaghet
+
         List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
+        List<String> abilityList = new ArrayList<>();
         CharacterData charData = mItem.fragments().characterData;
+        HashMap<String, VersionSheetData.Stat> statObjMap = new HashMap<>();
+
+        Log.d("VERSION_DATA", versionData.fragments().versionSheetData().stats().toString());
 
         CharacterData.Classql charClass = charData.classql();
         CharacterData.Race charRace = charData.race();
@@ -188,7 +196,10 @@ public class CharacterDetailFragment extends Fragment {
 
             //get version sheet stats and add each one to a map
             VersionSheetData.Stat stat = stats.get(i);
-            charStatMap.put(keyFilter(stat), 0d);
+            String key = keyFilter(stat);
+            statObjMap.put(key, stat);
+            charStatMap.put(key, 0d);
+
         }
 
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
@@ -232,6 +243,7 @@ public class CharacterDetailFragment extends Fragment {
                      long abilityVal = (long) m.invoke(abilityScores);
                      double val = charStatMap.get(abilKey);
                      val += abilityVal;
+                     abilityList.add(abilKey);
                      charStatMap.put(abilKey, val);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -239,6 +251,40 @@ public class CharacterDetailFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+        }
+
+        //create ability modifiers
+        for(String key : statObjMap.keySet()){
+            //Log.d("KEY", key);
+            VersionSheetData.Stat statObj = statObjMap.get(key);
+            List<VersionSheetData.Modifier> statMods = statObj.modifiers();
+
+            //modifier values
+            Double abilModVal = null;
+            Double mulVal = null;
+
+            if(statMods != null){
+                //get the ability modifier for each ability and
+                for(VersionSheetData.Modifier mod : statMods){
+                    if(abilityList.contains(mod.key())){
+                        //int abilKeyIndex = abilityList.indexOf(mod.key());
+                        Log.d("KEY", mod.key());
+                        abilModVal = charStatMap.get(mod.key());
+                        abilModVal += mod.value();
+                    }
+                    if(mod.key().equals("*")){
+                        mulVal = mod.value();
+                    }
+                }
+
+                //calculate ability modifier and add to the modifier value in the map
+                if(abilModVal != null && mulVal != null){
+                    abilModVal *= mulVal;
+                    charStatMap.put(key, Math.floor(abilModVal));
+                }
+
+            }
+
         }
 
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
