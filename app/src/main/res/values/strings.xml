@@ -246,4 +246,7 @@
     <!-- fragment_modifier_list.xml!-->
     <string name="modifiers">Modifiers:</string>
 
+    <!-- fragment_slots.xml!-->
+    <string name="slots_title">Character Equipment</string>
+
 </resources>
