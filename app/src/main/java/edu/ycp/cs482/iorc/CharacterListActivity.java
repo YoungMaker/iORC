@@ -249,6 +249,9 @@ public class CharacterListActivity extends AppCompatActivity {
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
                 getIds(policy);
+                //notify user the network response has been received.
+                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
                 //loadingView.setVisibility(View.GONE);
             }
 
@@ -319,9 +322,7 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mText = input.getText().toString(); //TODO set char name?
-                //TODO: Move this to when the network response has been received.
-                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
                 HashMap<String, String> creationData = (HashMap<String, String>) getIntent().getSerializableExtra(CREATION_DATA);
                 creationData.put("Name", mText);
                 Log.d("CHARACTER CREATION DATA","DATA: " + creationData);
