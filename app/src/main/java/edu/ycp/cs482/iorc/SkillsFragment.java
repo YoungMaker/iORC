@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,6 +78,8 @@ public class SkillsFragment extends Fragment {
 
         ListView listView = rootView.findViewById(R.id.skillList);
 
+//        RecyclerView Recycler = rootView.findViewById(R.id.skillList);
+
         HashMap<String, String> nameDescription = new HashMap<>();
 
         for(int i = 0; i < mItem.fragments().skillData.stats().size(); i++){
@@ -103,7 +106,13 @@ public class SkillsFragment extends Fragment {
                 new String[]{"First Line", "Second Line"},
                 new int[]{R.id.skill_his_text, R.id.skill_his_description});
 
+        for(int i = 0; i < 17; i++){
+            Log.d("SKILL_ADAPTER", adapter.getItem(i).toString());
+        }
+
         listView.setAdapter(adapter);
+
+//        Recycler.setAdapter(adapter);
 
 
 
@@ -159,13 +168,13 @@ public class SkillsFragment extends Fragment {
 
         private SkillView(View rootView){
 
-            //Log.d("SKILL_TEXT: ", mCharacterSkill.toString());
-            //mCharacterSkillHis = rootView.findViewById(R.id.skill_his_text);
+//            Log.d("SKILL_TEXT: ", mCharacterSkill.toString());
+
+//            mCharacterSkillHis = rootView.findViewById(R.id.skill_his_text);
 //            mCharacterSkillAcro = rootView.findViewById(R.id.skill_acro_text);
 //            mCharacterSkillArcana = rootView.findViewById(R.id.skill_arcana_text);
 //            mCharacterSkillAthl = rootView.findViewById(R.id.skill_athl_text);
 //            mCharacterSkillBluff = rootView.findViewById(R.id.skill_bluff_text);
-//
 //            mCharacterSkillDiplo = rootView.findViewById(R.id.skill_diplo_text);
 //            mCharacterSkillEndur = rootView.findViewById(R.id.skill_endur_text);
 //            mCharacterSkillHeal = rootView.findViewById(R.id.skill_heal_text);
@@ -179,7 +188,7 @@ public class SkillsFragment extends Fragment {
 //            mCharacterSkillThiev = rootView.findViewById(R.id.skill_thiev_text);
 //            mCharacterSkillDungeon = rootView.findViewById(R.id.skill_dungeon_text);
 
-            //mCharacterSkillHisDescription = rootView.findViewById(R.id.skill_his_description);
+//            mCharacterSkillHisDescription = rootView.findViewById(R.id.skill_his_description);
 //            mCharacterSkillAcroDescription = rootView.findViewById(R.id.skill_acro_description);
 //            mCharacterSkillArcanaDescription = rootView.findViewById(R.id.skill_arcana_description);
 //            mCharacterSkillAthlDescription = rootView.findViewById(R.id.skill_athl_description);
@@ -199,7 +208,6 @@ public class SkillsFragment extends Fragment {
         }
 
         private void updateSkillView(SkillVersionQuery.GetVersionSkills item) {
-            //convert the long values (of each ability score) to strings that can be shown as the character ability score values
             //Log.d("THING: ", item.fragments().skillData.stats().toString());
             if(item.fragments().skillData.stats() != null){
                 List<SkillData.Stat> SkillStats = item.fragments().skillData.stats();
