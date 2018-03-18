@@ -312,12 +312,16 @@ public class CharacterDetailFragment extends Fragment {
                         charStatMap.put(statName.toLowerCase(), skillValue);
                     }
 
-                    //TODO create defense values
+                    //create defense values
                     if(mod.key().contains("||")){
                         String[] options = mod.key().split("\\|\\|");
 
                         Log.d("OPTIONS", options[0] + " " + options[1]);
                         Log.d("DEFENSE", statName.toLowerCase());
+
+                        String highestMod = selectDefMod(options);
+                        Double value =  charStatMap.get(highestMod);
+                        charStatMap.put(statName.toLowerCase(), value);
 
                     }
                     //TODO create health stats (move to ability mod loop?)
@@ -350,9 +354,18 @@ public class CharacterDetailFragment extends Fragment {
         return keyName;
     }
 
-    public String selectDefMod(){
+    public String selectDefMod(String[] options){
 
         String highest = "";
+        Double highestVal = null;
+
+        for(String option : options){
+            Double value = charStatMap.get(option);
+            if(highestVal == null || highestVal < value){
+                highestVal = value;
+                highest = option;
+            }
+        }
 
         return highest;
     }
