@@ -15,7 +15,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 
 public class MyApolloClient {
-    private static final String BASE_URL = "http://10.64.12.31:8081/graphql";
+    private static final String BASE_URL = "http://10.128.65.65:8081/graphql";
     private static ApolloClient myApolloClient;
     //private static File characterCache = new File();
     private static int cacheSize = 1024*1024;

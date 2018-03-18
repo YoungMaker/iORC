@@ -135,7 +135,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-                    Log.d("CHAR_ARG", arguments.toString());
+                    //Log.d("CHAR_ARG", arguments.toString());
                     arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
@@ -144,13 +144,11 @@ public class CharacterDetailActivity extends AppCompatActivity {
                             .commit();
                     break;
 
-
                 case R.id.action_skills:
                     Bundle skillArguments = new Bundle();
                     skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
-                    Log.d("SKILL_ARG", skillArguments.toString());
-                    //Log.d("SKILL", getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID).toString());
+                    //Log.d("SKILL_ARG", skillArguments.toString());
                     skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
                     SkillsFragment skillFragment = new SkillsFragment();
                     skillFragment.setArguments(skillArguments);
@@ -158,12 +156,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
                             .replace(R.id.character_detail_container, skillFragment)
                             .commit();
                     break;
-
-                    /*SkillsFragment fragment2 = new SkillsFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
-                    fragmentTransaction2.commit();*/
-
 
                 case R.id.action_equipment:
                     EquipmentFragment fragment3 = new EquipmentFragment();

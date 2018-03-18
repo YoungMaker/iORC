@@ -173,9 +173,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.CENTER, 0, 0);
+                        //toast.show();
                         Log.e("ERROR: ", e.toString());
                     }
                 });
@@ -185,7 +185,7 @@ public class CharacterListActivity extends AppCompatActivity {
     //test query
     public void getSkillsList(HttpCachePolicy.Policy policy){
         //final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getSkillApolloClient().query(
+        MyApolloClient.getMyApolloClient().query(
                 SkillVersionQuery.builder().version("4e").build())
                 .httpCachePolicy(policy)
                 .enqueue(new ApolloCall.Callback<SkillVersionQuery.Data>() {
@@ -202,7 +202,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
                                 //clear list of skills so that when the query is called for a list update duplicate skills do not appear
                                 skillResponses.clear();
-                                //add skills into map and list
+                                //add skills into map and list8
                                 skillResponses.add(skillResponseData);
                                 Log.d("THING",skillResponseData.fragments().skillData.stats().toString());
                                 skillDetailMap.put(
@@ -218,9 +218,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.CENTER, 0, 0);
+                        //toast.show();
                         Log.e("ERROR: ", e.toString());
                     }
                 });
