@@ -332,7 +332,10 @@ public class CharacterDetailFragment extends Fragment {
 
 
 
-        Log.d("CHARACTER_ABILITIES", charStatMap.toString());
+        //Log.d("CHARACTER_ABILITIES", charStatMap.toString());
+        //log map values
+        printMapValues(charStatMap);
+
     }
 
 
@@ -368,6 +371,12 @@ public class CharacterDetailFragment extends Fragment {
         }
 
         return highest;
+    }
+
+    public void printMapValues(HashMap<String, Double> map){
+        for(String key : map.keySet()){
+            Log.d("MAP_VALUE", key + " " + map.get(key).toString());
+        }
     }
 
 }
