@@ -22,6 +22,14 @@
         android:title="@string/text_equipment"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/action_inventory"
+        android:enabled="true"
+        android:icon="@drawable/shield_outline"
+        android:title="@string/Inventory"
+        android:iconTint="@android:color/white"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_magic"
         android:enabled="true"
         android:icon="@drawable/magic"
