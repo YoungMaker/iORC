@@ -5,6 +5,12 @@
    }
  }
 
+ query VersionItemsQuery($version: String!){
+   getVersionItems(version: $version){
+     ...ItemData
+   }
+ }
+
  query VersionSheetQuery($version: String!){
      getVersionSheet(version : $version){
          ...VersionSheetData
@@ -114,4 +120,17 @@ fragment VersionInfoData on Version{
       type
       value
     }
+}
+
+fragment ItemData on Item {
+  name
+  version
+  description
+  modifiers{
+    key
+    value
+  }
+  itemClasses
+  price
+  type
 }

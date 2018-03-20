@@ -16,10 +16,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
 
+import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.fragment.ItemData;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of Items. This activity
@@ -39,6 +48,8 @@ public class ItemListActivity extends AppCompatActivity {
     private static final String CREATION_DATA = "CREATION_DATA";
     private boolean mTwoPane;
     private HashMap<String, String> creationMap;
+    private VersionItemsQuery.Data versionItemQueryData;
+    private List<ItemData> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,5 +173,47 @@ public class ItemListActivity extends AppCompatActivity {
                 mContentView = view.findViewById(R.id.content);
             }
         }
+    }
+
+    //item queries
+
+    //all items
+    private void getAllItems(){
+        MyApolloClient.getMyApolloClient().query(
+            VersionItemsQuery.builder().version("4e").build())
+                .enqueue(new ApolloCall.Callback<VersionItemsQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<VersionItemsQuery.Data> response) {
+
+                        versionItemQueryData = response.data();
+
+                        ItemListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int numItems = versionItemQueryData.getVersionItems().size();
+                                List<VersionItemsQuery.GetVersionItem> versionItems =
+                                        versionItemQueryData.getVersionItems();
+                                for(int i = 0; i < numItems; i++){
+                                    itemList.add(versionItems.get(i).fragments().itemData);
+                                }
+                                refreshView();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+
+                    }
+                });
+    }
+
+    //TODO implment other queries for specific item lookups
+
+    //TODO create method(s) for sorting list by different parameters
+
+    //refresh recycler view
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }
