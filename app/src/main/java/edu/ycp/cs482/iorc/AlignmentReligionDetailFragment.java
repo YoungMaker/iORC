@@ -9,7 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.fragment.VersionInfoData;
 
 /**
  * A fragment representing a single AlignmentReligion detail screen.
@@ -23,13 +26,13 @@ public class AlignmentReligionDetailFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM = "CURRENT_ITEM";
     public static final String ARG_SHOW_ITEM = "SHOW_RELIGION";
 
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyAlignment mItem;
-    private DummyContent.DummyReligion amItem;
+    private VersionInfoData.InfoList mItem;
 
     private boolean showReligion = false;
 
@@ -49,18 +52,13 @@ public class AlignmentReligionDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ALIGNMENT_MAP.get(getArguments().getString(ARG_ITEM_ID));
-            amItem = DummyContent.RELIGION_MAP.get((getArguments().getString(ARG_ITEM_ID)));
+            Bundle extras = getArguments();
+            mItem = (new Gson()).fromJson(extras.getString(ARG_ITEM), VersionInfoData.InfoList.class);
 
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                if(showReligion){
-                    appBarLayout.setTitle(amItem.name);
-                }else if(!showReligion){
-                    appBarLayout.setTitle(mItem.name);
-                }
-
+            if (appBarLayout != null && mItem != null) {
+                appBarLayout.setTitle(mItem.name());
             }
         }
     }
@@ -70,12 +68,12 @@ public class AlignmentReligionDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.alignmentreligion_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
-        if (!showReligion && mItem != null) {
-            ((TextView) rootView.findViewById(R.id.alignmentreligion_detail)).setText(mItem.content);
-        } else if (showReligion && amItem != null){
-            ((TextView) rootView.findViewById(R.id.alignmentreligion_detail)).setText(amItem.content);
+        if(mItem != null){
+            // Show the dummy content as text in a TextView.
+            ((TextView) rootView.findViewById(R.id.alignmentreligion_detail)).setText(mItem.value());
         }
+
+
         return rootView;
     }
 }

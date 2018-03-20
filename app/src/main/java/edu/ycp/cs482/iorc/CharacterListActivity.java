@@ -57,6 +57,7 @@ public class CharacterListActivity extends AppCompatActivity {
      */
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
+    private static final String V_DATA = "VERSION_DATA";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
@@ -68,7 +69,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
     private HashMap<String, String> characterDetailMap = new HashMap<>();
     private static HashMap<String, String> skillDetailMap = new HashMap<>();
+    private HashMap<String, String> versionInfoMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
+    private VersionSheetQuery.GetVersionSheet versionData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +101,8 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
+        getVersionInfo();
+
         //check if character is being deleted
         if(extras != null && extras.getBoolean(DO_DELETE)){
             //trigger delete muation
@@ -112,8 +117,9 @@ public class CharacterListActivity extends AppCompatActivity {
         }
 
 
-        Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
+        //Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
         if (findViewById(R.id.character_detail_container) != null && findViewById(R.id.skillList) != null) {
+        
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -122,7 +128,8 @@ public class CharacterListActivity extends AppCompatActivity {
         }
 
 
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, skillDetailMap, mTwoPane);
+
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane, versionInfoMap);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -340,6 +347,30 @@ public class CharacterListActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void getVersionInfo(){
+        MyApolloClient.getMyApolloClient().query(
+                VersionSheetQuery.builder().version("4e").build()
+        )
+                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
+                        versionData = response.data().getVersionSheet;
+                        //Log.d("VERSION DATA", versionData.toString());
+                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                versionInfoMap.put(V_DATA, (new Gson()).toJson(versionData));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.d("QUERY FAILED", "NO RESPONSE");
+                    }
+                });
+    }
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(mSimpleAdapter);
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
@@ -380,6 +411,7 @@ public class CharacterListActivity extends AppCompatActivity {
         //private final List<SkillVersionQuery.GetVersionSkills> mSkillValues;
         private final HashMap<String, String> mMap;
         private final HashMap<String, String> mSkillMap;
+        private final HashMap<String, String> mVData;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -420,7 +452,7 @@ public class CharacterListActivity extends AppCompatActivity {
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
                     intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
                     intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
-
+                    intent.putExtra(V_DATA, mVData);
                     context.startActivity(intent);
                 }
             }
@@ -428,13 +460,13 @@ public class CharacterListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
                                       List<CharacterVersionQuery.GetCharactersByVersion> items,
-                                      HashMap<String, String> characterDetailMap, HashMap<String, String> skillDetailMap, boolean twoPane) {
-
+                                      HashMap<String, String> characterDetailMap, boolean twoPane,
+                                      HashMap<String, String> versionData) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
             mMap = characterDetailMap;
-            mSkillMap = skillDetailMap;
+            mVData = versionData;
         }
 
         @Override
