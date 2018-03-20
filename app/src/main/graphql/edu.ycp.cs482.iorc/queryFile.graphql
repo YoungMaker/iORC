@@ -37,7 +37,7 @@
 
   query SkillVersionQuery($version: String!){
     getVersionSkills(version: $version){
-      ... VersionSheetInformation
+      ... VersionSheetData
       }
  }
   query VersionInfoTypeQuery($version :String!, $type :String!){
@@ -109,6 +109,7 @@ fragment ClassData on Class {
 fragment VersionSheetData on Version{
   version
     stats{
+      key
       name
       description
       modifiers{
@@ -117,15 +118,21 @@ fragment VersionSheetData on Version{
       }
     }
     infoList{
-      id
-      name
-      type
-      value
+        id
+        name
+        type
+        value
     }
 }
 
 fragment VersionInfoData on Version{
-  version
+    version
+    infoList{
+        id
+        name
+        type
+        value
+    }
 }
 
 fragment ItemData on Item {
