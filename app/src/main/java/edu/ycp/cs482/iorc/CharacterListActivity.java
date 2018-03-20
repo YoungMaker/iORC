@@ -215,9 +215,9 @@ public class CharacterListActivity extends AppCompatActivity {
                                 skillResponses.clear();
                                 //add skills into map and list8
                                 skillResponses.add(skillResponseData);
-                                Log.d("THING",skillResponseData.fragments().skillData.stats().toString());
+                                Log.d("THING",skillResponseData.fragments().versionSheetData().stats().toString());
                                 skillDetailMap.put(
-                                        skillResponseData.fragments().skillData.stats().toString(),
+                                        skillResponseData.fragments().versionSheetData().stats().toString(),
                                         (new Gson()).toJson(skillResponseData));
                                 Log.d("NEXT_THING", skillDetailMap.toString());
 
@@ -416,10 +416,9 @@ public class CharacterListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;
-        //private final List<SkillVersionQuery.GetVersionSkills> mSkillValues;
+        private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;;
         private final HashMap<String, String> mMap;
-        private final HashMap<String, String> mSkillMap;
+        //private final HashMap<String, String> mSkillMap;
         private final HashMap<String, String> mVData;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -437,7 +436,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     //Bundle skillArguments = new Bundle();
                     //Log.d("SKILL_ITEM", skillItem.toString());
-                    arguments.putString(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
+                    arguments.putString(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().versionSheetData().stats().toString());
 
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
@@ -459,8 +458,8 @@ public class CharacterListActivity extends AppCompatActivity {
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
                     intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
-                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
-                    intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
+                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().versionSheetData().stats().toString());
+                    //intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
                     intent.putExtra(V_DATA, mVData);
                     context.startActivity(intent);
                 }

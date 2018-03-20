@@ -25,7 +25,7 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
-import edu.ycp.cs482.iorc.fragment.SkillData;
+import edu.ycp.cs482.iorc.fragment.VersionSheetData;
 
 
 /**
@@ -82,8 +82,8 @@ public class SkillsFragment extends Fragment {
 
         HashMap<String, String> nameDescription = new HashMap<>();
 
-        for(int i = 0; i < mItem.fragments().skillData.stats().size(); i++){
-            nameDescription.put(mItem.fragments().skillData.stats().get(i).name(), mItem.fragments().skillData.stats().get(i).description());
+        for(int i = 0; i < mItem.fragments().versionSheetData().stats().size(); i++){
+            nameDescription.put(mItem.fragments().versionSheetData().stats().get(i).name(), mItem.fragments().versionSheetData().stats().get(i).description());
             //Log.d("SKILL_NAME_CHECK: ", mItem.fragments().skillData.stats().get(i).name());
             //Log.d("SKILL_DESCRIP_CHECK: ", mItem.fragments().skillData.stats().get(i).description());
         }
@@ -209,8 +209,8 @@ public class SkillsFragment extends Fragment {
 
         private void updateSkillView(SkillVersionQuery.GetVersionSkills item) {
             //Log.d("THING: ", item.fragments().skillData.stats().toString());
-            if(item.fragments().skillData.stats() != null){
-                List<SkillData.Stat> SkillStats = item.fragments().skillData.stats();
+            if(item.fragments().versionSheetData().stats() != null){
+                List<VersionSheetData.Stat> SkillStats = item.fragments().versionSheetData().stats();
                 //Log.d("SKILL_THING: ", SkillStats.toString());
                 //SkillData.Modifier SkillMods = (SkillData.Modifier) item.fragments().skillData().stats();
                 //CharacterData.AbilityPoints abilityPoints = item.fragments().characterData.abilityPoints();
