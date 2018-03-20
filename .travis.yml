@@ -2,13 +2,17 @@ language: android
 before_install:
  - chmod +x gradlew
  - yes | sdkmanager "platforms;android-26"
+android:
+  components:
+    - build-tools-25.0.1
+    - android-25
+env:
+  global:
+   # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8
+
 before_script:
-  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-25 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
-android:
-  components:
-
-    - build-tools-25.0.1
-    - android-25
