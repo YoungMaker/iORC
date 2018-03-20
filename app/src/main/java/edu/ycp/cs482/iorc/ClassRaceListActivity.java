@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -101,6 +103,24 @@ public class ClassRaceListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
 
     }
+
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.quit){
+            Intent intent = new Intent( ClassRaceListActivity.this, CharacterListActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     private void getRaces(){
         MyApolloClient.getRaceApolloClient().query(

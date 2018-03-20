@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -89,6 +91,23 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.quit){
+            Intent intent = new Intent( AlignmentReligionListActivity.this, CharacterListActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ALIGNMENTS, DummyContent.RELIGIONS, mTwoPane, showReligion));
         //set adapter
@@ -140,6 +159,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                     .inflate(R.layout.alignmentreligion_list_content, parent, false);
             return new ViewHolder(view);
         }
+
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
