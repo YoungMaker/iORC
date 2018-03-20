@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -147,12 +148,17 @@ public class CharacterDetailActivity extends AppCompatActivity {
                             .commit();
                     break;
 
-
                 case R.id.action_skills:
-                    SkillsFragment fragment2 = new SkillsFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
-                    fragmentTransaction2.commit();
+                    Bundle skillArguments = new Bundle();
+                    skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
+                            getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+                    //Log.d("SKILL_ARG", skillArguments.toString());
+                    skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
+                    SkillsFragment skillFragment = new SkillsFragment();
+                    skillFragment.setArguments(skillArguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.character_detail_container, skillFragment)
+                            .commit();
                     break;
 
                 case R.id.action_equipment:

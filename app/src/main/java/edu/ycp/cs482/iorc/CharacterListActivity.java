@@ -63,7 +63,12 @@ public class CharacterListActivity extends AppCompatActivity {
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
     private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
+
+    public static SkillVersionQuery.GetVersionSkills skillResponseData;
+    private List <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
+
     private HashMap<String, String> characterDetailMap = new HashMap<>();
+    private static HashMap<String, String> skillDetailMap = new HashMap<>();
     private HashMap<String, String> versionInfoMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
     private VersionSheetQuery.GetVersionSheet versionData;
@@ -108,16 +113,20 @@ public class CharacterListActivity extends AppCompatActivity {
             //get character list if now character is being deleted
             HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
             getIds(policy);
+            getSkillsList(policy);
         }
 
+
         //Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
-        if (findViewById(R.id.character_detail_container) != null) {
+        if (findViewById(R.id.character_detail_container) != null && findViewById(R.id.skillList) != null) {
+        
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+
 
 
         mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane, versionInfoMap);
@@ -143,41 +152,85 @@ public class CharacterListActivity extends AppCompatActivity {
                 CharacterVersionQuery.builder().version("4e").build())
                 .httpCachePolicy(policy)
                 .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
-            @Override
-            public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
-
-                characterResponseData = response.data().getCharactersByVersion;
-                //Log.d("BEFORE UI THREAD","Line before new runnable");
-                CharacterListActivity.this.runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {
-                        //characterResponses.add(characterResponseData);
-                        // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-                        //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
-                        //clear list of characters so that when the query is called for a list update duplicate characters do not appear
-                        characterResponses.clear();
-                        //add each character into map and list
-                        for(int i = 0; i < characterResponseData.size(); i++){
-                            characterResponses.add(characterResponseData.get(i));
-                            characterDetailMap.put(
-                                    characterResponseData.get(i).fragments().characterData.id(),
-                                    (new Gson()).toJson(characterResponseData.get(i)));
-                        }
-                        refreshView();
-                        //loadingView.setVisibility(View.GONE);
+                    public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
+
+                        characterResponseData = response.data().getCharactersByVersion;
+                        //Log.d("BEFORE UI THREAD","Line before new runnable");
+                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //characterResponses.add(characterResponseData);
+                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                                //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+                                characterResponses.clear();
+                                //add each character into map and list
+                                for(int i = 0; i < characterResponseData.size(); i++){
+                                    characterResponses.add(characterResponseData.get(i));
+                                    characterDetailMap.put(
+                                            characterResponseData.get(i).fragments().characterData.id(),
+                                            (new Gson()).toJson(characterResponseData.get(i)));
+                                }
+                                refreshView();
+                                //loadingView.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.CENTER, 0, 0);
+                        //toast.show();
+                        Log.e("ERROR: ", e.toString());
                     }
                 });
-            }
 
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                Log.e("ERROR: ", e.toString());
-            }
-        });
+    }
 
+    //test query
+    public void getSkillsList(HttpCachePolicy.Policy policy){
+        //final View loadingView = findViewById(R.id.loadingPanel);
+        MyApolloClient.getMyApolloClient().query(
+                SkillVersionQuery.builder().version("4e").build())
+                .httpCachePolicy(policy)
+                .enqueue(new ApolloCall.Callback<SkillVersionQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<SkillVersionQuery.Data> response) {
+
+                        //SkillVersionQuery.GetVersionSkills skillResponseDataTemp = response.data().getVersionSkills;
+                        skillResponseData = response.data().getVersionSkills;
+
+                        //Log.d("BEFORE UI THREAD","Line before new runnable");
+                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                //clear list of skills so that when the query is called for a list update duplicate skills do not appear
+                                skillResponses.clear();
+                                //add skills into map and list8
+                                skillResponses.add(skillResponseData);
+                                Log.d("THING",skillResponseData.fragments().skillData.stats().toString());
+                                skillDetailMap.put(
+                                        skillResponseData.fragments().skillData.stats().toString(),
+                                        (new Gson()).toJson(skillResponseData));
+                                Log.d("NEXT_THING", skillDetailMap.toString());
+
+                                refreshView();
+                                //loadingView.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.CENTER, 0, 0);
+                        //toast.show();
+                        Log.e("ERROR: ", e.toString());
+                    }
+                });
     }
 
     private void createCharacter(HashMap<String, String> creationData){
@@ -203,6 +256,9 @@ public class CharacterListActivity extends AppCompatActivity {
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
                 getIds(policy);
+                //notify user the network response has been received.
+                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
                 //loadingView.setVisibility(View.GONE);
             }
 
@@ -273,9 +329,7 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mText = input.getText().toString(); //TODO set char name?
-                //TODO: Move this to when the network response has been received.
-                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
                 HashMap<String, String> creationData = (HashMap<String, String>) getIntent().getSerializableExtra(CREATION_DATA);
                 creationData.put("Name", mText);
                 Log.d("CHARACTER CREATION DATA","DATA: " + creationData);
@@ -338,10 +392,12 @@ public class CharacterListActivity extends AppCompatActivity {
             case R.id.dice:
                 Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
                 startActivity(diceIntent);
+                break;
 
             case R.id.login:
                 Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -352,7 +408,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
         private final CharacterListActivity mParentActivity;
         private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;
+        //private final List<SkillVersionQuery.GetVersionSkills> mSkillValues;
         private final HashMap<String, String> mMap;
+        private final HashMap<String, String> mSkillMap;
         private final HashMap<String, String> mVData;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -364,18 +422,37 @@ public class CharacterListActivity extends AppCompatActivity {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
+
+
+                    //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
+
+                    //Bundle skillArguments = new Bundle();
+                    //Log.d("SKILL_ITEM", skillItem.toString());
+                    arguments.putString(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
+
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
+
+                    SkillsFragment skillFragment = new SkillsFragment();
+
+                    skillFragment.setArguments(arguments);
+
                     mParentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.character_detail_container, fragment)
                             .commit();
+
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.skillList, skillFragment)
+                            .commit();
                 } else {
+                    //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
                     intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
+                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
+                    intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
                     intent.putExtra(V_DATA, mVData);
-
                     context.startActivity(intent);
                 }
             }

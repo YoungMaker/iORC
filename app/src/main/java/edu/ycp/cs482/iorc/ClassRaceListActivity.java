@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -56,7 +58,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classrace_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
@@ -77,10 +79,12 @@ public class ClassRaceListActivity extends AppCompatActivity {
         if(extra != null && extra.getBoolean(ARG_BOOL_KEY)){
             //indicate a switch in values
             showRace = true;
+            setTitle(getResources().getString(R.string.title_race));
             getRaces();
             getIntent().removeExtra(ARG_BOOL_KEY);
         }
         else {
+            setTitle(getResources().getString(R.string.title_class));
             getClasses();
         }
 
@@ -99,6 +103,24 @@ public class ClassRaceListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
 
     }
+
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.quit){
+            Intent intent = new Intent( ClassRaceListActivity.this, CharacterListActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     private void getRaces(){
         MyApolloClient.getRaceApolloClient().query(
@@ -237,7 +259,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             int itemCount = 0;
             if(showRace) {
                 itemCount = amValues.size();
-            }else if(!showRace){
+            }else {
                 itemCount = mValues.size();
             }
             return itemCount;

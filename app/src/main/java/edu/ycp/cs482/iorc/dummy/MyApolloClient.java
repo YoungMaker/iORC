@@ -208,5 +208,33 @@ public class MyApolloClient {
         return itemApolloClient;
     }
 
+    public static ApolloClient getSkillApolloClient(){
+
+        CharacterHttpCacheStore skillCacheStore = new CharacterHttpCacheStore();
+
+        //setup skills
+        skillCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/skillCache/"), cacheSize);
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        HttpCache cache = new ApolloHttpCache(skillCacheStore, null);
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                //Network interceptor for http request, cache interceptor for cache
+                .addNetworkInterceptor(loggingInterceptor)
+                .addInterceptor(cache.interceptor())
+                .readTimeout(2, TimeUnit.SECONDS)
+                .writeTimeout(2, TimeUnit.SECONDS)
+                .build();
+
+        ApolloClient skillApolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .httpCache(new ApolloHttpCache(skillCacheStore))
+                .okHttpClient(okHttpClient)
+                .build();
+
+        return skillApolloClient;
+    }
+
 }
 

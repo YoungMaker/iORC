@@ -74,9 +74,10 @@ public class CharacterDetailFragment extends Fragment {
             // to load content from a content provider.
             //mItem = DummyContent.CHARACTER_MAP.get(getArguments().getString(ARG_ITEM_ID));
             Bundle bundle = getArguments();
-
+            Log.d("CHAR_ARGUMENTS", getArguments().toString());
             HashMap<String, String> charMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
             String charObj = "";
+            Log.d("CHAR_OBJ", charMap.get(bundle.getString(ARG_ITEM_ID)));
             if(charMap != null){
                 charObj = charMap.get(bundle.getString((ARG_ITEM_ID)));
             }
@@ -147,8 +148,8 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilInt = rootView.findViewById(R.id.character_abil_int);
             mCharacterAbilWis = rootView.findViewById(R.id.character_abil_wis);
             mCharacterAbilCha = rootView.findViewById(R.id.character_abil_cha);
-            mCharacterRace = rootView.findViewById(R.id.character_race);
-            mCharacterClass = rootView.findViewById(R.id.character_class);
+            //mCharacterRace = rootView.findViewById(R.id.character_race);
+            //mCharacterClass = rootView.findViewById(R.id.character_class);
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {

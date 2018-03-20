@@ -6,14 +6,14 @@
         android:enabled="true"
         android:icon="@drawable/human_male_female"
         android:title="@string/character"
-        android:iconTint="@android:color/white"
+        android:tint="@android:color/white"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_skills"
         android:enabled="true"
         android:icon="@drawable/ic_build_black_24dp"
         android:title="@string/Skills"
-        android:iconTint="@android:color/white"
+        android:tint="@android:color/white"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_equipment"
@@ -21,6 +21,7 @@
         android:icon="@drawable/sword_cross"
         android:title="@string/text_equipment"
         app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_magic"
         android:enabled="true"
