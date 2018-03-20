@@ -56,7 +56,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classrace_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
 
@@ -77,10 +77,12 @@ public class ClassRaceListActivity extends AppCompatActivity {
         if(extra != null && extra.getBoolean(ARG_BOOL_KEY)){
             //indicate a switch in values
             showRace = true;
+            setTitle(getResources().getString(R.string.title_race));
             getRaces();
             getIntent().removeExtra(ARG_BOOL_KEY);
         }
         else {
+            setTitle(getResources().getString(R.string.title_class));
             getClasses();
         }
 
@@ -237,7 +239,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             int itemCount = 0;
             if(showRace) {
                 itemCount = amValues.size();
-            }else if(!showRace){
+            }else {
                 itemCount = mValues.size();
             }
             return itemCount;

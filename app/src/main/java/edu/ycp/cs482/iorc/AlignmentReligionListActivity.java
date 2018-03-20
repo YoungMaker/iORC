@@ -63,7 +63,10 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             if(extra.getBoolean(ARG_BOOL_KEY)){
                 //indicate a switch in values
                 showReligion = true;
+                setTitle(getResources().getString(R.string.title_religion));
                 getIntent().removeExtra(ARG_BOOL_KEY);
+            }else {
+                setTitle(getResources().getString(R.string.title_alignment));
             }
         }
 
@@ -145,7 +148,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
                 holder.mContentView.setText(mValues.get(position).name);
 
                 holder.itemView.setTag(mValues.get(position));
-            } else if(isReligion){
+            } else {
                 holder.mIdView.setText(amValues.get(position).id);
                 holder.mContentView.setText(amValues.get(position).name);
 
@@ -159,7 +162,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
             int itemCount = 0;
             if(!isReligion){
                 itemCount = mValues.size();
-            } else if(isReligion){
+            } else {
                 itemCount = amValues.size();
             }
             return itemCount;

@@ -184,9 +184,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_classrace_list">ClassesRaces</string>
+    <string name="title_classrace_list">Classes &amp; Races</string>
     <string name="title_classrace_detail">ClassRace Detail</string>
-    <string name="title_alignmentreligion_list">AlignmentsReligions</string>
+    <string name="title_alignment">Choose Your Alignment</string>
+    <string name="title_religion">Choose Your Religion</string>
+    <string name="title_race">Choose Your Race</string>
+    <string name="title_class">Choose Your Class</string>
+    <string name="title_alignmentreligion_list">Alignments &amp; Religion</string>
     <string name="title_alignmentreligion_detail">AlignmentReligion Detail</string>
 
     <!-- character_detail.xml - fragment -->
