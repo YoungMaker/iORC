@@ -76,6 +76,7 @@ public class CharacterListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_character_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -84,6 +85,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
         //get extras
         Bundle extras = getIntent().getExtras();
+
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -187,7 +189,9 @@ public class CharacterListActivity extends AppCompatActivity {
                     }
                 });
 
+
     }
+
 
     //test query
     public void getSkillsList(HttpCachePolicy.Policy policy){
@@ -245,7 +249,7 @@ public class CharacterListActivity extends AppCompatActivity {
         abilityScores.cha(randAbils.getCha());
         AbilityInput staticAbil = abilityScores.build();
 
-        //final View loadingView = findViewById(R.id.loadingPanel);
+        final View loadingView = findViewById(R.id.loadingPanel);
 
         MyApolloClient.getMyApolloClient().mutate(
 
@@ -254,6 +258,7 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
+                loadingView.setVisibility(View.GONE);
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
                 getIds(policy);
                 //notify user the network response has been received.
@@ -273,7 +278,7 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void deleteCharacter(String toDel){
-        //final View loadingView = findViewById(R.id.loadingPanel);
+        final View loadingView = findViewById(R.id.loadingPanel);
         MyApolloClient.getMyApolloClient().mutate(
                 DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
             //on character deletion get the character list
@@ -281,8 +286,12 @@ public class CharacterListActivity extends AppCompatActivity {
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
                 //loadingView.setVisibility(View.GONE);
                 Log.d("CHARACTER DELETED", "");
+
+                loadingView.setVisibility(View.GONE);
+
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
                 getIds(policy);
+
             }
 
             @Override
