@@ -283,5 +283,6 @@
     <string name="delete_page">Delete Page</string>
     <!-- fragment_modifier_list.xml!-->
     <string name="modifiers">Modifiers:</string>
+    <string name="menu_bail">Quit</string>
 
 </resources>
