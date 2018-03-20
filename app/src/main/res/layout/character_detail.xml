@@ -306,7 +306,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:text="Race:"/>
+            android:text="@string/race"/>
 
         <TextView
             android:id="@+id/character_race"
@@ -331,7 +331,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
-            android:text="Class:"/>
+            android:text="@string/Class"/>
 
         <TextView
             android:id="@+id/character_class"

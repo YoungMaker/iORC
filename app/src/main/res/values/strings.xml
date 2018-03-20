@@ -184,9 +184,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_classrace_list">ClassesRaces</string>
+    <string name="title_classrace_list">Classes &amp; Races</string>
     <string name="title_classrace_detail">ClassRace Detail</string>
-    <string name="title_alignmentreligion_list">AlignmentsReligions</string>
+    <string name="title_alignment">Choose Your Alignment</string>
+    <string name="title_religion">Choose Your Religion</string>
+    <string name="title_race">Choose Your Race</string>
+    <string name="title_class">Choose Your Class</string>
+    <string name="title_alignmentreligion_list">Alignments &amp; Religion</string>
     <string name="title_alignmentreligion_detail">AlignmentReligion Detail</string>
 
     <!-- character_detail.xml - fragment -->
@@ -208,6 +212,47 @@
     <string name="Int">INT:</string>
     <string name="Wis">WIS:</string>
     <string name="Cha">CHA:</string>
+    <string name="race">Race:</string>
+    <string name="Class">Class:</string>
+    <string name="initiative">Initiative:</string>
+    <string name="hitpoints">Hitpoints:</string>
+    <string name="speed">Speed:</string>
+    <string name="pref_race">%1$s</string>
+    <string name="pref_class">%1$s</string>
+    <string name="pref_skill_history">%1$s</string>
+    <string name="pref_skill_acrobatics">%1$s</string>
+    <string name="pref_skill_arcana">%1$s</string>
+    <string name="pref_skill_athletics">%1$s</string>
+    <string name="pref_skill_bluff">%1$s</string>
+    <string name="pref_skill_diplomancy">%1$s</string>
+    <string name="pref_skill_endurance">%1$s</string>
+    <string name="pref_skill_heal">%1$s</string>
+    <string name="pref_skill_insight">%1$s</string>
+    <string name="pref_skill_intimidate">%1$s</string>
+    <string name="pref_skill_nature">%1$s</string>
+    <string name="pref_skill_perception">%1$s</string>
+    <string name="pref_skill_religion">%1$s</string>
+    <string name="pref_skill_stealth">%1$s</string>
+    <string name="pref_skill_streetwise">%1$s</string>
+    <string name="pref_skill_thievery">%1$s</string>
+    <string name="pref_skill_dungeoneering">%1$s</string>
+    <string name="pref_skill__history_description">%1$s</string>
+    <string name="pref_skill_acrobatics_description">%1$s</string>
+    <string name="pref_skill_arcana_description">%1$s</string>
+    <string name="pref_skill_athletics_description">%1$s</string>
+    <string name="pref_skill_bluff_description">%1$s</string>
+    <string name="pref_skill_diplomancy_description">%1$s</string>
+    <string name="pref_skill_endurance_description">%1$s</string>
+    <string name="pref_skill_heal_description">%1$s</string>
+    <string name="pref_skill_insight_description">%1$s</string>
+    <string name="pref_skill_intimidate_description">%1$s</string>
+    <string name="pref_skill_nature_description">%1$s</string>
+    <string name="pref_skill_perception_description">%1$s</string>
+    <string name="pref_skill_religion_description">%1$s</string>
+    <string name="pref_skill_stealth_description">%1$s</string>
+    <string name="pref_skill_streetwise_description">%1$s</string>
+    <string name="pref_skill_thievery_description">%1$s</string>
+    <string name="pref_skill_dungeoneering_description">%1$s</string>
 
     <!--defense_layout.xml-->
     <string name="pref_ac">%1$s</string>
@@ -235,11 +280,9 @@
     <string name="text_magic">Magic</string>
     <string name="Skills">Skills</string>
     <string name="character">Character</string>
-    <string name="initiative">Initiative:</string>
-    <string name="hitpoints">Hitpoints:</string>
-    <string name="speed">Speed:</string>
     <string name="delete_page">Delete Page</string>
     <!-- fragment_modifier_list.xml!-->
     <string name="modifiers">Modifiers:</string>
+    <string name="menu_bail">Quit</string>
 
 </resources>

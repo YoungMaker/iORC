@@ -8,6 +8,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -27,6 +28,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
+    private static final String V_DATA = "VERSION_DATA";
     private String CHARCTER_ID = "";
 
     @Override
@@ -80,7 +82,9 @@ public class CharacterDetailActivity extends AppCompatActivity {
             CHARCTER_ID = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
             arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                     CHARCTER_ID);
-            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+            arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
+                    getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
             CharacterDetailFragment fragment = new CharacterDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -132,9 +136,11 @@ public class CharacterDetailActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
+                    arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID, getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
+                            getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
@@ -142,12 +148,17 @@ public class CharacterDetailActivity extends AppCompatActivity {
                             .commit();
                     break;
 
-
                 case R.id.action_skills:
-                    SkillsFragment fragment2 = new SkillsFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.character_detail_container, fragment2, "FragmentName");
-                    fragmentTransaction2.commit();
+                    Bundle skillArguments = new Bundle();
+                    skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
+                            getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+                    //Log.d("SKILL_ARG", skillArguments.toString());
+                    skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
+                    SkillsFragment skillFragment = new SkillsFragment();
+                    skillFragment.setArguments(skillArguments);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.character_detail_container, skillFragment)
+                            .commit();
                     break;
 
                 case R.id.action_equipment:

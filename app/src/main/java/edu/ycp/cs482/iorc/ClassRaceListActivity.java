@@ -8,25 +8,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import android.widget.Toast;
 
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
-
-import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.dummy.MyApolloClient;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +63,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classrace_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         View loadingView = findViewById(R.id.loadingIcon);
@@ -86,10 +85,12 @@ public class ClassRaceListActivity extends AppCompatActivity {
         if(extra != null && extra.getBoolean(ARG_BOOL_KEY)){
             //indicate a switch in values
             showRace = true;
+            setTitle(getResources().getString(R.string.title_race));
             getRaces();
             getIntent().removeExtra(ARG_BOOL_KEY);
         }
         else {
+            setTitle(getResources().getString(R.string.title_class));
             getClasses();
         }
 
@@ -109,10 +110,31 @@ public class ClassRaceListActivity extends AppCompatActivity {
         setupRecyclerView((RecyclerView) recyclerView);
     }
 
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.quit){
+            Intent intent = new Intent( ClassRaceListActivity.this, CharacterListActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
     private void getRaces(){
         final View loadingView = findViewById(R.id.loadingIcon);
-        MyApolloClient.getMyApolloClient().query(
-            RaceVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
+        MyApolloClient.getRaceApolloClient().query(
+            RaceVersionQuery
+                    .builder().version("4e").build())
+                .httpCachePolicy(HttpCachePolicy.CACHE_FIRST)
+                .enqueue(new ApolloCall.Callback<RaceVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<RaceVersionQuery.Data> response) {
                 loadingView.setVisibility(View.GONE);
@@ -145,8 +167,10 @@ public class ClassRaceListActivity extends AppCompatActivity {
     //todo create class query after class data is created
     private void getClasses(){
         final View loadingView = findViewById(R.id.loadingIcon);
-        MyApolloClient.getMyApolloClient().query(
-                ClassVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<ClassVersionQuery.Data>() {
+        MyApolloClient.getClassApolloClient().query(
+                ClassVersionQuery.builder().version("4e").build())
+                .httpCachePolicy(HttpCachePolicy.CACHE_FIRST)
+                .enqueue(new ApolloCall.Callback<ClassVersionQuery.Data>() {
             @Override
             public void onResponse(@Nonnull Response<ClassVersionQuery.Data> response) {
                 loadingView.setVisibility(View.GONE);
@@ -251,7 +275,7 @@ public class ClassRaceListActivity extends AppCompatActivity {
             int itemCount = 0;
             if(showRace) {
                 itemCount = amValues.size();
-            }else if(!showRace){
+            }else {
                 itemCount = mValues.size();
             }
             return itemCount;

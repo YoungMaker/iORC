@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
@@ -56,13 +57,21 @@ public class CharacterListActivity extends AppCompatActivity {
      */
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
+    private static final String V_DATA = "VERSION_DATA";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
     private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
+
+    public static SkillVersionQuery.GetVersionSkills skillResponseData;
+    private List <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
+
     private HashMap<String, String> characterDetailMap = new HashMap<>();
+    private static HashMap<String, String> skillDetailMap = new HashMap<>();
+    private HashMap<String, String> versionInfoMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
+    private VersionSheetQuery.GetVersionSheet versionData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,19 +103,25 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
-        //check for character to delete
-        if(extras != null){
-            if(extras.getBoolean(DO_DELETE)){
-                //TODO trigger delete muation
-                String toDel = extras.getString(DEL_ID);
-                deleteCharacter(toDel);
-                //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
-            }
+        getVersionInfo();
+
+        //check if character is being deleted
+        if(extras != null && extras.getBoolean(DO_DELETE)){
+            //trigger delete muation
+            String toDel = extras.getString(DEL_ID);
+            deleteCharacter(toDel);
+            //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+        } else{
+            //get character list if now character is being deleted
+            HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
+            getIds(policy);
+            getSkillsList(policy);
         }
 
-        getIds();
-        Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
-        if (findViewById(R.id.character_detail_container) != null) {
+
+        //Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
+        if (findViewById(R.id.character_detail_container) != null && findViewById(R.id.skillList) != null) {
+        
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
             // If this view is present, then the
@@ -115,7 +130,8 @@ public class CharacterListActivity extends AppCompatActivity {
         }
 
 
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane);
+
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane, versionInfoMap);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -130,44 +146,95 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     //test query
-    private void getIds(){
-        final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getMyApolloClient().query(
+    private void getIds(HttpCachePolicy.Policy policy){
+        //final View loadingView = findViewById(R.id.loadingPanel);
+        MyApolloClient.getCharacterApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
-                CharacterVersionQuery.builder().version("4e").build()).enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
-            @Override
-            public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
-                characterResponseData = response.data().getCharactersByVersion;
-                //Log.d("BEFORE UI THREAD","Line before new runnable");
-                CharacterListActivity.this.runOnUiThread(new Runnable() {
+                CharacterVersionQuery.builder().version("4e").build())
+                .httpCachePolicy(policy)
+                .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
                     @Override
-                    public void run() {
-                        //characterResponses.add(characterResponseData);
-                        // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-                        //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
-                        //clear list of characters so that when the query is called for a list update duplicate characters do not appear
-                        characterResponses.clear();
-                        //add each character into map and list
-                        for(int i = 0; i < characterResponseData.size(); i++){
-                            characterResponses.add(characterResponseData.get(i));
-                            characterDetailMap.put(characterResponseData.get(i).fragments().characterData.id(),(new Gson()).toJson(characterResponseData.get(i)));
-                        }
-                        refreshView();
-                        loadingView.setVisibility(View.GONE);
+                    public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
+
+                        characterResponseData = response.data().getCharactersByVersion;
+                        //Log.d("BEFORE UI THREAD","Line before new runnable");
+                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //characterResponses.add(characterResponseData);
+                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+                                //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+                                characterResponses.clear();
+                                //add each character into map and list
+                                for(int i = 0; i < characterResponseData.size(); i++){
+                                    characterResponses.add(characterResponseData.get(i));
+                                    characterDetailMap.put(
+                                            characterResponseData.get(i).fragments().characterData.id(),
+                                            (new Gson()).toJson(characterResponseData.get(i)));
+                                }
+                                refreshView();
+                                //loadingView.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.CENTER, 0, 0);
+                        //toast.show();
+                        Log.e("ERROR: ", e.toString());
                     }
                 });
-            }
 
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                Log.e("ERROR: ", e.toString());
-            }
-        });
 
+    }
+
+
+    //test query
+    public void getSkillsList(HttpCachePolicy.Policy policy){
+        //final View loadingView = findViewById(R.id.loadingPanel);
+        MyApolloClient.getMyApolloClient().query(
+                SkillVersionQuery.builder().version("4e").build())
+                .httpCachePolicy(policy)
+                .enqueue(new ApolloCall.Callback<SkillVersionQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<SkillVersionQuery.Data> response) {
+
+                        //SkillVersionQuery.GetVersionSkills skillResponseDataTemp = response.data().getVersionSkills;
+                        skillResponseData = response.data().getVersionSkills;
+
+                        //Log.d("BEFORE UI THREAD","Line before new runnable");
+                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                //clear list of skills so that when the query is called for a list update duplicate skills do not appear
+                                skillResponses.clear();
+                                //add skills into map and list8
+                                skillResponses.add(skillResponseData);
+                                Log.d("THING",skillResponseData.fragments().skillData.stats().toString());
+                                skillDetailMap.put(
+                                        skillResponseData.fragments().skillData.stats().toString(),
+                                        (new Gson()).toJson(skillResponseData));
+                                Log.d("NEXT_THING", skillDetailMap.toString());
+
+                                refreshView();
+                                //loadingView.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
+                        //toast.setGravity(Gravity.CENTER, 0, 0);
+                        //toast.show();
+                        Log.e("ERROR: ", e.toString());
+                    }
+                });
     }
 
     private void createCharacter(HashMap<String, String> creationData){
@@ -191,8 +258,13 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
-                getIds();
                 loadingView.setVisibility(View.GONE);
+                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                getIds(policy);
+                //notify user the network response has been received.
+                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                //loadingView.setVisibility(View.GONE);
             }
 
             @Override
@@ -209,10 +281,17 @@ public class CharacterListActivity extends AppCompatActivity {
         final View loadingView = findViewById(R.id.loadingPanel);
         MyApolloClient.getMyApolloClient().mutate(
                 DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
+            //on character deletion get the character list
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+                //loadingView.setVisibility(View.GONE);
                 Log.d("CHARACTER DELETED", "");
+
                 loadingView.setVisibility(View.GONE);
+
+                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                getIds(policy);
+
             }
 
             @Override
@@ -259,9 +338,7 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mText = input.getText().toString(); //TODO set char name?
-                //TODO: Move this to when the network response has been received.
-                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
                 HashMap<String, String> creationData = (HashMap<String, String>) getIntent().getSerializableExtra(CREATION_DATA);
                 creationData.put("Name", mText);
                 Log.d("CHARACTER CREATION DATA","DATA: " + creationData);
@@ -277,6 +354,30 @@ public class CharacterListActivity extends AppCompatActivity {
         });
 
         builder.show();
+    }
+
+    public void getVersionInfo(){
+        MyApolloClient.getMyApolloClient().query(
+                VersionSheetQuery.builder().version("4e").build()
+        )
+                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
+                        versionData = response.data().getVersionSheet;
+                        //Log.d("VERSION DATA", versionData.toString());
+                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                versionInfoMap.put(V_DATA, (new Gson()).toJson(versionData));
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.d("QUERY FAILED", "NO RESPONSE");
+                    }
+                });
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -300,10 +401,12 @@ public class CharacterListActivity extends AppCompatActivity {
             case R.id.dice:
                 Intent diceIntent = new Intent(CharacterListActivity.this, DiceWidgetActivity.class);
                 startActivity(diceIntent);
+                break;
 
             case R.id.login:
                 Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -314,7 +417,10 @@ public class CharacterListActivity extends AppCompatActivity {
 
         private final CharacterListActivity mParentActivity;
         private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;
+        //private final List<SkillVersionQuery.GetVersionSkills> mSkillValues;
         private final HashMap<String, String> mMap;
+        private final HashMap<String, String> mSkillMap;
+        private final HashMap<String, String> mVData;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -325,17 +431,37 @@ public class CharacterListActivity extends AppCompatActivity {
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
+
+
+                    //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
+
+                    //Bundle skillArguments = new Bundle();
+                    //Log.d("SKILL_ITEM", skillItem.toString());
+                    arguments.putString(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
+
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
+
+                    SkillsFragment skillFragment = new SkillsFragment();
+
+                    skillFragment.setArguments(arguments);
+
                     mParentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.character_detail_container, fragment)
                             .commit();
+
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.skillList, skillFragment)
+                            .commit();
                 } else {
+                    //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
                     intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData.id());
                     intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
-
+                    intent.putExtra(SkillsFragment.ARG_ITEM_ID, skillResponseData.fragments().skillData.stats().toString());
+                    intent.putExtra(SkillsFragment.ARG_MAP_ID, mSkillMap);
+                    intent.putExtra(V_DATA, mVData);
                     context.startActivity(intent);
                 }
             }
@@ -343,11 +469,13 @@ public class CharacterListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
                                       List<CharacterVersionQuery.GetCharactersByVersion> items,
-                                      HashMap<String, String> characterDetailMap, boolean twoPane) {
+                                      HashMap<String, String> characterDetailMap, boolean twoPane,
+                                      HashMap<String, String> versionData) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
             mMap = characterDetailMap;
+            mVData = versionData;
         }
 
         @Override

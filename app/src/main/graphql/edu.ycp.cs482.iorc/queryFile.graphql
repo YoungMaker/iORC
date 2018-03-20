@@ -5,6 +5,18 @@
    }
  }
 
+ query VersionItemsQuery($version: String!){
+   getVersionItems(version: $version){
+     ...ItemData
+   }
+ }
+
+ query VersionSheetQuery($version: String!){
+     getVersionSheet(version : $version){
+         ...VersionSheetData
+     }
+  }
+
  query CharacterVersionQuery($version :String!){
    getCharactersByVersion(version:$version){
      ...CharacterData
@@ -23,13 +35,24 @@
     }
   }
 
+  query SkillVersionQuery($version: String!){
+    getVersionSkills(version: $version){
+      ... VersionSheetInformation
+      }
+ }
+  query VersionInfoTypeQuery($version :String!, $type :String!){
+    getVersionInfoType(version: $version, type: $type){
+      ...VersionInfoData
+    }
+  }
+
  mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!){
      createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid){
        ...CharacterData
      }
  }
 
- mutation DeleteCharacterMutation($id:String!){
+ mutation DeleteCharacterMutation($id:ID!){
    deleteCharacter(id:$id)
  }
 
@@ -80,4 +103,40 @@ fragment ClassData on Class {
        key
        value
      }
+}
+
+
+fragment VersionSheetData on Version{
+  version
+    stats{
+      name
+      description
+      modifiers{
+        key
+        value
+      }
+    }
+    infoList{
+      id
+      name
+      type
+      value
+    }
+}
+
+fragment VersionInfoData on Version{
+  version
+}
+
+fragment ItemData on Item {
+  name
+  version
+  description
+  modifiers{
+    key
+    value
+  }
+  itemClasses
+  price
+  type
 }

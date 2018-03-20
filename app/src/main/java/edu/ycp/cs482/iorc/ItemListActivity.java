@@ -1,5 +1,6 @@
 package edu.ycp.cs482.iorc;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,15 +12,27 @@ import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import edu.ycp.cs482.iorc.dummy.DummyContent;
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.dummy.DummyContent;
+import edu.ycp.cs482.iorc.dummy.MyApolloClient;
+import edu.ycp.cs482.iorc.fragment.ItemData;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /**
  * An activity representing a list of Items. This activity
@@ -39,6 +52,8 @@ public class ItemListActivity extends AppCompatActivity {
     private static final String CREATION_DATA = "CREATION_DATA";
     private boolean mTwoPane;
     private HashMap<String, String> creationMap;
+    private VersionItemsQuery.Data versionItemQueryData;
+    private List<ItemData> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +70,8 @@ public class ItemListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        getAllItems();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,11 +95,29 @@ public class ItemListActivity extends AppCompatActivity {
         }
 
         //create our simple item recycler adapter add to recycler view
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane, creationMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, itemList, mTwoPane, creationMap);
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
+
+    //Create the menu button on the toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.quit){
+            Intent intent = new Intent( ItemListActivity.this, CharacterListActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         //recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
@@ -97,16 +132,17 @@ public class ItemListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final ItemListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<ItemData> mValues;
         private final boolean mTwoPane;
         private final HashMap<String, String> mCreationData;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                ItemData item = (ItemData) view.getTag();
+                String gsonItem = (new Gson()).toJson(item);
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(ItemDetailFragment.ARG_ITEM, gsonItem);
                     ItemDetailFragment fragment = new ItemDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -115,7 +151,7 @@ public class ItemListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
-                    intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
                     intent.putExtra(CREATION_DATA, mCreationData);
                     context.startActivity(intent);
                 }
@@ -123,7 +159,7 @@ public class ItemListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<ItemData> items,
                                       boolean twoPane, HashMap<String, String> creationData) {
             mValues = items;
             mParentActivity = parent;
@@ -140,8 +176,8 @@ public class ItemListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(mValues.get(position).name());
+            holder.mContentView.setText(mValues.get(position).price());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -162,5 +198,47 @@ public class ItemListActivity extends AppCompatActivity {
                 mContentView = view.findViewById(R.id.content);
             }
         }
+    }
+
+    //item queries
+
+    //all items
+    private void getAllItems(){
+        MyApolloClient.getMyApolloClient().query(
+            VersionItemsQuery.builder().version("4e").build())
+                .enqueue(new ApolloCall.Callback<VersionItemsQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<VersionItemsQuery.Data> response) {
+
+                        versionItemQueryData = response.data();
+
+                        ItemListActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                int numItems = versionItemQueryData.getVersionItems().size();
+                                List<VersionItemsQuery.GetVersionItem> versionItems =
+                                        versionItemQueryData.getVersionItems();
+                                for(int i = 0; i < numItems; i++){
+                                    itemList.add(versionItems.get(i).fragments().itemData);
+                                }
+                                refreshView();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+
+                    }
+                });
+    }
+
+    //TODO implment other queries for specific item lookups
+
+    //TODO create method(s) for sorting list by different parameters
+
+    //refresh recycler view
+    public void refreshView(){
+        mSimpleAdapter.notifyDataSetChanged();
     }
 }
