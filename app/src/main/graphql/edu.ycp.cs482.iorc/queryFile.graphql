@@ -112,6 +112,7 @@ fragment VersionSheetData on Version{
       key
       name
       description
+      skill
       modifiers{
         key
         value
