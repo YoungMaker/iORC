@@ -58,7 +58,7 @@ public class SkillsFragment extends Fragment {
                 Log.d("ARGUMENTS", getArguments().toString());
                 HashMap<String, String> skillMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
                 String skillObj = "";
-                Log.d("SKILL_OBJ", skillMap.get(bundle.getString(ARG_ITEM_ID)));
+                //Log.d("SKILL_OBJ", skillMap.get(bundle.getString(ARG_ITEM_ID)));
                 if(skillMap != null){
                     //Log.d("SKILL_OBJ", skillMap.get(bundle.getString((ARG_ITEM_ID))).toString());
                     skillObj = skillMap.get(bundle.getString((ARG_ITEM_ID)));
@@ -82,11 +82,15 @@ public class SkillsFragment extends Fragment {
 
         HashMap<String, String> nameDescription = new HashMap<>();
 
-        for(int i = 0; i < mItem.fragments().versionSheetData().stats().size(); i++){
-            nameDescription.put(mItem.fragments().versionSheetData().stats().get(i).name(), mItem.fragments().versionSheetData().stats().get(i).description());
-            //Log.d("SKILL_NAME_CHECK: ", mItem.fragments().skillData.stats().get(i).name());
-            //Log.d("SKILL_DESCRIP_CHECK: ", mItem.fragments().skillData.stats().get(i).description());
+        if(mItem != null){
+            for(int i = 0; i < mItem.fragments().versionSheetData().stats().size(); i++){
+                nameDescription.put(mItem.fragments().versionSheetData().stats().get(i).name(), mItem.fragments().versionSheetData().stats().get(i).description());
+                //Log.d("SKILL_NAME_CHECK: ", mItem.fragments().skillData.stats().get(i).name());
+                //Log.d("SKILL_DESCRIP_CHECK: ", mItem.fragments().skillData.stats().get(i).description());
+            }
         }
+
+
 
         //Log.d("HASHMAP_SKILL", nameDescription.toString());
 
@@ -106,7 +110,11 @@ public class SkillsFragment extends Fragment {
                 new String[]{"First Line", "Second Line"},
                 new int[]{R.id.skill_his_text, R.id.skill_his_description});
 
-        for(int i = 0; i < 17; i++){
+
+        //Index out of bounds
+        //change to using side instead of hard coded 17
+        //TODO what is this used for???
+        for(int i = 0; i < adapter.getCount(); i++){
             Log.d("SKILL_ADAPTER", adapter.getItem(i).toString());
         }
 
