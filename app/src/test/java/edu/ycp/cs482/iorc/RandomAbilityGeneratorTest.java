@@ -61,9 +61,15 @@ public class RandomAbilityGeneratorTest {
 
     @Test
     public void generatedAbilTest() throws Exception {
-        int test1 = abilGen.generateRoll("1d4");
-        int test2 = abilGen.generateRoll("5d12");
-        assertTrue(1 <= test1 && test1 <= 4);
-        assertTrue(5 <= test2 && test2 <= 60);
+        int testNums = 100;
+        for(int i = 0; i < testNums; i++){
+            int test1 = abilGen.generateRoll("1d4");
+            System.out.println("TEST" + test1);
+            assertTrue(1 <= test1 && test1 <= 4);
+            int test2 = abilGen.generateRoll("5d12");
+            System.out.println("TEST" + test2);
+            assertTrue(5 <= test2 && test2 <= 60);
+        }
+
     }
 }

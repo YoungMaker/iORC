@@ -36,7 +36,7 @@ public class RandAbilityGenerator {
         int[] params = rollParamParser(rollParam);
         int total = 0;
         for(int i = 0; i < params[0]; i++){
-            total += rand.nextInt(params[0]-min+1) + min;
+            total += rand.nextInt(params[1]-min+1) + min;
         }
         return total;
     }
