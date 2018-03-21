@@ -148,8 +148,8 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilInt = rootView.findViewById(R.id.character_abil_int);
             mCharacterAbilWis = rootView.findViewById(R.id.character_abil_wis);
             mCharacterAbilCha = rootView.findViewById(R.id.character_abil_cha);
-            //mCharacterRace = rootView.findViewById(R.id.character_race);
-            //mCharacterClass = rootView.findViewById(R.id.character_class);
+            mCharacterRace = rootView.findViewById(R.id.character_race);
+            mCharacterClass = rootView.findViewById(R.id.character_class);
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
@@ -163,16 +163,16 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilCha.setText(getResources().getString(R.string.pref_cha, longToString(abilityPoints.cha())));
 
             CharacterData.Race Races = item.fragments().characterData.race();
-            //Log.d("RACE DATA", Races.toString());
-            mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.fragments().raceData().name()));
-
             CharacterData.Classql Classes = item.fragments().characterData.classql();
-            mCharacterClass.setText(getResources().getString(R.string.pref_class, Classes.fragments().classData().name()));
-            //mCharacterDetailRef.setText(getResources().getString(R.string.pref_ref, item.ref));
+            Log.d("RACE", Races.fragments().raceData().name());
+            if(Races != null){
+                //Log.d("RACE DATA", Races.toString());
+                mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.fragments().raceData().name()));
+            }
 
-
-            //mCharacterDetailFort.setText(getResources().getString(R.string.pref_fort, item.fort));
-           // mCharacterDetailSpd.setText(getResources().getString(R.string.pref_cha, item.sp));
+            if(Classes != null){
+                mCharacterClass.setText(getResources().getString(R.string.pref_class, Classes.fragments().classData().name()));
+            }
 
         }
 
