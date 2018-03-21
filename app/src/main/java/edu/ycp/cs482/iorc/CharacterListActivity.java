@@ -147,7 +147,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
     //test query
     private void getIds(HttpCachePolicy.Policy policy){
-        //final View loadingView = findViewById(R.id.loadingPanel);
+        final View loadingView = findViewById(R.id.loadingPanel);
         MyApolloClient.getCharacterApolloClient().query(
                 //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
                 //Boii:    b9704025-b811-426b-af3a-461dd40866e3
@@ -175,7 +175,7 @@ public class CharacterListActivity extends AppCompatActivity {
                                             (new Gson()).toJson(characterResponseData.get(i)));
                                 }
                                 refreshView();
-                                //loadingView.setVisibility(View.GONE);
+                                loadingView.setVisibility(View.GONE);
                             }
                         });
                     }
@@ -264,7 +264,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 //notify user the network response has been received.
                 Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                //loadingView.setVisibility(View.GONE);
+                loadingView.setVisibility(View.GONE);
             }
 
             @Override
@@ -284,7 +284,7 @@ public class CharacterListActivity extends AppCompatActivity {
             //on character deletion get the character list
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
-                //loadingView.setVisibility(View.GONE);
+                loadingView.setVisibility(View.GONE);
                 Log.d("CHARACTER DELETED", "");
 
                 loadingView.setVisibility(View.GONE);
