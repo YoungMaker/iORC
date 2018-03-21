@@ -5,6 +5,7 @@ import android.util.Log;
 import org.junit.Before;
 import org.junit.Test;
 
+import dalvik.annotation.TestTarget;
 import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -40,6 +41,22 @@ public class RandomAbilityGeneratorTest {
         int[] test2 = abilGen.rollParamParser("50d2");
         assertEquals(50, test2[0]);
         assertEquals(2, test2[1]);
+    }
+
+    @Test
+    public void determineMinValTest(){
+        int test1 = abilGen.determineMax(4,3);
+        assertEquals(12, test1);
+        int test2 = abilGen.determineMax(20,100);
+        assertEquals(2000, test2);
+    }
+
+    @Test
+    public void determineMaxValTest(){
+        int test1 = abilGen.determineMin(4);
+        assertEquals(4, test1);
+        int test2 = abilGen.determineMin(20);
+        assertEquals(20, test2);
     }
 
     @Test

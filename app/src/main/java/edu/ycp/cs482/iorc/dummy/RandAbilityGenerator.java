@@ -32,8 +32,12 @@ public class RandAbilityGenerator {
     //role param should be something like 1d6 or 3d4
     //the first number being the amount of dice rolled and
     //the second number being the range of the dice (ex. 2d4 would be 2 4 sided dice)
-    public int generateAbilityScore(String rollParam){
-
+    public int generateRoll(String rollParam){
+        int[] params = rollParamParser(rollParam);
+        int total = 0;
+        for(int i = 0; i < params[0]; i++){
+            total += rand.nextInt();
+        }
         return rand.nextInt(max-min+1) + min;
     }
 
@@ -56,5 +60,18 @@ public class RandAbilityGenerator {
         }
 
         return parameters;
+    }
+
+    //max value of a given roll
+    public int determineMax(int maxDieVal, int numDice){
+        int maxVal = 0;
+        maxVal = maxDieVal * numDice;
+        return maxVal;
+    }
+
+    //min value of given roll
+    public int determineMin(int numDice){
+        int minVal = numDice;
+        return minVal;
     }
 }
