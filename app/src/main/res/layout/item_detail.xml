@@ -22,19 +22,18 @@
         android:textIsSelectable="true"
         tools:context="edu.ycp.cs482.iorc.ItemDetailFragment" />
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@android:color/darker_gray">
 
         <FrameLayout
             android:id="@+id/item_modifier_frag_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:layout_margin="2dp">
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@color/fadeGrey">
 
         </FrameLayout>
     </LinearLayout>
-
 
 </android.support.v7.widget.LinearLayoutCompat>
