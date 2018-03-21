@@ -92,7 +92,11 @@ public class ItemDetailFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description());
             ((TextView) rootView.findViewById(R.id.item_price)).setText(mItem.price());
         }
-
+        StringBuilder output = new StringBuilder();
+        for(String tag : mItem.itemClasses()){
+            output.append(tag).append(", ");
+        }
+        ((TextView) rootView.findViewById(R.id.item_tags)).setText(output);
         return rootView;
     }
 }
