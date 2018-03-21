@@ -238,15 +238,15 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void createCharacter(HashMap<String, String> creationData){
-        RandAbilityGenerator randAbils = new RandAbilityGenerator();
-        randAbils.generateAbilitiesScores();
+        //RandAbilityGenerator randAbils = new RandAbilityGenerator();
+        //randAbils.generateAbilitiesScores();
         AbilityInput.Builder abilityScores = AbilityInput.builder();
-        abilityScores.str(randAbils.getStr());
+        /*/abilityScores.str(randAbils.getStr());
         abilityScores.con(randAbils.getCon());
         abilityScores.dex(randAbils.getDex());
         abilityScores._int(randAbils.get_int());
         abilityScores.wis(randAbils.getWis());
-        abilityScores.cha(randAbils.getCha());
+        abilityScores.cha(randAbils.getCha());*/
         AbilityInput staticAbil = abilityScores.build();
 
         final View loadingView = findViewById(R.id.loadingPanel);
