@@ -25,7 +25,7 @@ public class RandAbilityGenerator {
     //aka what to look for when splitting the number of dice and range of each die
     private String splitRegex = "d";
 
-    public void generateAbilitiesScores(){
+    public RandAbilityGenerator(){
         rand = new Random(System.currentTimeMillis());
     }
 
