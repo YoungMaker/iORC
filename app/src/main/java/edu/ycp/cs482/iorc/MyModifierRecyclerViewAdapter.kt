@@ -3,6 +3,7 @@ package edu.ycp.cs482.iorc
 import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,8 @@ import android.widget.TextView
 import edu.ycp.cs482.iorc.ModifierFragment.OnListFragmentInteractionListener
 import edu.ycp.cs482.iorc.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.fragment.ClassData
+import java.math.RoundingMode
+import java.text.DecimalFormat
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -19,6 +22,8 @@ import edu.ycp.cs482.iorc.fragment.ClassData
  */
 class MyModifierRecyclerViewAdapter(private val mValues: List<ModifierFragment.Modifier>, private val mGreen: Int)
                                         : RecyclerView.Adapter<MyModifierRecyclerViewAdapter.ViewHolder>() {
+
+    private val MIN_CMP_FLOAT = 0.001
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -32,7 +37,21 @@ class MyModifierRecyclerViewAdapter(private val mValues: List<ModifierFragment.M
         holder.mContentView.text = mValues[position].key
 
         val cItemValue = mValues[position].value
-        if(cItemValue > 0 && mValues[position].key != "*") {
+        if(cItemValue % 1 > 0 && mValues[position].key != "*") {
+            val diceValue = (cItemValue %1)
+            val outDice : Int
+            outDice = if((diceValue-0.2f) < MIN_CMP_FLOAT ) {
+                Math.round(diceValue * 100)
+            } else {
+                Math.round(diceValue * 10)
+            }
+
+            holder.mIdView.setTextColor(Color.MAGENTA)
+            holder.mIdView.text = ("%d d %d".format(cItemValue.toInt(), outDice))
+
+
+        }
+        else if(cItemValue > 0 && mValues[position].key != "*") {
             holder.mIdView.setTextColor(mGreen)
             holder.mIdView.text = ("+ %.0f".format(cItemValue)) //todo: make this str object? its just a plus
         }

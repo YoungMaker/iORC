@@ -284,5 +284,9 @@
     <!-- fragment_modifier_list.xml!-->
     <string name="modifiers">Modifiers:</string>
     <string name="menu_bail">Quit</string>
+    <string name="item_detail_price">Price:</string>
+    <string name="item_tags">Item Tags:</string>
+    <string name="text_stats">Stats:</string>
+    <string name="currency_placeholder"><![CDATA[<Gold Pieces>]]></string>
 
 </resources>

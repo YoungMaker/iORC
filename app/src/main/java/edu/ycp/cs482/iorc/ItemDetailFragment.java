@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.List;
 
 import edu.ycp.cs482.iorc.dummy.DummyContent;
 import edu.ycp.cs482.iorc.fragment.ItemData;
@@ -64,9 +65,19 @@ public class ItemDetailFragment extends Fragment {
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         HashMap<String, Float> map = new HashMap<>();
-        map.put("ac", 2f); //TODO: REPLACE THESE WITH MOD DATA FROM THE GRAPHQL CONTENT
-        map.put("wis", 2f);
-        map.put("con", -2f);
+
+        List<ItemData.Modifier> bonusList = mItem.modifiers();
+        if (bonusList != null) {
+            for (int i = 0; i < bonusList.size(); i++) {
+                ItemData.Modifier listItem = bonusList.get(i);
+                map.put(listItem.key(), (float) listItem.value());
+            }
+        }
+//        map.put("ac", 2f);
+//        map.put("wis", 2f);
+//        map.put("dmg_test1", 1.2f);
+//        map.put("dmg_test2", 1.30f);
+//        map.put("dmg_test3", 1.12f);
         Fragment childFragment = ModifierFragment.Companion.newInstance(2, map);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.item_modifier_frag_container, childFragment).commit();
@@ -83,7 +94,12 @@ public class ItemDetailFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.description());
             ((TextView) rootView.findViewById(R.id.item_price)).setText(mItem.price());
         }
-
+        StringBuilder output = new StringBuilder();
+        for(int i =0; i < mItem.itemClasses().size()-2; i++){ //TODO: crosscheck these in the version sheet and get
+            output.append(mItem.itemClasses().get(i)).append(", ");   //their value
+        }
+        output.append(mItem.itemClasses().get(mItem.itemClasses().size()-1));
+        ((TextView) rootView.findViewById(R.id.item_tags)).setText(output);
         return rootView;
     }
 }
