@@ -75,7 +75,9 @@ public class ItemDetailFragment extends Fragment {
         }
 //        map.put("ac", 2f);
 //        map.put("wis", 2f);
-//        map.put("con", -2f);
+//        map.put("dmg_test1", 1.2f);
+//        map.put("dmg_test2", 1.30f);
+//        map.put("dmg_test3", 1.12f);
         Fragment childFragment = ModifierFragment.Companion.newInstance(2, map);
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.add(R.id.item_modifier_frag_container, childFragment).commit();
@@ -93,9 +95,10 @@ public class ItemDetailFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.item_price)).setText(mItem.price());
         }
         StringBuilder output = new StringBuilder();
-        for(String tag : mItem.itemClasses()){
-            output.append(tag).append(", ");
+        for(int i =0; i < mItem.itemClasses().size()-2; i++){ //TODO: crosscheck these in the version sheet and get
+            output.append(mItem.itemClasses().get(i)).append(", ");   //their value
         }
+        output.append(mItem.itemClasses().get(mItem.itemClasses().size()-1));
         ((TextView) rootView.findViewById(R.id.item_tags)).setText(output);
         return rootView;
     }
