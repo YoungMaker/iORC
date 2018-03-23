@@ -154,16 +154,16 @@ public class CharacterDetailActivity extends AppCompatActivity {
                     break;
 
                 case R.id.action_skills:
-                    Bundle skillArguments = new Bundle();
-                    skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
-                            getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
-                    //Log.d("SKILL_ARG", skillArguments.toString());
-                    skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
-                    SkillsFragment skillFragment = new SkillsFragment();
-                    skillFragment.setArguments(skillArguments);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.character_detail_container, skillFragment)
-                            .commit();
+//                    Bundle skillArguments = new Bundle();
+//                    skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
+//                            getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+//                    //Log.d("SKILL_ARG", skillArguments.toString());
+//                    skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
+//                    SkillsFragment skillFragment = new SkillsFragment();
+//                    skillFragment.setArguments(skillArguments);
+//                    getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.character_detail_container, skillFragment)
+//                            .commit();
                     break;
 
                 case R.id.action_equipment:
