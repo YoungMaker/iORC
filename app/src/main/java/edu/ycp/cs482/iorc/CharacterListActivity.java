@@ -73,6 +73,8 @@ public class CharacterListActivity extends AppCompatActivity {
     private static final String CREATION_DATA = "CREATION_DATA";
     private VersionSheetQuery.GetVersionSheet versionData;
 
+    private String abilGenExpression = "3d6";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,14 +241,13 @@ public class CharacterListActivity extends AppCompatActivity {
 
     private void createCharacter(HashMap<String, String> creationData){
         RandAbilityGenerator randAbils = new RandAbilityGenerator();
-        randAbils.generateAbilitiesScores();
         AbilityInput.Builder abilityScores = AbilityInput.builder();
-        abilityScores.str(randAbils.getStr());
-        abilityScores.con(randAbils.getCon());
-        abilityScores.dex(randAbils.getDex());
-        abilityScores._int(randAbils.get_int());
-        abilityScores.wis(randAbils.getWis());
-        abilityScores.cha(randAbils.getCha());
+        abilityScores.str(randAbils.generateRoll(abilGenExpression));
+        abilityScores.con(randAbils.generateRoll(abilGenExpression));
+        abilityScores.dex(randAbils.generateRoll(abilGenExpression));
+        abilityScores._int(randAbils.generateRoll(abilGenExpression));
+        abilityScores.wis(randAbils.generateRoll(abilGenExpression));
+        abilityScores.cha(randAbils.generateRoll(abilGenExpression));
         AbilityInput staticAbil = abilityScores.build();
 
         final View loadingView = findViewById(R.id.loadingPanel);
