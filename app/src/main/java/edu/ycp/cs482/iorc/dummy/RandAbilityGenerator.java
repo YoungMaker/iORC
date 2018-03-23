@@ -49,9 +49,12 @@ public class RandAbilityGenerator {
         int min = 1;
 
         switch (special){
-            case "drop_lowest":;
-            case "reroll_lowest":;
-            default: total = standardRoll(min, max, params[0]);
+            case "drop_lowest":
+                total = dropLowest(min, max, params[0]);
+            case "reroll_lowest":
+                total = rerollLowest(min, max, params[0]);
+            default:
+                total = standardRoll(min, max, params[0]);
         }
 
         return total;
