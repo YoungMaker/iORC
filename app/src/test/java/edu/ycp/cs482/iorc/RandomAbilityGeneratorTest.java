@@ -45,10 +45,10 @@ public class RandomAbilityGeneratorTest {
 
     @Test
     public void determineMinValTest(){
-        int test1 = abilGen.determineMax(4,3);
-        assertEquals(12, test1);
-        int test2 = abilGen.determineMax(20,100);
-        assertEquals(2000, test2);
+        int test1 = abilGen.determineMax(4);
+        assertEquals(4, test1);
+        int test2 = abilGen.determineMax(20);
+        assertEquals(20, test2);
     }
 
     @Test

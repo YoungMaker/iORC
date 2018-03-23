@@ -12,13 +12,12 @@ import java.util.Random;
 public class RandAbilityGenerator {
     //TODO change to allow for a dynamic range of ability scores names
 
-    //minimum and maximum ability scores
-    private int max = 20;
-    private int min = 1;
     //ability score types
     private long str, con, dex, _int, wis, cha;
     //create and seed RNG
     private Random rand;
+    //large value to initialize the lowest value for a single die roll
+    private int maxDieRollVal = 9999999;
     //regex for defining what the parameters for a dice roll are
     private String paramRegex = "[0-9]*d[0-9]*";
     //splitter regex for dice roll
@@ -35,9 +34,26 @@ public class RandAbilityGenerator {
     public int generateRoll(String rollParam){
         int[] params = rollParamParser(rollParam);
         int total = 0;
-        for(int i = 0; i < params[0]; i++){
-            total += rand.nextInt(params[1]-min+1) + min;
+        int min = 1;
+        int max = determineMax(params[1]);
+        total = standardRoll(min, max, params[0]);
+        return total;
+    }
+
+    //special is for things like drop lowest or reroll lowest
+    //if the special does not match anything then the standard roll is performed
+    public int generateRoll(String rollParam, String special){
+        int[] params = rollParamParser(rollParam);
+        int total = 0;
+        int max = determineMax(params[1]);
+        int min = 1;
+
+        switch (special){
+            case "drop_lowest":;
+            case "reroll_lowest":;
+            default: total = standardRoll(min, max, params[0]);
         }
+
         return total;
     }
 
@@ -63,9 +79,9 @@ public class RandAbilityGenerator {
     }
 
     //max value of a given roll
-    public int determineMax(int maxDieVal, int numDice){
+    public int determineMax(int maxDieVal){
         int maxVal = 0;
-        maxVal = maxDieVal * numDice;
+        maxVal = maxDieVal;
         return maxVal;
     }
 
@@ -73,5 +89,71 @@ public class RandAbilityGenerator {
     public int determineMin(int numDice){
         int minVal = numDice;
         return minVal;
+    }
+
+    //roll with no special cases
+    public int standardRoll(int min, int max, int numRolls){
+        int total = 0;
+        for(int i = 0; i < numRolls; i++){
+            total += rand.nextInt(max-min+1) + min;
+        }
+
+        return total;
+    }
+
+    //drop lowest roll
+    public int dropLowest(int min, int max, int numRolls){
+        int total = 0;
+        int lowestVal = maxDieRollVal, lowestInd = 0, rollVal = 0;
+        int[] rolls = new int[numRolls];
+
+        //roll the dice
+        for(int i = 0; i < numRolls; i++){
+            rollVal = rand.nextInt(max-min+1) + min;
+
+            if(rollVal < lowestVal){
+                lowestVal = rollVal;
+                lowestInd = i;
+            }
+            rolls[i] = rollVal;
+        }
+
+        //total all of the dice rolled except the lowest
+        for(int i = 0; i < numRolls; i++){
+            if(i != lowestInd){
+                total += rolls[i];
+            }
+        }
+
+        return total;
+    }
+
+    //reroll lowest roll
+    public int rerollLowest(int min, int max, int numRolls){
+        int total = 0;
+        int lowestVal = maxDieRollVal, lowestInd = 0, rollVal = 0;
+        int[] rolls = new int[numRolls];
+
+        //roll the dice
+        for(int i = 0; i < numRolls; i++){
+            rollVal = rand.nextInt(max-min+1) + min;
+
+            if(rollVal < lowestVal){
+                lowestVal = rollVal;
+                lowestInd = i;
+            }
+            rolls[i] = rollVal;
+        }
+
+        //reroll lowest die value
+        rollVal = rand.nextInt(max-min+1) + min;
+        rolls[lowestInd] = rollVal;
+
+        //total all of the dice rolled
+        for(int i = 0; i < numRolls; i++){
+            total += rolls[i];
+        }
+
+        return total;
     }
 }
