@@ -1,12 +1,9 @@
 package edu.ycp.cs482.iorc;
 
-import android.util.Log;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import dalvik.annotation.TestTarget;
-import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
+import edu.ycp.cs482.iorc.Apollo.RandAbilityGenerator;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;

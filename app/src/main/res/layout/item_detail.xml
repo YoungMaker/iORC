@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:textIsSelectable="true"
-        tools:context="edu.ycp.cs482.iorc.ItemDetailFragment" />
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -59,7 +59,7 @@
             android:padding="8dp"
             android:textIsSelectable="false"
             android:text="@string/item_tags"
-            tools:context="edu.ycp.cs482.iorc.ItemDetailFragment" />
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
 
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:textIsSelectable="true"
-            tools:context="edu.ycp.cs482.iorc.ItemDetailFragment" />
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
     </LinearLayout>
 
     <TextView
@@ -78,7 +78,7 @@
         android:padding="8dp"
         android:textIsSelectable="false"
         android:text="@string/text_stats"
-        tools:context="edu.ycp.cs482.iorc.ItemDetailFragment" />
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
 
     <LinearLayout
         android:layout_width="match_parent"

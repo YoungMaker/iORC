@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="edu.ycp.cs482.iorc.ClassRaceDetailActivity"
+    tools:context="edu.ycp.cs482.iorc.Activities.ClassRaceDetailActivity"
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout
