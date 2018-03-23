@@ -23,7 +23,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/initiative"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
 
         <TextView
@@ -35,7 +35,7 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
 
         <TextView
@@ -47,7 +47,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/hitpoints"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
 
         <TextView
@@ -59,7 +59,7 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
 
         <TextView
@@ -71,7 +71,7 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="@string/speed"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
 
         <TextView
@@ -83,7 +83,7 @@
             android:paddingRight="8dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
     </LinearLayout>
 
@@ -101,7 +101,7 @@
         android:text="@string/abil_title"
         android:layout_gravity="center_horizontal"
         
-        tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
         android:layout_column="0"
         android:layout_row="1"
         />
@@ -122,7 +122,7 @@
             android:padding="@dimen/stat_padding"
             android:text="@string/Str"
             
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="0"
             android:layout_row="0"
             android:layout_gravity=""
@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/stat_padding"
 
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="1"
             android:layout_row="0"
             />
@@ -147,7 +147,7 @@
             android:padding="@dimen/stat_padding"
             android:text="@string/Con"
             
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="2"
             android:layout_row="0"
             />
@@ -159,7 +159,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/stat_padding"
 
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="3"
             android:layout_row="0"
             />
@@ -171,7 +171,7 @@
             android:padding="@dimen/stat_padding"
             android:text="@string/Dex"
             
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="4"
             android:layout_row="0"
             />
@@ -183,7 +183,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/stat_padding"
 
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="5"
             android:layout_row="0"
             />
@@ -195,7 +195,7 @@
             android:padding="@dimen/stat_padding"
             android:text="@string/Int"
             
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="0"
             android:layout_row="1"
             />
@@ -207,7 +207,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/stat_padding"
 
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="1"
             android:layout_row="1"
             />
@@ -219,7 +219,7 @@
             android:padding="@dimen/stat_padding"
             android:text="@string/Wis"
             
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="2"
             android:layout_row="1"
             />
@@ -231,7 +231,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/stat_padding"
 
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="3"
             android:layout_row="1"
             />
@@ -243,7 +243,7 @@
             android:padding="@dimen/stat_padding"
             android:text="@string/Cha"
             
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="4"
             android:layout_row="1"
             />
@@ -255,7 +255,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/stat_padding"
 
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="5"
             android:layout_row="1"
             />
@@ -275,7 +275,7 @@
         android:text="@string/def_title"
         android:layout_gravity="center_horizontal"
         
-        tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
         android:layout_column="0"
         android:layout_row="4"
         />
@@ -305,7 +305,7 @@
             android:paddingRight="0dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:text="@string/race"/>
 
         <TextView
@@ -318,7 +318,7 @@
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"/>
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"/>
 
         <TextView
             android:id="@+id/character_class_name"
@@ -330,7 +330,7 @@
             android:paddingRight="0dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:text="@string/Class"/>
 
         <TextView
@@ -343,7 +343,7 @@
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:context="edu.ycp.cs482.iorc.CharacterDetailFragment"/>
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"/>
     </LinearLayout>
 
 

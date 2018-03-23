@@ -11,5 +11,5 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.ycp.cs482.iorc.ModifierFragment"
+    tools:context="edu.ycp.cs482.iorc.Fragments.ModifierFragment"
     tools:listitem="@layout/fragment_modifier" />

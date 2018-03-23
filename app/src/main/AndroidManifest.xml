@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".CharacterListActivity"
+            android:name=".Activities.CharacterListActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -26,71 +26,71 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CharacterDetailActivity"
+            android:name=".Activities.CharacterDetailActivity"
             android:label="@string/title_character_detail"
-            android:parentActivityName=".CharacterListActivity"
+            android:parentActivityName=".Activities.CharacterListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.ycp.cs482.iorc.CharacterListActivity" />
+                android:value="edu.ycp.cs482.iorc.Activities.CharacterListActivity" />
         </activity>
         <!-- <activity android:name=".RaceClassChooser" /> -->
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".CharacterListActivity">
+            android:parentActivityName=".Activities.CharacterListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.ycp.cs482.iorc.CharacterListActivity" />
+                android:value="edu.ycp.cs482.iorc.Activities.CharacterListActivity" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activities.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".FeatDetail"
             android:label="@string/title_activity_feat_detail"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ItemListActivity"
+            android:name=".Activities.ItemListActivity"
             android:label="@string/title_item_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ItemDetailActivity"
+            android:name=".Activities.ItemDetailActivity"
             android:label="@string/title_item_detail"
-            android:parentActivityName=".ItemListActivity"
+            android:parentActivityName=".Activities.ItemListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.ycp.cs482.iorc.ItemListActivity" />
+                android:value="edu.ycp.cs482.iorc.Activities.ItemListActivity" />
         </activity>
-        <activity android:name=".SkillDetailActivity" />
-        <activity android:name=".DiceWidgetActivity" />
-        <activity android:name=".DeleteCheckActivity" />
+        <activity android:name=".Activities.SkillDetailActivity" />
+        <activity android:name=".Activities.DiceWidgetActivity" />
+        <activity android:name=".Activities.DeleteCheckActivity" />
         <activity
-            android:name=".ClassRaceListActivity"
+            android:name=".Activities.ClassRaceListActivity"
             android:label="@string/title_classrace_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ClassRaceDetailActivity"
+            android:name=".Activities.ClassRaceDetailActivity"
             android:label="@string/title_classrace_detail"
-            android:parentActivityName=".ClassRaceListActivity"
+            android:parentActivityName=".Activities.ClassRaceListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.ycp.cs482.iorc.ClassRaceListActivity" />
+                android:value="edu.ycp.cs482.iorc.Activities.ClassRaceListActivity" />
         </activity>
         <activity
-            android:name=".AlignmentReligionListActivity"
+            android:name=".Activities.AlignmentReligionListActivity"
             android:label="@string/title_alignmentreligion_list"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".AlignmentReligionDetailActivity"
+            android:name=".Activities.AlignmentReligionDetailActivity"
             android:label="@string/title_alignmentreligion_detail"
-            android:parentActivityName=".AlignmentReligionListActivity"
+            android:parentActivityName=".Activities.AlignmentReligionListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="edu.ycp.cs482.iorc.AlignmentReligionListActivity" />
+                android:value="edu.ycp.cs482.iorc.Activities.AlignmentReligionListActivity" />
         </activity>
     </application>
 

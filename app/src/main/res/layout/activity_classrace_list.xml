@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="edu.ycp.cs482.iorc.ClassRaceListActivity">
+    tools:context="edu.ycp.cs482.iorc.Activities.ClassRaceListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"

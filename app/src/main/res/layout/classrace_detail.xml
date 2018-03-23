@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:textIsSelectable="true"
-        tools:context="edu.ycp.cs482.iorc.ClassRaceDetailFragment" />
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ClassRaceDetailFragment" />
 
     <LinearLayout
         android:layout_width="match_parent"

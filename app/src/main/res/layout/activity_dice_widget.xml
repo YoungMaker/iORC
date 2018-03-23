@@ -19,7 +19,7 @@
         android:text="@string/roll_a_die"
         android:layout_gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+        tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
         android:layout_column="0"
         android:layout_row="0"
         />
@@ -45,7 +45,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d20"
-            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+            tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -60,7 +60,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d12"
-            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+            tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -75,7 +75,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d10"
-            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+            tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -90,7 +90,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d8"
-            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+            tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -105,7 +105,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d6"
-            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+            tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -120,7 +120,7 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             app:srcCompat="@drawable/d4"
-            tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+            tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
             android:layout_gravity="center_horizontal"
             />
 
@@ -138,7 +138,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:layout_gravity="center_horizontal"
-        tools:context="edu.ycp.cs482.iorc.DiceWidgetActivity"
+        tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
         android:text="@string/roll_result"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         />
