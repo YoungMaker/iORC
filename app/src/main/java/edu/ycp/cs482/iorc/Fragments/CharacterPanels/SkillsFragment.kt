@@ -36,7 +36,7 @@ class SkillsFragment : Fragment() {
     private var mSkillList : HashMap<String, String>? = hashMapOf()
     //private var mListener: OnListFragmentInteractionListener? = null
     private val V_DATA = "VERSION_DATA"
-    //private var mItem: VersionSheetQuery.GetVersionSheet? = null
+    private var mItem: VersionSheetQuery.GetVersionSheet? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,36 +45,37 @@ class SkillsFragment : Fragment() {
         val nameDescription = HashMap<String, String>()
         val bundle = arguments
         val skillMap = bundle.getSerializable(V_DATA) as HashMap<String, String>
-        //mItem = Gson().fromJson(skillMap.get(V_DATA), VersionSheetQuery.GetVersionSheet::class.java)
+        mItem = Gson().fromJson(skillMap.get(V_DATA), VersionSheetQuery.GetVersionSheet::class.java)
 
-//        val size = mItem!!.fragments().versionSheetData().stats()!!.size
-//
-//        for (i in 0 until size) {
-//            nameDescription.put(mItem!!.fragments().versionSheetData().stats()!!.get(i).name(),
-//                    mItem!!.fragments().versionSheetData().stats()!!.get(i).description())
-//        }
-//
-//        //val listItems = ArrayList<HashMap<String, String>>()
-//
-//        val it = nameDescription.iterator()
-//        while (it.hasNext()) {
-//            val resultMap = HashMap<String, String>()
-//            val pair = it.next()
-//            resultMap.put("Name", pair.key)
-//            resultMap.put("Description", pair.value)
-//            mSkillList!!.add(resultMap)
-//        }
+        val size = mItem!!.fragments().versionSheetData().stats()!!.size
+
+        for (i in 0 until size) {
+            if(mItem!!.fragments().versionSheetData().stats()!!.get(i).skill() == true)
+            nameDescription.put(mItem!!.fragments().versionSheetData().stats()!!.get(i).name(),
+                    mItem!!.fragments().versionSheetData().stats()!!.get(i).description())
+        }
+
+        //val listItems = ArrayList<HashMap<String, String>>()
+
+        val it = nameDescription.iterator()
+        while (it.hasNext()) {
+            //val resultMap = HashMap<String, String>()
+            val pair = it.next()
+            mSkillList!!.put(pair.key, pair.value)
+            //mSkillList!!.put("Name", pair.key)
+            //mSkillList!!.add(resultMap)
+        }
 
 
 
         Log.d("SERIALIZABLE", arguments.getSerializable(V_DATA).toString())
-        if (arguments.getSerializable(V_DATA) != null) {
-            mSkillList = arguments.getSerializable((V_DATA)) as HashMap<String, String>
-            Log.d("mSKILL_LIST", mSkillList.toString())
-        }
-        else{
-            Log.d("SKILLS_LIST", "NULL")
-        }
+//        if (arguments.getSerializable(V_DATA) != null) {
+//            mSkillList = arguments.getSerializable((V_DATA)) as HashMap<String, String>
+//            Log.d("mSKILL_LIST", mSkillList.toString())
+//        }
+//        else{
+//            Log.d("SKILLS_LIST", "NULL")
+//        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
