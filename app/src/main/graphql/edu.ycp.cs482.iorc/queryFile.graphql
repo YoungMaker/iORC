@@ -80,6 +80,12 @@ fragment CharacterData on Character{
   classql{
     ...ClassData
   }
+  inventory{
+    ...ItemData
+  }
+  slots{
+    ...SlotData
+  }
 }
 
 
@@ -147,4 +153,13 @@ fragment ItemData on Item {
   itemClasses
   price
   type
+}
+
+fragment SlotData on Slot{
+  name
+  item {
+    version
+    type
+  }
+  empty
 }
