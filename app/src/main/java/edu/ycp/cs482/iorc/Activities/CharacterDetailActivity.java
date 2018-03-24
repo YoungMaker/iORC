@@ -6,8 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -44,26 +46,6 @@ public class CharacterDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         BottomNavigationView Bottom_navigation_main = findViewById(R.id.character_bottom);
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-
-        FloatingActionButton fab = findViewById(R.id.edit_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(), "TODO: Implement Editing", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-            }
-        });
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -112,9 +94,15 @@ public class CharacterDetailActivity extends AppCompatActivity {
             case R.id.home:
                 Intent Intent = new Intent(CharacterDetailActivity.this, CharacterListActivity.class);
                 startActivity(Intent);
+                break;
+
+            case R.id.editCharacter:
+                Log.d("IMPLEMENT CHAR EDITING", "Create layout that implements character editing properties");
+                break;
 
             case R.id.deleteCheck:
                 confirmDeleteBox();
+                break;
         }
         //int id = item.getItemId();
         //if (id == android.R.id.home) {
