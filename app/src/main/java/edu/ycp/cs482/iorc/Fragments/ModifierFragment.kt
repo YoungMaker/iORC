@@ -27,6 +27,7 @@ import edu.ycp.cs482.iorc.ViewAdapters.MyModifierRecyclerViewAdapter
 class ModifierFragment : Fragment() {
     // TODO: Customize parameters
     private var mColumnCount = 2
+    private var mNoModsKey = " "
     private var mModMap: HashMap<String, Float> = hashMapOf()
     //private var mListener: OnListFragmentInteractionListener? = null
 
@@ -62,9 +63,15 @@ class ModifierFragment : Fragment() {
 
     fun convertBackToModifiers(mods: HashMap<String, Float>): List<Modifier>{
         val outputList = mutableListOf<Modifier>()
-        for((key, value) in mods) {
-            outputList.add(Modifier(key, value))
+        if(mods.isEmpty()){
+            var noMod: Modifier = Modifier(mNoModsKey, 0f)
+            outputList.add(noMod)
+        } else{
+            for((key, value) in mods) {
+                outputList.add(Modifier(key, value))
+            }
         }
+
         return outputList
     }
 
