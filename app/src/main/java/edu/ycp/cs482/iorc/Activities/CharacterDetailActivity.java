@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -30,12 +32,15 @@ import edu.ycp.cs482.iorc.R;
  * item details are presented side-by-side with a list of items
  * in a {@link CharacterListActivity}.
  */
-public class CharacterDetailActivity extends AppCompatActivity {
+public class CharacterDetailActivity extends AppCompatActivity{
+
 
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
     private String CHARCTER_ID = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +134,7 @@ public class CharacterDetailActivity extends AppCompatActivity {
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
                     arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+                    Log.d("V_DATA", arguments.toString());
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
                     arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
@@ -142,10 +148,10 @@ public class CharacterDetailActivity extends AppCompatActivity {
 
                 case R.id.action_skills:
                     Bundle skillArguments = new Bundle();
-                    skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
-                            getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
-                    //Log.d("SKILL_ARG", skillArguments.toString());
-                    skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
+                    skillArguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+                    //skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
+                            //getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+                    //skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
                     SkillsFragment skillFragment = new SkillsFragment();
                     skillFragment.setArguments(skillArguments);
                     getSupportFragmentManager().beginTransaction()
