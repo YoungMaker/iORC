@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment
 
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment.OnListFragmentInteractionListener
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
@@ -16,7 +17,8 @@ import edu.ycp.cs482.iorc.fragment.VersionSheetData
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MySkillRecyclerViewAdapter(private val mValues: ArrayList<VersionSheetData.Stat>?) : RecyclerView.Adapter<MySkillRecyclerViewAdapter.ViewHolder>() {
+class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>)
+    : RecyclerView.Adapter<MySkillRecyclerViewAdapter.ViewHolder>() {
 //private val mListener: OnListFragmentInteractionListener?
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -25,9 +27,9 @@ class MySkillRecyclerViewAdapter(private val mValues: ArrayList<VersionSheetData
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.mItem = mValues!![position]
-        holder.mIdView.text = mValues[position].name()
-        holder.mContentView.text = mValues[position].description()
+        holder.mItem = mValues[position]
+        holder.mIdView.text = mValues[position].name
+        holder.mContentView.text = mValues[position].description
 
 //        holder.mView.setOnClickListener {
 //            mListener?.onListFragmentInteraction(holder.mItem!!)
@@ -41,11 +43,11 @@ class MySkillRecyclerViewAdapter(private val mValues: ArrayList<VersionSheetData
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView
         val mContentView: TextView
-        var mItem: VersionSheetData.Stat? = null
+        var mItem: SkillsFragment.Stats? = null
 
         init {
-            mIdView = mView.findViewById(R.id.id)
-            mContentView = mView.findViewById(R.id.content)
+            mIdView = mView.findViewById(R.id.skill_name)
+            mContentView = mView.findViewById(R.id.skill_description)
         }
 
         override fun toString(): String {

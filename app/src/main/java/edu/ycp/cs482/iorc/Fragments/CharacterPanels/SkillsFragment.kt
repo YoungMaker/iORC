@@ -1,10 +1,9 @@
 package edu.ycp.cs482.iorc.Fragments.CharacterPanels
 
+import android.content.ClipDescription
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,11 +13,12 @@ import com.google.gson.Gson
 import edu.ycp.cs482.iorc.VersionSheetQuery
 
 import edu.ycp.cs482.iorc.R
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.ViewAdapters.MySkillRecyclerViewAdapter
 import edu.ycp.cs482.iorc.fragment.VersionSheetData
 import java.util.HashMap
+//import javax.swing.UIManager.put
+
+
 
 /**
  * A fragment representing a list of Items.
@@ -33,23 +33,43 @@ import java.util.HashMap
  */
 class SkillsFragment : Fragment() {
     // TODO: Customize parameters
-    private var mSkillList : ArrayList<VersionSheetData.Stat>? = null
+    private var mSkillList : HashMap<String, String>? = hashMapOf()
     //private var mListener: OnListFragmentInteractionListener? = null
     private val V_DATA = "VERSION_DATA"
-    private var mItem: VersionSheetQuery.GetVersionSheet? = null
+    //private var mItem: VersionSheetQuery.GetVersionSheet? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val nameDescription = HashMap<String, String>()
         val bundle = arguments
         val skillMap = bundle.getSerializable(V_DATA) as HashMap<String, String>
-        mItem = Gson().fromJson(skillMap.get(V_DATA), VersionSheetQuery.GetVersionSheet::class.java)
+        //mItem = Gson().fromJson(skillMap.get(V_DATA), VersionSheetQuery.GetVersionSheet::class.java)
+
+//        val size = mItem!!.fragments().versionSheetData().stats()!!.size
+//
+//        for (i in 0 until size) {
+//            nameDescription.put(mItem!!.fragments().versionSheetData().stats()!!.get(i).name(),
+//                    mItem!!.fragments().versionSheetData().stats()!!.get(i).description())
+//        }
+//
+//        //val listItems = ArrayList<HashMap<String, String>>()
+//
+//        val it = nameDescription.iterator()
+//        while (it.hasNext()) {
+//            val resultMap = HashMap<String, String>()
+//            val pair = it.next()
+//            resultMap.put("Name", pair.key)
+//            resultMap.put("Description", pair.value)
+//            mSkillList!!.add(resultMap)
+//        }
+
 
 
         Log.d("SERIALIZABLE", arguments.getSerializable(V_DATA).toString())
         if (arguments.getSerializable(V_DATA) != null) {
-            mSkillList = mItem as ArrayList<VersionSheetData.Stat>?
+            mSkillList = arguments.getSerializable((V_DATA)) as HashMap<String, String>
             Log.d("mSKILL_LIST", mSkillList.toString())
         }
         else{
@@ -67,10 +87,18 @@ class SkillsFragment : Fragment() {
         if (view is RecyclerView) {
             Log.d("SKILL_LIST_CHECK", mSkillList.toString())
             if(mSkillList != null){
-                view.adapter = MySkillRecyclerViewAdapter(mSkillList)
+                view.adapter = MySkillRecyclerViewAdapter(convertBackToSkills(mSkillList!!))
             }
         }
         return view
+    }
+
+    fun convertBackToSkills(skill_list: HashMap<String, String>): List<Stats>{
+        val outputList = mutableListOf<Stats>()
+        for((name, description) in skill_list) {
+            outputList.add(Stats(name, description))
+        }
+        return outputList
     }
 
 
@@ -108,12 +136,17 @@ class SkillsFragment : Fragment() {
         private val SKILLS_LIST = "skills_list"
 
         // TODO: Customize parameter initialization
-        fun newInstance(skills : ArrayList<VersionSheetData.Stat>): SkillsFragment {
+        fun newInstance(skillsMap : HashMap<String, String>): SkillsFragment {
             val fragment = SkillsFragment()
             val args = Bundle()
-            args.putSerializable(SKILLS_LIST, skills)
+            args.putSerializable(SKILLS_LIST, skillsMap)
             fragment.arguments = args
             return fragment
         }
     }
+
+    data class Stats(
+            val name: String,
+            val description: String
+    )
 }

@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
@@ -145,6 +148,7 @@ public class CharacterDetailActivity extends AppCompatActivity{
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
                     arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+                    Log.d("V_DATA", arguments.toString());
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
                     arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
