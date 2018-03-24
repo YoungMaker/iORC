@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.apollographql.apollo.ApolloCall;
@@ -192,9 +191,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
-                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                        //toast.setGravity(Gravity.CENTER, 0, 0);
-                        //toast.show();
+                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                         Log.e("ERROR: ", e.toString());
                     }
                 });
@@ -239,9 +237,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
-                        //Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                        //toast.setGravity(Gravity.CENTER, 0, 0);
-                        //toast.show();
+                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
                         Log.e("ERROR: ", e.toString());
                     }
                 });
@@ -278,10 +275,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
-                Log.d("CREATION FAILED", "SERVER NOT RESPONDING");
+                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }
@@ -301,9 +296,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Toast toast = Toast.makeText(getApplicationContext(), "Query Error", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
 
             }
         });
