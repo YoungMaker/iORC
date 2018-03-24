@@ -16,8 +16,8 @@ import edu.ycp.cs482.iorc.fragment.VersionSheetData
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MySkillRecyclerViewAdapter(private val mValues: ArrayList<VersionSheetData.Stat>?, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<MySkillRecyclerViewAdapter.ViewHolder>() {
-
+class MySkillRecyclerViewAdapter(private val mValues: ArrayList<VersionSheetData.Stat>?) : RecyclerView.Adapter<MySkillRecyclerViewAdapter.ViewHolder>() {
+//private val mListener: OnListFragmentInteractionListener?
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.fragment_skill, parent, false)
@@ -29,9 +29,9 @@ class MySkillRecyclerViewAdapter(private val mValues: ArrayList<VersionSheetData
         holder.mIdView.text = mValues[position].name()
         holder.mContentView.text = mValues[position].description()
 
-        holder.mView.setOnClickListener {
-            mListener?.onListFragmentInteraction(holder.mItem!!)
-        }
+//        holder.mView.setOnClickListener {
+//            mListener?.onListFragmentInteraction(holder.mItem!!)
+//        }
     }
 
     override fun getItemCount(): Int {
