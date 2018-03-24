@@ -4,13 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/classrace_defBonus"
-        style="?android:attr/textAppearanceLarge"
-        android:padding="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
-
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/classrace_detail"
