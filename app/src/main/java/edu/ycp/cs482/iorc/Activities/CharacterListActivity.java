@@ -293,10 +293,6 @@ public class CharacterListActivity extends AppCompatActivity {
             //on character deletion get the character list
             @Override
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
-                loadingView.setVisibility(View.GONE);
-                Log.d("CHARACTER DELETED", "");
-
-                loadingView.setVisibility(View.GONE);
 
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
                 getIds(policy);
