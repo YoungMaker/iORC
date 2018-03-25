@@ -288,5 +288,7 @@
     <string name="item_tags">Item Tags:</string>
     <string name="text_stats">Stats:</string>
     <string name="currency_placeholder"><![CDATA[<Gold Pieces>]]></string>
+    <string name="delete">Delete</string>
+    <string name="itemIntent">Items</string>
 
 </resources>

@@ -19,6 +19,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import java.util.HashMap;
+
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
@@ -39,6 +41,8 @@ public class CharacterDetailActivity extends AppCompatActivity{
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
     private String CHARCTER_ID = "";
+    private static final String CREATION_DATA = "CREATION_DATA";
+    private HashMap<String, String> creationData;
 
 
 
@@ -50,6 +54,14 @@ public class CharacterDetailActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
         BottomNavigationView Bottom_navigation_main = findViewById(R.id.character_bottom);
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        FloatingActionButton fab = findViewById(R.id.edit_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { //TODO toggle editing
+                Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
+            }
+        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -100,8 +112,10 @@ public class CharacterDetailActivity extends AppCompatActivity{
                 startActivity(Intent);
                 break;
 
-            case R.id.editCharacter:
-                Log.d("IMPLEMENT CHAR EDITING", "Create layout that implements character editing properties");
+            case R.id.itemIntent:
+                Intent itemIntent = new Intent(CharacterDetailActivity.this, ItemListActivity.class);
+                itemIntent.putExtra(CREATION_DATA, creationData);
+                startActivity(itemIntent);
                 break;
 
             case R.id.deleteCheck:
@@ -123,6 +137,7 @@ public class CharacterDetailActivity extends AppCompatActivity{
           //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
             //startActivity(deleteIntent);
         //}
+
         return super.onOptionsItemSelected(item);
     }
 

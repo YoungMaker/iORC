@@ -46,18 +46,6 @@ public class EquipmentFragment extends Fragment {
 
         listView.setAdapter(listViewAdapter);
 
-
-        //creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
-        FloatingActionButton fab = view.findViewById(R.id.item_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent itemIntent = new Intent(getActivity(), ItemListActivity.class);
-                itemIntent.putExtra(CREATION_DATA, creationData);
-                startActivity(itemIntent);
-            }
-        });
-
         // Inflate the layout for this fragment
         return view;
     }

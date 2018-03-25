@@ -68,6 +68,19 @@
         >
     </android.support.design.widget.BottomNavigationView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:layout_gravity="center_horizontal|end"
+        android:clickable="true"
+        app:layout_anchor="@+id/character_bottom"
+        app:layout_anchorGravity="end"
+        app:srcCompat="@drawable/ic_edit_black_24dp"
+        android:tint="@android:color/white"
+        tools:layout_editor_absoluteX="344dp" />
+
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->
         <!--android:layout_width="wrap_content"-->

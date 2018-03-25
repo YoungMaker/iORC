@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/editCharacter"
+        android:id="@+id/itemIntent"
         android:orderInCategory="100"
-        android:title="Edit"
+        android:title="@string/itemIntent"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/deleteCheck"
         android:orderInCategory="200"
-        android:title="Delete"
+        android:title="@string/delete"
         app:showAsAction="never"/>
 
 </menu>
