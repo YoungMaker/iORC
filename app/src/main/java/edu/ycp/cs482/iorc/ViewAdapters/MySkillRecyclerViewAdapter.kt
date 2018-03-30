@@ -1,6 +1,7 @@
 package edu.ycp.cs482.iorc.ViewAdapters
 
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,15 @@ class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
         holder.mIdView.text = mValues[position].name
-        holder.mContentView.text = mValues[position].description
+
+        if(mValues[position].description.length <  110) {
+            holder.mContentView.text = mValues[position].description
+        }
+        else {
+            Log.d("TEXT_OUTPUT", "\'" + mValues[position].description + "\'")
+            val outputStr = mValues[position].description.subSequence(0, 110)
+            holder.mContentView.text = "%s...".format(outputStr)
+        }
 
 //        holder.mView.setOnClickListener {
 //            mListener?.onListFragmentInteraction(holder.mItem!!)
@@ -37,18 +46,13 @@ class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>
     }
 
     override fun getItemCount(): Int {
-        return mValues!!.size
+        return mValues.size
     }
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView
-        val mContentView: TextView
+    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+        val mIdView: TextView = mView.findViewById(R.id.skill_name)
+        val mContentView: TextView = mView.findViewById(R.id.skill_description)
         var mItem: SkillsFragment.Stats? = null
-
-        init {
-            mIdView = mView.findViewById(R.id.skill_name)
-            mContentView = mView.findViewById(R.id.skill_description)
-        }
 
         override fun toString(): String {
             return super.toString() + " '" + mContentView.text + "'"

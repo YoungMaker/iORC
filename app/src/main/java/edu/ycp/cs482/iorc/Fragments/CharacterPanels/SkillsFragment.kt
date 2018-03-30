@@ -4,6 +4,7 @@ import android.content.ClipDescription
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -45,15 +46,16 @@ class SkillsFragment : Fragment() {
         val nameDescription = HashMap<String, String>()
         val bundle = arguments
         val skillMap = bundle.getSerializable(V_DATA) as HashMap<String, String>
-        mItem = Gson().fromJson(skillMap.get(V_DATA), VersionSheetQuery.GetVersionSheet::class.java)
+        mItem = Gson().fromJson(skillMap[V_DATA], VersionSheetQuery.GetVersionSheet::class.java)
 
         val size = mItem!!.fragments().versionSheetData().stats()!!.size
 
-        for (i in 0 until size) {
-            if(mItem!!.fragments().versionSheetData().stats()!!.get(i).skill() == true)
-            nameDescription.put(mItem!!.fragments().versionSheetData().stats()!!.get(i).name(),
-                    mItem!!.fragments().versionSheetData().stats()!!.get(i).description())
-        }
+        (0 until size)
+                .filter { mItem!!.fragments().versionSheetData().stats()!![it].skill() == true }
+                .forEach {
+                    nameDescription.put(mItem!!.fragments().versionSheetData().stats()!![it].name(),
+                            mItem!!.fragments().versionSheetData().stats()!![it].description())
+                }
 
         //val listItems = ArrayList<HashMap<String, String>>()
 
@@ -90,6 +92,10 @@ class SkillsFragment : Fragment() {
             if(mSkillList != null){
                 view.adapter = MySkillRecyclerViewAdapter(convertBackToSkills(mSkillList!!))
             }
+                val itemDecor = DividerItemDecoration(view.context,
+                        DividerItemDecoration.VERTICAL) //this should probably get the layoutManager's preference.
+                view.addItemDecoration(itemDecor)
+
         }
         return view
     }
