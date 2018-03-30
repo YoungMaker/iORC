@@ -6,7 +6,8 @@
         android:id="@+id/itemIntent"
         android:orderInCategory="100"
         android:title="@string/itemIntent"
-        app:showAsAction="never"/>
+        android:icon="@drawable/sword_cross"
+        app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/deleteCheck"
