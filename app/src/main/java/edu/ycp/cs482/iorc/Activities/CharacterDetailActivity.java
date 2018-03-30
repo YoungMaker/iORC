@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -17,7 +18,8 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-import android.widget.Toast;
+
+import java.util.HashMap;
 
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
@@ -39,6 +41,8 @@ public class CharacterDetailActivity extends AppCompatActivity{
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
     private String CHARCTER_ID = "";
+    private static final String CREATION_DATA = "CREATION_DATA";
+    private HashMap<String, String> creationData;
 
 
 
@@ -51,25 +55,13 @@ public class CharacterDetailActivity extends AppCompatActivity{
         BottomNavigationView Bottom_navigation_main = findViewById(R.id.character_bottom);
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
         FloatingActionButton fab = findViewById(R.id.edit_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Toast toast = Toast.makeText(getApplicationContext(), "TODO: Implement Editing", Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+            public void onClick(View view) { //TODO toggle editing
+                Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
             }
         });
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -118,9 +110,17 @@ public class CharacterDetailActivity extends AppCompatActivity{
             case R.id.home:
                 Intent Intent = new Intent(CharacterDetailActivity.this, CharacterListActivity.class);
                 startActivity(Intent);
+                break;
+
+            case R.id.itemIntent:
+                Intent itemIntent = new Intent(CharacterDetailActivity.this, ItemListActivity.class);
+                itemIntent.putExtra(CREATION_DATA, creationData);
+                startActivity(itemIntent);
+                break;
 
             case R.id.deleteCheck:
                 confirmDeleteBox();
+                break;
         }
         //int id = item.getItemId();
         //if (id == android.R.id.home) {
@@ -137,6 +137,7 @@ public class CharacterDetailActivity extends AppCompatActivity{
           //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
             //startActivity(deleteIntent);
         //}
+
         return super.onOptionsItemSelected(item);
     }
 

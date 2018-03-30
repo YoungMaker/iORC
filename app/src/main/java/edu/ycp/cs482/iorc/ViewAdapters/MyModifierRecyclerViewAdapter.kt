@@ -56,6 +56,9 @@ class MyModifierRecyclerViewAdapter(private val mValues: List<ModifierFragment.M
             holder.mIdView.setTextColor(Color.RED)
             holder.mIdView.text = ("  %.0f".format(cItemValue))
         }
+        else if(mValues[position].key == " "){
+            holder.mIdView.text = ("No Modifiers")
+        }
         else{
             holder.mIdView.text = cItemValue.toString()
         }
