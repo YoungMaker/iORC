@@ -29,6 +29,7 @@ import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.fragment.ItemData;
 
 
 /**
@@ -165,6 +166,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_skills:
+                    //TODO: Please use newInstance method if at all possible
                     Bundle skillArguments = new Bundle();
                     skillArguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
                     //skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
@@ -178,10 +180,11 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_equipment:
-                    EquipmentFragment fragment3 = new EquipmentFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
-                    fragmentTransaction3.commit();
+                    //TODO: inject character inventory into fragment
+                    //EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance()
+                    //android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
+                    //fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
+                    //fragmentTransaction3.commit();
                     break;
 
                 case R.id.action_magic:
@@ -223,7 +226,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     }
 
     @Override
-    public void onListFragmentInteraction(@NotNull DummyContent.DummyItem item) {
-        Log.d("ITEM_CLICKED", "inventory item clicked");
+    public void onListFragmentInteraction(@NotNull ItemData item) {
+        Log.d("ITEM_CLICKED", item.name());
     }
 }

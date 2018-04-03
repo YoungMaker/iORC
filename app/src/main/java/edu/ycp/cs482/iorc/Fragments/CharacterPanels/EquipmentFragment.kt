@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
+import edu.ycp.cs482.iorc.CharacterVersionQuery
 
 import edu.ycp.cs482.iorc.R
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.ViewAdapters.MyItemRecyclerViewAdapter
+import edu.ycp.cs482.iorc.fragment.ItemData
 
 /**
  * A fragment representing a list of Items.
@@ -27,15 +30,15 @@ import edu.ycp.cs482.iorc.ViewAdapters.MyItemRecyclerViewAdapter
  * fragment (e.g. upon screen orientation changes).
  */
 class EquipmentFragment : Fragment() {
-    // TODO: Customize parameters
-    private var mColumnCount = 1
     private var mListener: OnListFragmentInteractionListener? = null
+    private var mItemsList: List<ItemData>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (arguments != null) {
-            mColumnCount = arguments.getInt(ARG_COLUMN_COUNT)
+            val charMap = arguments.getSerializable(ARG_INV_DATA) as java.util.HashMap<String, String>
         }
     }
 
@@ -46,12 +49,8 @@ class EquipmentFragment : Fragment() {
         // Set the adapter
         if (view is RecyclerView) {
             val context = view.getContext()
-            if (mColumnCount <= 1) {
-                view.layoutManager = LinearLayoutManager(context)
-            } else {
-                view.layoutManager = GridLayoutManager(context, mColumnCount)
-            }
-            view.adapter = MyItemRecyclerViewAdapter(DummyContent.ITEMS, mListener)
+            //TODO: put data into view adapter
+            view.adapter = MyItemRecyclerViewAdapter(mItemsList, mListener)
         }
         return view
     }
@@ -81,20 +80,17 @@ class EquipmentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem)
+        fun onListFragmentInteraction(item: ItemData)
     }
 
     companion object {
 
-        // TODO: Customize parameter argument names
-        private val ARG_COLUMN_COUNT = "column-count"
+        private val ARG_INV_DATA = "ITEM_INV_DATA"
 
-        // TODO: Customize parameter initialization
-        fun newInstance(columnCount: Int): EquipmentFragment {
+        fun newInstance(invMap: HashMap<String, String>): EquipmentFragment {
             val fragment = EquipmentFragment()
             val args = Bundle()
-            args.putInt(ARG_COLUMN_COUNT, columnCount)
+            args.putSerializable(ARG_INV_DATA, invMap)
             fragment.arguments = args
             return fragment
         }

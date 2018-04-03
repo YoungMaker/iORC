@@ -33,7 +33,6 @@ import java.util.HashMap
  * fragment (e.g. upon screen orientation changes).
  */
 class SkillsFragment : Fragment() {
-    // TODO: Customize parameters
     private var mSkillList : HashMap<String, String>? = hashMapOf()
     //private var mListener: OnListFragmentInteractionListener? = null
     private val V_DATA = "VERSION_DATA"
