@@ -19,8 +19,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
@@ -34,7 +37,7 @@ import edu.ycp.cs482.iorc.R;
  * item details are presented side-by-side with a list of items
  * in a {@link CharacterListActivity}.
  */
-public class CharacterDetailActivity extends AppCompatActivity{
+public class CharacterDetailActivity extends AppCompatActivity implements EquipmentFragment.OnListFragmentInteractionListener{
 
 
     private static final String DO_DELETE = "DO_DELETE";
@@ -219,4 +222,8 @@ public class CharacterDetailActivity extends AppCompatActivity{
         builder.show();
     }
 
+    @Override
+    public void onListFragmentInteraction(@NotNull DummyContent.DummyItem item) {
+        Log.d("ITEM_CLICKED", "inventory item clicked");
+    }
 }
