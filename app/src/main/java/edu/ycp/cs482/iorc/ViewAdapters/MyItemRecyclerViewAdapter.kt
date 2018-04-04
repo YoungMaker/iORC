@@ -19,10 +19,12 @@ import org.w3c.dom.Text
  */
 class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
 
+    private val MIN_CMP_FLOAT = 0.001
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(
-                        R.layout.item_list_content,
+                        R.layout.equipment_list_content,
                         parent,
                         false)
         return ViewHolder(view)
@@ -35,7 +37,13 @@ class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private va
             //TODO: Show modifiers
             var output = ""
             for( modifier in mValues[position].modifiers()!!) {
-                output += "+ %.0f".format(modifier.value()) + " " + modifier.key() + " "
+                output += if(modifier.value() % 1 > 0 && modifier.key() != "*"){
+                    "%d d %d".format(modifier.value().toInt(), getDiceValue(modifier.value().toFloat())) + " " + modifier.key() + " "
+                }else if (modifier.value() < 0) {
+                    "%.0f".format(modifier.value()) + " " + modifier.key() + " "
+                }else {
+                    "+ %.0f".format(modifier.value()) + " " + modifier.key() + " "
+                }
             }
             holder.mContentView.text = output
 
@@ -43,6 +51,17 @@ class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private va
                 mListener?.onListFragmentInteraction(holder.mItem!!)
             }
         }
+    }
+
+    private fun getDiceValue(modVal: Float): Int{
+        val diceValue = (modVal %1)
+        val outDice : Int
+        outDice = if((diceValue-0.2f) < MIN_CMP_FLOAT ) {
+            Math.round(diceValue * 100)
+        } else {
+            Math.round(diceValue * 10)
+        }
+        return outDice
     }
 
     override fun getItemCount(): Int {
@@ -55,7 +74,7 @@ class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private va
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.findViewById(R.id.id_text)
-        val mContentView: TextView = mView.findViewById(R.id.content)
+        val mContentView: TextView = mView.findViewById(R.id.item_mods)
         var mItem: ItemData? = null
 
         override fun toString(): String {
