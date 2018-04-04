@@ -19,16 +19,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
+import edu.ycp.cs482.iorc.CharacterVersionQuery;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.fragment.ItemData;
 
 
@@ -180,12 +184,31 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_equipment:
+                    //get key for character map
+                    String itemKey = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
+                    //get character map
+                    HashMap<String, String> charMap =
+                            (HashMap<String, String>) getIntent()
+                                    .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
+                    //unwrap character data
+                    CharacterData character = (new Gson()).fromJson(charMap.get(itemKey),
+                            CharacterVersionQuery.GetCharactersByVersion.class).fragments().characterData();
+
+                    //get items from character inventory and put into map, key is just i for now
+                    //value is just name for now
+                    HashMap<String, String> invMap = new HashMap<>();
+                    for(int i = 0; i < character.inventory().size(); i++){
+                        CharacterData.Inventory invItem = character.inventory().get(i);
+                        String itemData = new Gson().toJson(invItem.fragments().itemData());
+                        invMap.put(String.valueOf(i), itemData);
+                        Log.d("INVENTORY_ITEM", itemData);
+                    }
                     //TODO: inject character inventory into fragment
-                    //EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance()
-                    //android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-                    //fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
-                    //fragmentTransaction3.commit();
-                    break;
+//                    EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance(invMap);
+//                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
+//                    fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
+//                    fragmentTransaction3.commit();
+//                    break;
 
                 case R.id.action_magic:
                     MagicFragment fragment4 = new MagicFragment();
