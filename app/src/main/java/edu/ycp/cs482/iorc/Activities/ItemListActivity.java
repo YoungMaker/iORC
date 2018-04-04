@@ -57,6 +57,7 @@ public class ItemListActivity extends AppCompatActivity {
     private VersionItemsQuery.Data versionItemQueryData;
     private List<ItemData> itemList = new ArrayList<>();
     public static final String CHAR_ID = "CHAR_ID";
+    private static final int ITEM_SELECTION_REQ_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,6 @@ public class ItemListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
         getAllItems();
 
         if (findViewById(R.id.item_detail_container) != null) {
@@ -139,11 +139,13 @@ public class ItemListActivity extends AppCompatActivity {
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
                 } else {
+
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
                     intent.putExtra(CREATION_DATA, mCreationData);
-                    context.startActivity(intent);
+                    mParentActivity.startActivityForResult(intent, ITEM_SELECTION_REQ_CODE);
+                    //context.startActivityResult(intent);
                 }
             }
         };
@@ -246,5 +248,14 @@ public class ItemListActivity extends AppCompatActivity {
     //refresh recycler view
     public void refreshView(){
         mSimpleAdapter.notifyDataSetChanged();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == ITEM_SELECTION_REQ_CODE && resultCode == RESULT_OK){
+            String dataReturn = data.getStringExtra("result");
+            Log.d("DATA_RETURN_TEST", dataReturn);
+        }
     }
 }

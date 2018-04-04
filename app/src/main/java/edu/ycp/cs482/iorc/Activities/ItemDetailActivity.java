@@ -42,6 +42,9 @@ public class ItemDetailActivity extends AppCompatActivity {
             public void onClick(View view) { //TODO: this should add the item in detail to the character
                 Snackbar.make(view, "TODO: This should add an item to the character. ", Snackbar.LENGTH_LONG)
                         .setAction("Add", null).show();
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("result", "HELLO FROM INVENTORY");
+                setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });
