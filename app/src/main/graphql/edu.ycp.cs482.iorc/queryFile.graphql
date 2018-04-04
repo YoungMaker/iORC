@@ -52,6 +52,12 @@
      }
  }
 
+ mutation AddItemToCharMutation($itemId :ID!, $charID :ID!){
+   addItemToCharacter(itemid:$itemId, id:$charID){
+     ...CharacterData
+   }
+ }
+
  mutation DeleteCharacterMutation($id:ID!){
    deleteCharacter(id:$id)
  }
@@ -143,6 +149,7 @@ fragment VersionInfoData on Version{
 }
 
 fragment ItemData on Item {
+  id
   name
   version
   description

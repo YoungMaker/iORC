@@ -46,10 +46,12 @@ public class CharacterDetailActivity extends AppCompatActivity{
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
     private CharacterVersionQuery.GetCharactersByVersion mItem;
+    private CharacterData mCharacterData;
     private String CHARCTER_ID = "";
     private static final String CREATION_DATA = "CREATION_DATA";
     public static final String ITEM_ID = "item_id";
     public static final String MAP_ID = "map_id";
+    public static final String CHAR_ID = "CHAR_ID";
     private HashMap<String, String> creationData;
 
 
@@ -93,6 +95,10 @@ public class CharacterDetailActivity extends AppCompatActivity{
             charObj = charMap.get(char_Arguments.getString((CharacterDetailFragment.ARG_ITEM_ID)));
         }
         mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
+
+        //get character data to be used in fragments
+        mCharacterData = mItem.fragments().characterData();
+
         CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
         if (appBarLayout != null && mItem != null) {
             appBarLayout.setTitle(mItem.fragments().characterData().name());
@@ -144,6 +150,7 @@ public class CharacterDetailActivity extends AppCompatActivity{
 
             case R.id.itemIntent:
                 Intent itemIntent = new Intent(CharacterDetailActivity.this, ItemListActivity.class);
+                itemIntent.putExtra(CHAR_ID, mCharacterData.id());
                 itemIntent.putExtra(CREATION_DATA, creationData);
                 startActivity(itemIntent);
                 break;

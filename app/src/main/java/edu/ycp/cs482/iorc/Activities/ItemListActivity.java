@@ -55,6 +55,7 @@ public class ItemListActivity extends AppCompatActivity {
     private HashMap<String, String> creationMap;
     private VersionItemsQuery.Data versionItemQueryData;
     private List<ItemData> itemList = new ArrayList<>();
+    public static final String CHAR_ID = "CHAR_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
