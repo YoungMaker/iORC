@@ -79,12 +79,6 @@ public class CharacterDetailFragment extends Fragment {
             mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
             Log.d("mItem CHECK: ", "" + mItem);
 
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null && mItem != null) {
-                appBarLayout.setTitle(mItem.fragments().characterData().name());
-            }
-
             if(bundle.containsKey(V_DATA)){
                 HashMap<String, String> vDataMap = (HashMap<String, String>)bundle.getSerializable(V_DATA);
                 if(vDataMap != null){
