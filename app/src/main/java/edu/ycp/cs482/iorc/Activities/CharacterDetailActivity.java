@@ -1,5 +1,6 @@
 package edu.ycp.cs482.iorc.Activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
+import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.fragment.ItemData;
@@ -42,7 +44,7 @@ import edu.ycp.cs482.iorc.fragment.ItemData;
  * item details are presented side-by-side with a list of items
  * in a {@link CharacterListActivity}.
  */
-public class CharacterDetailActivity extends AppCompatActivity implements EquipmentFragment.OnListFragmentInteractionListener{
+public class CharacterDetailActivity extends AppCompatActivity implements EquipmentFragment.OnListFragmentInteractionListener {
 
 
     private static final String DO_DELETE = "DO_DELETE";
@@ -51,7 +53,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private String CHARCTER_ID = "";
     private static final String CREATION_DATA = "CREATION_DATA";
     private HashMap<String, String> creationData;
-
 
 
     @Override
@@ -106,15 +107,15 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
     //Create the menu button on the toolbar
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_character_detail_activity,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_character_detail_activity, menu);
         return true;
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.home:
                 Intent Intent = new Intent(CharacterDetailActivity.this, CharacterListActivity.class);
                 startActivity(Intent);
@@ -132,18 +133,18 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         }
         //int id = item.getItemId();
         //if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-          //  navigateUpTo(new Intent(this, CharacterListActivity.class));
-            //return true;
+        // This ID represents the Home or Up button. In the case of this
+        // activity, the Up button is shown. For
+        // more details, see the Navigation pattern on Android Design:
+        //
+        // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+        //
+        //  navigateUpTo(new Intent(this, CharacterListActivity.class));
+        //return true;
         //}
         //else if(id == R.id.deleteCheck){
-          //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
-            //startActivity(deleteIntent);
+        //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
+        //startActivity(deleteIntent);
         //}
 
         return super.onOptionsItemSelected(item);
@@ -153,7 +154,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
                     arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
@@ -174,7 +175,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     Bundle skillArguments = new Bundle();
                     skillArguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
                     //skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
-                            //getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+                    //getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
                     //skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
                     SkillsFragment skillFragment = new SkillsFragment();
                     skillFragment.setArguments(skillArguments);
@@ -197,7 +198,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     //get items from character inventory and put into map, key is just i for now
                     //value is just name for now
                     HashMap<String, String> invMap = new HashMap<>();
-                    for(int i = 0; i < character.inventory().size(); i++){
+                    for (int i = 0; i < character.inventory().size(); i++) {
                         CharacterData.Inventory invItem = character.inventory().get(i);
                         ItemData itemDataobj = invItem.fragments().itemData();
                         String itemData = new Gson().toJson(itemDataobj);
@@ -223,7 +224,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         }
     };
 
-    private void confirmDeleteBox(){
+    private void confirmDeleteBox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Delete?");
         // Set up the buttons
@@ -252,5 +253,10 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     @Override
     public void onListFragmentInteraction(@NotNull ItemData item) {
         Log.d("ITEM_CLICKED", item.name());
+
+        String gsonItem = (new Gson()).toJson(item);
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+        intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
+        startActivity(intent);
     }
 }
