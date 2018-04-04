@@ -1,9 +1,11 @@
 package edu.ycp.cs482.iorc.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -151,7 +153,7 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
-
+                        showAlert();
                     }
                 });
     }
@@ -260,6 +262,18 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    public void showAlert(){
+        AlertDialog.Builder errorAlert =new AlertDialog.Builder(this);
+        errorAlert.setMessage("Failed to communicate with server")
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setTitle("ERROR").create();
+        errorAlert.show();
     }
 
     public void refreshView(){

@@ -1,10 +1,12 @@
 package edu.ycp.cs482.iorc.Activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -160,9 +162,10 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Log.d("No Response:","No acknowledgment from server");
+                showAlert();
+//                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                Log.d("No Response:","No acknowledgment from server");
             }
         });
     }
@@ -196,9 +199,10 @@ public class ClassRaceListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                Log.d("No Response:","No acknowledgment from server");
+                showAlert();
+//                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                Log.d("No Response:","No acknowledgment from server");
             }
         });
     }
@@ -350,6 +354,18 @@ public class ClassRaceListActivity extends AppCompatActivity {
                 context.startActivity(intent);
             }
         }
+    }
+
+    public void showAlert(){
+        AlertDialog.Builder errorAlert =new AlertDialog.Builder(this);
+        errorAlert.setMessage("Failed to communicate with server")
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setTitle("ERROR").create();
+        errorAlert.show();
     }
 
     public void refreshView(){
