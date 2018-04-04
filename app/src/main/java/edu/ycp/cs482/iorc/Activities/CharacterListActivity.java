@@ -190,9 +190,10 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
-                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                        Log.e("ERROR: ", e.toString());
+                        showAlert();
+//                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                                .setAction("Action", null).show();
+//                        Log.e("ERROR: ", e.toString());
                     }
                 });
 
@@ -230,8 +231,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showAlert();
+//                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
     }
@@ -251,8 +253,9 @@ public class CharacterListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                showAlert();
+//                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
 
             }
         });
@@ -329,6 +332,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
+                        showAlert();
                         Log.d("QUERY FAILED", "NO RESPONSE");
                     }
                 });
@@ -453,6 +457,18 @@ public class CharacterListActivity extends AppCompatActivity {
                 mContentView = view.findViewById(R.id.content);
             }
         }
+    }
+
+    public void showAlert(){
+        AlertDialog.Builder errorAlert =new AlertDialog.Builder(this);
+        errorAlert.setMessage("Failed to communicate with server")
+                .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        }).setTitle("ERROR").create();
+        errorAlert.show();
     }
 
     public void refreshView(){
