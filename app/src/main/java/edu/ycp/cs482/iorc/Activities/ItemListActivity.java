@@ -23,6 +23,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.AddItemToCharMutation;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
 import edu.ycp.cs482.iorc.R;
@@ -220,6 +221,22 @@ public class ItemListActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void addItemtoChar(String itemID, String charID){
+        MyApolloClient.getMyApolloClient().mutate(
+            AddItemToCharMutation.builder().itemId(itemID).charID(charID).build())
+               .enqueue(new ApolloCall.Callback<AddItemToCharMutation.Data>() {
+                   @Override
+                   public void onResponse(@Nonnull Response<AddItemToCharMutation.Data> response) {
+                       Log.d("ADD_ITEM_RESPONSE", "COMPLETE");
+                   }
+
+                   @Override
+                   public void onFailure(@Nonnull ApolloException e) {
+                       Log.d("ADD_ITEM_RESPONSE", "ERROR");
+                   }
+               });
     }
 
     //TODO implment other queries for specific item lookups
