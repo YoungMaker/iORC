@@ -58,6 +58,7 @@ public class ItemListActivity extends AppCompatActivity {
     private List<ItemData> itemList = new ArrayList<>();
     public static final String CHAR_ID = "CHAR_ID";
     private static final int ITEM_SELECTION_REQ_CODE = 1;
+    private static String charIDVal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,15 @@ public class ItemListActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();
 
         //create our character creation data map
-        creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        if(extra != null){
+            if(extra.containsKey(CREATION_DATA)){
+                creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+            }
+            if(extra.containsKey(CHAR_ID)){
+                charIDVal = extra.getString(CHAR_ID);
+            }
+        }
+
         Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -225,9 +234,9 @@ public class ItemListActivity extends AppCompatActivity {
                 });
     }
 
-    private void addItemtoChar(String itemID, String charID){
+    private void addItemtoChar(String itemID){
         MyApolloClient.getMyApolloClient().mutate(
-            AddItemToCharMutation.builder().itemId(itemID).charID(charID).build())
+            AddItemToCharMutation.builder().itemId(itemID).charID(charIDVal).build())
                .enqueue(new ApolloCall.Callback<AddItemToCharMutation.Data>() {
                    @Override
                    public void onResponse(@Nonnull Response<AddItemToCharMutation.Data> response) {
@@ -256,6 +265,7 @@ public class ItemListActivity extends AppCompatActivity {
         if(requestCode == ITEM_SELECTION_REQ_CODE && resultCode == RESULT_OK){
             String dataReturn = data.getStringExtra("result");
             Log.d("DATA_RETURN_TEST", dataReturn);
+            addItemtoChar(dataReturn);
         }
     }
 }
