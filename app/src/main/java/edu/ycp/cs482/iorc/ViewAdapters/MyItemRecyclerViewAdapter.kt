@@ -32,7 +32,12 @@ class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private va
         if(mValues != null) {
             holder.mItem = mValues[position]
             holder.mIdView.text = mValues[position].name()
-            holder.mContentView.text = mValues[position].description()
+            //TODO: Show modifiers
+            var output = ""
+            for( modifier in mValues[position].modifiers()!!) {
+                output += "+ %.0f".format(modifier.value()) + " " + modifier.key() + " "
+            }
+            holder.mContentView.text = output
 
             holder.mView.setOnClickListener {
                 mListener?.onListFragmentInteraction(holder.mItem!!)
