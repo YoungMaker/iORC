@@ -199,7 +199,8 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     HashMap<String, String> invMap = new HashMap<>();
                     for(int i = 0; i < character.inventory().size(); i++){
                         CharacterData.Inventory invItem = character.inventory().get(i);
-                        String itemData = new Gson().toJson(invItem.fragments().itemData());
+                        ItemData itemDataobj = invItem.fragments().itemData();
+                        String itemData = new Gson().toJson(itemDataobj);
                         invMap.put(String.valueOf(i), itemData);
                         Log.d("INVENTORY_ITEM", itemData);
                     }

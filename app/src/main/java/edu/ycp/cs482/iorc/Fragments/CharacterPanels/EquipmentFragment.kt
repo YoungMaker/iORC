@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,14 +32,22 @@ import edu.ycp.cs482.iorc.fragment.ItemData
  */
 class EquipmentFragment : Fragment() {
     private var mListener: OnListFragmentInteractionListener? = null
-    private var mItemsList: List<ItemData>? = null
+    private var mItemsList: MutableList<ItemData>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (arguments != null) {
-            val charMap = arguments.getSerializable(ARG_INV_DATA) as java.util.HashMap<String, String>
+            val invMap = arguments.getSerializable(ARG_INV_DATA) as java.util.HashMap<String, String>
+            //Log.d("HELLO", invMap.ke)
+            mItemsList = mutableListOf()
+            invMap.keys.forEach {
+                val invItemData = (Gson()).fromJson(invMap.get(it), ItemData::class.java)
+                if(invItemData != null){
+                    mItemsList!!.add(invItemData)
+                }
+            }
         }
     }
 
