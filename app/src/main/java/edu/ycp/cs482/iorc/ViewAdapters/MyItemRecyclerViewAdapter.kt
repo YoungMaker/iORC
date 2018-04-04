@@ -41,7 +41,11 @@ class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private va
     }
 
     override fun getItemCount(): Int {
-        return mValues!!.size
+        if (mValues != null){
+            return mValues.size
+        }
+        return 0
+
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {

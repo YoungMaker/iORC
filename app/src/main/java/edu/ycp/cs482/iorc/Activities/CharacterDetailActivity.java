@@ -204,11 +204,11 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                         Log.d("INVENTORY_ITEM", itemData);
                     }
                     //TODO: inject character inventory into fragment
-//                    EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance(invMap);
-//                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-//                    fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
-//                    fragmentTransaction3.commit();
-//                    break;
+                    EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance(invMap);
+                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
+                    fragmentTransaction3.commit();
+                    break;
 
                 case R.id.action_magic:
                     MagicFragment fragment4 = new MagicFragment();
