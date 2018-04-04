@@ -10,10 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.fragment.ItemData;
 
 /**
  * An activity representing a single Item detail screen. This
@@ -24,6 +27,7 @@ import edu.ycp.cs482.iorc.R;
 public class ItemDetailActivity extends AppCompatActivity {
 
     private static final String CREATION_DATA = "CREATION_DATA";
+    private ItemData mItem;
     private HashMap<String, String> creationData;
 
     @Override
@@ -35,16 +39,27 @@ public class ItemDetailActivity extends AppCompatActivity {
 
         //get extras from item list activity
         final Bundle extra = getIntent().getExtras();
-        creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+
+        if(extra != null){
+            if(extra.containsKey(CREATION_DATA)){
+                creationData = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+            }
+            if(extra.containsKey(ItemDetailFragment.ARG_ITEM)){
+                mItem = (new Gson()).fromJson( extra.getString(ItemDetailFragment.ARG_ITEM), ItemData.class);
+            }
+        }
+
+
+        //FAB button press triggers result of selection to be sent to list activity
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //TODO: this should add the item in detail to the character
                 Snackbar.make(view, "TODO: This should add an item to the character. ", Snackbar.LENGTH_LONG)
                         .setAction("Add", null).show();
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("result", "HELLO FROM INVENTORY");
-                setResult(RESULT_OK, resultIntent);
+                Intent itemSelected = new Intent();
+                itemSelected.putExtra("result", mItem.id());
+                setResult(RESULT_OK, itemSelected);
                 finish();
             }
         });
