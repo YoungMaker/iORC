@@ -61,7 +61,8 @@ public class AlignmentReligionDetailActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 }else if(showReligion){
-                    intent = new Intent(AlignmentReligionDetailActivity.this, ItemListActivity.class);
+                    intent = new Intent(AlignmentReligionDetailActivity.this, CharacterListActivity.class);
+                    intent.putExtra("SET_CHAR_NAME", true); //this is so we can pop the dialog in the char activity
                     intent.putExtra(CREATION_DATA, creationData);
                     creationData.put("DEITY",insertData);
                     startActivity(intent);
