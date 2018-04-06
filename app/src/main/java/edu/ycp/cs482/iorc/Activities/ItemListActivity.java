@@ -74,19 +74,6 @@ public class ItemListActivity extends AppCompatActivity {
 
         getAllItems();
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-                Intent intent = new Intent(ItemListActivity.this, CharacterListActivity.class);
-                intent.putExtra("SET_CHAR_NAME", true); //this is so we can pop the dialog in the char activity
-                intent.putExtra(CREATION_DATA, creationMap);
-                startActivity(intent);  //TODO: Instead package the character here?
-            }
-        });
-
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).

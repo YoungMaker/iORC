@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent;
+
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
@@ -36,6 +37,7 @@ import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.fragment.ItemData;
+
 
 
 /**
@@ -50,8 +52,11 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
+    private CharacterVersionQuery.GetCharactersByVersion mItem;
     private String CHARCTER_ID = "";
     private static final String CREATION_DATA = "CREATION_DATA";
+    public static final String ITEM_ID = "item_id";
+    public static final String MAP_ID = "map_id";
     private HashMap<String, String> creationData;
 
 
@@ -76,6 +81,28 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        //Display Character name on Toolbar
+        Bundle char_Arguments = new Bundle();
+        char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+        char_Arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
+                getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+        char_Arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
+                getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+        CharacterDetailFragment char_Fragment = new CharacterDetailFragment();
+        char_Fragment.setArguments(char_Arguments);
+
+        HashMap<String, String> charMap =(HashMap<String, String>)char_Arguments.getSerializable(CharacterDetailFragment.ARG_MAP_ID);
+        String charObj = "";
+        if(charMap != null){
+            charObj = charMap.get(char_Arguments.getString((CharacterDetailFragment.ARG_ITEM_ID)));
+        }
+        mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
+        CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null && mItem != null) {
+            appBarLayout.setTitle(mItem.fragments().characterData().name());
+
         }
 
         // savedInstanceState is non-null when there is fragment state
