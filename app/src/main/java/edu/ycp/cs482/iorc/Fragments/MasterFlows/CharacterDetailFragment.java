@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -112,8 +114,10 @@ public class CharacterDetailFragment extends Fragment {
 
 //        private TextView mCharacterDetailInitiative;
 //        private TextView mCharacterDetailHp;
-        //private TextView mCharacterDetailFort;
-        //private TextView mCharacterDetailRef;
+        private TextView mCharacterDetailWill;
+        private TextView mCharacterDetailFort;
+        private TextView mCharacterDetailRef;
+        private TextView mCharacterDetailAC;
        // private TextView mCharacterDetailSpd;
         private TextView mCharacterAbilStr;
         private TextView mCharacterAbilCon;
@@ -128,8 +132,10 @@ public class CharacterDetailFragment extends Fragment {
         private CharacterView(View rootView){
 //            mCharacterDetailInitiative = (TextView)rootView.findViewById(R.id.character_detail_initiative);
            // mCharacterDetailHp = (TextView)rootView.findViewById(R.id.character_abil_hp);
-            //mCharacterDetailFort = rootView.findViewById(R.id.character_abil_fort);
-            //mCharacterDetailRef = rootView.findViewById(R.id.character_abil_ref);
+            mCharacterDetailWill = rootView.findViewById(R.id.character_abil_wil);
+            mCharacterDetailAC = rootView.findViewById(R.id.character_abil_ac);
+            mCharacterDetailFort = rootView.findViewById(R.id.character_abil_fort);
+            mCharacterDetailRef = rootView.findViewById(R.id.character_abil_ref);
            // mCharacterDetailSpd = (TextView)rootView.findViewById(R.id.character_detail_spd);
             mCharacterAbilStr = rootView.findViewById(R.id.character_abil_str);
             mCharacterAbilCon = rootView.findViewById(R.id.character_abil_con);
@@ -151,9 +157,14 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilWis.setText(getResources().getString(R.string.pref_wis, longToString(abilityPoints.wis())));
             mCharacterAbilCha.setText(getResources().getString(R.string.pref_cha, longToString(abilityPoints.cha())));
 
+            mCharacterDetailAC.setText(String.valueOf(charStatMap.get("ac")));
+            mCharacterDetailFort.setText(String.valueOf(charStatMap.get("fort")));
+            mCharacterDetailRef.setText(String.valueOf(charStatMap.get("ref")));
+            mCharacterDetailWill.setText(String.valueOf(charStatMap.get("will")));
+
             CharacterData.Race Races = item.fragments().characterData().race();
             CharacterData.Classql Classes = item.fragments().characterData().classql();
-            Log.d("RACE", Races.fragments().raceData().name());
+            //Log.d("RACE", Races.fragments().raceData().name());
             if(Races != null){
                 //Log.d("RACE DATA", Races.toString());
                 mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.fragments().raceData().name()));
@@ -310,7 +321,7 @@ public class CharacterDetailFragment extends Fragment {
                         Log.d("DEFENSE", statName.toLowerCase());
 
                         String highestMod = selectDefMod(options);
-                        Double value =  charStatMap.get(highestMod);
+                        Double value =  charStatMap.get(highestMod) + 10;
                         charStatMap.put(statName.toLowerCase(), value);
 
                     }
