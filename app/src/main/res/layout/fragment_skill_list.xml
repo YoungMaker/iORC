@@ -6,8 +6,8 @@
     android:name="edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment"
     tools:listitem="@layout/fragment_skill" />

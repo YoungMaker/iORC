@@ -1,5 +1,6 @@
 package edu.ycp.cs482.iorc.Activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,15 +23,21 @@ import android.view.MenuItem;
 
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
+
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
+import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
+import edu.ycp.cs482.iorc.fragment.ItemData;
+
 
 
 /**
@@ -39,7 +46,7 @@ import edu.ycp.cs482.iorc.fragment.CharacterData;
  * item details are presented side-by-side with a list of items
  * in a {@link CharacterListActivity}.
  */
-public class CharacterDetailActivity extends AppCompatActivity{
+public class CharacterDetailActivity extends AppCompatActivity implements EquipmentFragment.OnListFragmentInteractionListener {
 
 
     private static final String DO_DELETE = "DO_DELETE";
@@ -51,7 +58,6 @@ public class CharacterDetailActivity extends AppCompatActivity{
     public static final String ITEM_ID = "item_id";
     public static final String MAP_ID = "map_id";
     private HashMap<String, String> creationData;
-
 
 
     @Override
@@ -128,15 +134,15 @@ public class CharacterDetailActivity extends AppCompatActivity{
 
     //Create the menu button on the toolbar
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_character_detail_activity,menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_character_detail_activity, menu);
         return true;
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.home:
                 Intent Intent = new Intent(CharacterDetailActivity.this, CharacterListActivity.class);
                 startActivity(Intent);
@@ -154,18 +160,18 @@ public class CharacterDetailActivity extends AppCompatActivity{
         }
         //int id = item.getItemId();
         //if (id == android.R.id.home) {
-            // This ID represents the Home or Up button. In the case of this
-            // activity, the Up button is shown. For
-            // more details, see the Navigation pattern on Android Design:
-            //
-            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-            //
-          //  navigateUpTo(new Intent(this, CharacterListActivity.class));
-            //return true;
+        // This ID represents the Home or Up button. In the case of this
+        // activity, the Up button is shown. For
+        // more details, see the Navigation pattern on Android Design:
+        //
+        // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+        //
+        //  navigateUpTo(new Intent(this, CharacterListActivity.class));
+        //return true;
         //}
         //else if(id == R.id.deleteCheck){
-          //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
-            //startActivity(deleteIntent);
+        //  Intent deleteIntent = new Intent(CharacterDetailActivity.this, DeleteCheckActivity.class);
+        //startActivity(deleteIntent);
         //}
 
         return super.onOptionsItemSelected(item);
@@ -175,7 +181,7 @@ public class CharacterDetailActivity extends AppCompatActivity{
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
                     arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
@@ -192,10 +198,11 @@ public class CharacterDetailActivity extends AppCompatActivity{
                     break;
 
                 case R.id.action_skills:
+                    //TODO: Please use newInstance method if at all possible
                     Bundle skillArguments = new Bundle();
                     skillArguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
                     //skillArguments.putString(SkillsFragment.ARG_ITEM_ID,
-                            //getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
+                    //getIntent().getStringExtra(SkillsFragment.ARG_ITEM_ID));
                     //skillArguments.putSerializable(SkillsFragment.ARG_MAP_ID, getIntent().getSerializableExtra(SkillsFragment.ARG_MAP_ID));
                     SkillsFragment skillFragment = new SkillsFragment();
                     skillFragment.setArguments(skillArguments);
@@ -205,7 +212,28 @@ public class CharacterDetailActivity extends AppCompatActivity{
                     break;
 
                 case R.id.action_equipment:
-                    EquipmentFragment fragment3 = new EquipmentFragment();
+                    //get key for character map
+                    String itemKey = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
+                    //get character map
+                    HashMap<String, String> charMap =
+                            (HashMap<String, String>) getIntent()
+                                    .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
+                    //unwrap character data
+                    CharacterData character = (new Gson()).fromJson(charMap.get(itemKey),
+                            CharacterVersionQuery.GetCharactersByVersion.class).fragments().characterData();
+
+                    //get items from character inventory and put into map, key is just i for now
+                    //value is just name for now
+                    HashMap<String, String> invMap = new HashMap<>();
+                    for (int i = 0; i < character.inventory().size(); i++) {
+                        CharacterData.Inventory invItem = character.inventory().get(i);
+                        ItemData itemDataobj = invItem.fragments().itemData();
+                        String itemData = new Gson().toJson(itemDataobj);
+                        invMap.put(String.valueOf(i), itemData);
+                        Log.d("INVENTORY_ITEM", itemData);
+                    }
+                    //TODO: inject character inventory into fragment
+                    EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance(invMap);
                     android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
                     fragmentTransaction3.commit();
@@ -223,7 +251,7 @@ public class CharacterDetailActivity extends AppCompatActivity{
         }
     };
 
-    private void confirmDeleteBox(){
+    private void confirmDeleteBox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Delete?");
         // Set up the buttons
@@ -249,4 +277,13 @@ public class CharacterDetailActivity extends AppCompatActivity{
         builder.show();
     }
 
+    @Override
+    public void onListFragmentInteraction(@NotNull ItemData item) {
+        Log.d("ITEM_CLICKED", item.name());
+
+        String gsonItem = (new Gson()).toJson(item);
+        Intent intent = new Intent(this, ItemDetailActivity.class);
+        intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
+        startActivity(intent);
+    }
 }

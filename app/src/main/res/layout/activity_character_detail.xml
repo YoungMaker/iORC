@@ -50,7 +50,8 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/character_detail_container"
         android:layout_width="match_parent"
-        android:layout_height="467dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
