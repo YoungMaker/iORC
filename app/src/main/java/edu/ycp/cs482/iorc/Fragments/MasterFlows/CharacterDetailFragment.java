@@ -111,14 +111,14 @@ public class CharacterDetailFragment extends Fragment {
 
 
     private class CharacterView {
-
-//        private TextView mCharacterDetailInitiative;
-//        private TextView mCharacterDetailHp;
+        //TODO find better way to create and assign values for textviews
+        private TextView mCharacterDetailInitiative;
+        private TextView mCharacterDetailHp;
         private TextView mCharacterDetailWill;
         private TextView mCharacterDetailFort;
         private TextView mCharacterDetailRef;
         private TextView mCharacterDetailAC;
-       // private TextView mCharacterDetailSpd;
+        private TextView mCharacterDetailSpd;
         private TextView mCharacterAbilStr;
         private TextView mCharacterAbilCon;
         private TextView mCharacterAbilDex;
@@ -130,13 +130,13 @@ public class CharacterDetailFragment extends Fragment {
 
 
         private CharacterView(View rootView){
-//            mCharacterDetailInitiative = (TextView)rootView.findViewById(R.id.character_detail_initiative);
-           // mCharacterDetailHp = (TextView)rootView.findViewById(R.id.character_abil_hp);
+            mCharacterDetailInitiative = (TextView)rootView.findViewById(R.id.character_detail_initiative);
+            mCharacterDetailHp = (TextView)rootView.findViewById(R.id.character_detail_hp);
             mCharacterDetailWill = rootView.findViewById(R.id.character_abil_wil);
             mCharacterDetailAC = rootView.findViewById(R.id.character_abil_ac);
             mCharacterDetailFort = rootView.findViewById(R.id.character_abil_fort);
             mCharacterDetailRef = rootView.findViewById(R.id.character_abil_ref);
-           // mCharacterDetailSpd = (TextView)rootView.findViewById(R.id.character_detail_spd);
+            mCharacterDetailSpd = (TextView)rootView.findViewById(R.id.character_detail_spd);
             mCharacterAbilStr = rootView.findViewById(R.id.character_abil_str);
             mCharacterAbilCon = rootView.findViewById(R.id.character_abil_con);
             mCharacterAbilDex = rootView.findViewById(R.id.character_abil_dex);
@@ -161,6 +161,9 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterDetailFort.setText(String.valueOf(charStatMap.get("fort")));
             mCharacterDetailRef.setText(String.valueOf(charStatMap.get("ref")));
             mCharacterDetailWill.setText(String.valueOf(charStatMap.get("will")));
+            mCharacterDetailHp.setText(String.valueOf(charStatMap.get("hp")));
+            mCharacterDetailSpd.setText(String.valueOf(charStatMap.get("speed")));
+            mCharacterDetailInitiative.setText(String.valueOf(charStatMap.get("initiative")));
 
             CharacterData.Race Races = item.fragments().characterData().race();
             CharacterData.Classql Classes = item.fragments().characterData().classql();
