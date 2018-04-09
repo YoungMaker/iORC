@@ -68,6 +68,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private HashMap<String, Double> skillValueMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
     private HashMap<String, String> creationData;
+    private HashMap<String, String> defenseTableData = new HashMap<>();
 
 
     @Override
@@ -149,6 +150,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
             arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
                     getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+            arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
             CharacterDetailFragment fragment = new CharacterDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -200,6 +202,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
                     arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
                             getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+                    arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
                     getSupportFragmentManager().beginTransaction()
@@ -303,6 +306,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         List<String> modifierList = new ArrayList<>();
         CharacterData charData = mItem.fragments().characterData();
         HashMap<String, VersionSheetData.Stat> statObjMap = new HashMap<>();
+        List<String> defList = new ArrayList<>();
 
         Log.d("VERSION_DATA", versionData.fragments().versionSheetData().stats().toString());
 
@@ -320,6 +324,8 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             charStatMap.put(key, 0d);
 
         }
+
+        createDefList(defList, statObjMap);
 
         Log.d("CHARACTER_ABILITIES", charStatMap.toString());
 
@@ -347,6 +353,9 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             //check if the modifier key is in the map if so add the value to the existing
             //value in the map
             if(charStatMap.containsKey(mod.key())){
+                if(defList.contains(mod.key())){
+                    defenseTableData.put(mod.key() + "_class", String.valueOf(mod.value()));
+                }
                 Double mapItem = charStatMap.get(mod.key());
                 mapItem += mod.value();
                 charStatMap.put(mod.key(), mapItem);
@@ -434,7 +443,9 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
                         String highestMod = selectDefMod(options);
                         //Log.d("DEF_MOD", highestMod);
-                        Double value =  charStatMap.get(highestMod) + 10;
+                        Double defModVal = charStatMap.get(highestMod);
+                        defenseTableData.put(statName.toLowerCase()+"_abil", defModVal.toString());
+                        Double value =  defModVal + 10;
                         //Log.d("DEF_VAL", value.toString());
                         charStatMap.put(statName.toLowerCase(), value);
 
@@ -497,5 +508,21 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         for(String key : map.keySet()){
             Log.d("MAP_VALUE", key + " " + map.get(key).toString());
         }
+    }
+
+    public void createDefList(List<String> defList, HashMap<String, VersionSheetData.Stat> statMap){
+        for(String key : statMap.keySet()){
+            VersionSheetData.Stat statObj = statMap.get(key);
+            List<VersionSheetData.Modifier> mods = statObj.modifiers();
+            if(mods != null){
+                for(VersionSheetData.Modifier mod : mods){
+                    if(mod.key().contains("||")){
+                        Log.d("DEFENSE_FOUND", statObj.name());
+                        defList.add(statObj.name().toLowerCase());
+                    }
+                }
+            }
+        }
+        Log.d("DEFENSES_FOUND", "Exiting");
     }
 }

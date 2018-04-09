@@ -47,6 +47,7 @@ public class CharacterDetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String ARG_MAP_ID = "map_id";
     public static final String ARG_CHAR_STAT_DATA = "CHAR_STAT_DATA";
+    public static final String ARG_DEF_TABLE_DATA = "DEF_TABLE";
     private static final String V_DATA = "VERSION_DATA";
     /**
      * The dummy content this fragment is presenting.
@@ -88,25 +89,31 @@ public class CharacterDetailFragment extends Fragment {
         if(getArguments().containsKey(ARG_CHAR_STAT_DATA)){
             charStatMap = (HashMap<String, Double>) getArguments().getSerializable(ARG_CHAR_STAT_DATA);
         }
-        acAddModTab.put("abil", "1");
-        acAddModTab.put("class", "2");
-        acAddModTab.put("feat", "3");
-        acAddModTab.put("enh", "4");
 
-        fortAddModTab.put("abil", "4");
-        fortAddModTab.put("class", "3");
-        fortAddModTab.put("feat", "2");
-        fortAddModTab.put("enh", "1");
+        if(getArguments().containsKey(ARG_DEF_TABLE_DATA)){
+            HashMap<String, String> defMap = (HashMap<String, String>) getArguments().getSerializable(ARG_DEF_TABLE_DATA);
+            String value = "";
+            acAddModTab.put("abil", value = (defMap.get("ac_abil") != null) ? defMap.get("ac_abil") : "0");
+            acAddModTab.put("class", value = (defMap.get("ac_class") != null) ? defMap.get("ac_class") : "0");
+            acAddModTab.put("feat", value = (defMap.get("ac_feat") != null) ? defMap.get("ac_feat") : "0");
+            acAddModTab.put("enh", value = (defMap.get("ac_enh") != null) ? defMap.get("ac_enh") : "0");
 
-        refAddModTab.put("abil", "9");
-        refAddModTab.put("class", "8");
-        refAddModTab.put("feat", "7");
-        refAddModTab.put("enh", "6");
+            fortAddModTab.put("abil", value = (defMap.get("fort_abil") != null) ? defMap.get("fort_abil") : "0");
+            fortAddModTab.put("class", value = (defMap.get("fort_class") != null) ? defMap.get("fort_class") : "0");
+            fortAddModTab.put("feat", value = (defMap.get("fort_feat") != null) ? defMap.get("fort_feat") : "0");
+            fortAddModTab.put("enh", value = (defMap.get("fort_enh") != null) ? defMap.get("fort_enh") : "0");
 
-        willAddModTab.put("abil", "6");
-        willAddModTab.put("class", "7");
-        willAddModTab.put("feat", "8");
-        willAddModTab.put("enh", "9");
+            refAddModTab.put("abil", value = (defMap.get("ref_abil") != null) ? defMap.get("ref_abil") : "0");
+            refAddModTab.put("class", value = (defMap.get("ref_class") != null) ? defMap.get("ref_class") : "0");
+            refAddModTab.put("feat", value = (defMap.get("ref_feat") != null) ? defMap.get("ref_feat") : "0");
+            refAddModTab.put("enh", value = (defMap.get("ref_enh") != null) ? defMap.get("ref_enh") : "0");
+
+            willAddModTab.put("abil", value = (defMap.get("will_abil") != null) ? defMap.get("will_abil") : "0");
+            willAddModTab.put("class", value = (defMap.get("will_class") != null) ? defMap.get("will_class") : "0");
+            willAddModTab.put("feat", value = (defMap.get("will_feat") != null) ? defMap.get("will_feat") : "0");
+            willAddModTab.put("enh", value = (defMap.get("will_enh") != null) ? defMap.get("will_enh") : "0");
+        }
+
         //Log.d("mItem CHECK: ", "Finished Loading Map");
     }
 
