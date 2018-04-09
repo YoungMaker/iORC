@@ -366,7 +366,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         for(Method m: abilityScores.getClass().getMethods()){
             String abilKey = m.getName().replaceAll("_", "");
             if(charStatMap.containsKey(abilKey)){
-                Log.d("ADD_FROM_METHOD", abilKey);
+                //Log.d("ADD_FROM_METHOD", abilKey);
                 try {
                     long abilityVal = (long) m.invoke(abilityScores);
                     double val = charStatMap.get(abilKey);
@@ -444,8 +444,9 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                         String highestMod = selectDefMod(options);
                         //Log.d("DEF_MOD", highestMod);
                         Double defModVal = charStatMap.get(highestMod);
+                        Double defModCurVal = charStatMap.get(statName.toLowerCase());
                         defenseTableData.put(statName.toLowerCase()+"_abil", defModVal.toString());
-                        Double value =  defModVal + 10;
+                        Double value =  defModCurVal + defModVal + 10;
                         //Log.d("DEF_VAL", value.toString());
                         charStatMap.put(statName.toLowerCase(), value);
 
