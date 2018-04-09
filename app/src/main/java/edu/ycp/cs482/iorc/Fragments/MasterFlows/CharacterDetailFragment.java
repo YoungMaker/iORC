@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -52,6 +54,10 @@ public class CharacterDetailFragment extends Fragment {
     private CharacterVersionQuery.GetCharactersByVersion mItem;
     private VersionSheetQuery.GetVersionSheet versionData;
     private HashMap<String, Double> charStatMap;
+    private HashMap<String, String> acAddModTab = new HashMap<>();
+    private HashMap<String, String> fortAddModTab = new HashMap<>();
+    private HashMap<String, String> refAddModTab = new HashMap<>();
+    private HashMap<String, String> willAddModTab = new HashMap<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -82,6 +88,25 @@ public class CharacterDetailFragment extends Fragment {
         if(getArguments().containsKey(ARG_CHAR_STAT_DATA)){
             charStatMap = (HashMap<String, Double>) getArguments().getSerializable(ARG_CHAR_STAT_DATA);
         }
+        acAddModTab.put("abil", "1");
+        acAddModTab.put("class", "2");
+        acAddModTab.put("feat", "3");
+        acAddModTab.put("enh", "4");
+
+        fortAddModTab.put("abil", "4");
+        fortAddModTab.put("class", "3");
+        fortAddModTab.put("feat", "2");
+        fortAddModTab.put("enh", "1");
+
+        refAddModTab.put("abil", "9");
+        refAddModTab.put("class", "8");
+        refAddModTab.put("feat", "7");
+        refAddModTab.put("enh", "6");
+
+        willAddModTab.put("abil", "6");
+        willAddModTab.put("class", "7");
+        willAddModTab.put("feat", "8");
+        willAddModTab.put("enh", "9");
         //Log.d("mItem CHECK: ", "Finished Loading Map");
     }
 
@@ -116,15 +141,58 @@ public class CharacterDetailFragment extends Fragment {
         private TextView mCharacterRace;
         private TextView mCharacterClass;
 
+        //TODO read up on iterating through view IDS so I can get rid of this mess of variables
+        private List<View> mCharAcList = new ArrayList<>();
+        private TextView mCharacterAcAbil;
+        private TextView mCharacterAcClass;
+        private TextView mCharacterAcFeat;
+        private TextView mCharacterAcEnh;
+
+        private TextView mCharacterFortAbil;
+        private TextView mCharacterFortClass;
+        private TextView mCharacterFortFeat;
+        private TextView mCharacterFortEnh;
+
+        private TextView mCharacterRefAbil;
+        private TextView mCharacterRefClass;
+        private TextView mCharacterRefFeat;
+        private TextView mCharacterRefEnh;
+
+        private TextView mCharacterWillAbil;
+        private TextView mCharacterWillClass;
+        private TextView mCharacterWillFeat;
+        private TextView mCharacterWillEnh;
+
+        private View mCharacterAcTab;
+        private View mCharacterFortTab;
+        private View mCharacterRefTab;
+        private View mCharacterWillTab;
+
+
+        private List<View> mCharFortList = new ArrayList<>();
+        private List<View> mCharRefList = new ArrayList<>();
+        private List<View> mCharWillList = new ArrayList<>();
+
 
         private CharacterView(View rootView){
-            mCharacterDetailInitiative = (TextView)rootView.findViewById(R.id.character_detail_initiative);
-            mCharacterDetailHp = (TextView)rootView.findViewById(R.id.character_detail_hp);
+
+            mCharacterAcTab = rootView.findViewById(R.id.ac_mod_table);
+            mCharacterFortTab = rootView.findViewById(R.id.fort_mod_table);
+            mCharacterRefTab = rootView.findViewById(R.id.ref_mod_table);
+            mCharacterWillTab = rootView.findViewById(R.id.will_mod_table);
+
+            //TODO read up on iterating through view IDS so I can get rid of this mess of variables
+            /*for(int i = 0; i < mCharacterAcTab; i++){
+
+            }*/
+
+            mCharacterDetailInitiative = rootView.findViewById(R.id.character_detail_initiative);
+            mCharacterDetailHp = rootView.findViewById(R.id.character_detail_hp);
             mCharacterDetailWill = rootView.findViewById(R.id.character_abil_wil);
             mCharacterDetailAC = rootView.findViewById(R.id.character_abil_ac);
             mCharacterDetailFort = rootView.findViewById(R.id.character_abil_fort);
             mCharacterDetailRef = rootView.findViewById(R.id.character_abil_ref);
-            mCharacterDetailSpd = (TextView)rootView.findViewById(R.id.character_detail_spd);
+            mCharacterDetailSpd = rootView.findViewById(R.id.character_detail_spd);
             mCharacterAbilStr = rootView.findViewById(R.id.character_abil_str);
             mCharacterAbilCon = rootView.findViewById(R.id.character_abil_con);
             mCharacterAbilDex = rootView.findViewById(R.id.character_abil_dex);
@@ -133,6 +201,26 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAbilCha = rootView.findViewById(R.id.character_abil_cha);
             mCharacterRace = rootView.findViewById(R.id.character_race);
             mCharacterClass = rootView.findViewById(R.id.character_class);
+
+            mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
+            mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
+            mCharacterAcFeat = mCharacterAcTab.findViewById(R.id.mod_feat);
+            mCharacterAcEnh = mCharacterAcTab.findViewById(R.id.mod_enh);
+
+            mCharacterFortAbil = mCharacterFortTab.findViewById(R.id.mod_abil);
+            mCharacterFortClass = mCharacterFortTab.findViewById(R.id.mod_class);
+            mCharacterFortFeat = mCharacterFortTab.findViewById(R.id.mod_feat);
+            mCharacterFortEnh = mCharacterFortTab.findViewById(R.id.mod_enh);
+
+            mCharacterRefAbil = mCharacterRefTab.findViewById(R.id.mod_abil);
+            mCharacterRefClass = mCharacterRefTab.findViewById(R.id.mod_class);
+            mCharacterRefFeat = mCharacterRefTab.findViewById(R.id.mod_feat);
+            mCharacterRefEnh = mCharacterRefTab.findViewById(R.id.mod_enh);
+
+            mCharacterWillAbil = mCharacterWillTab.findViewById(R.id.mod_abil);
+            mCharacterWillClass = mCharacterWillTab.findViewById(R.id.mod_class);
+            mCharacterWillFeat = mCharacterWillTab.findViewById(R.id.mod_feat);
+            mCharacterWillEnh = mCharacterWillTab.findViewById(R.id.mod_enh);
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
@@ -152,6 +240,27 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterDetailHp.setText(String.valueOf(charStatMap.get("hp")));
             mCharacterDetailSpd.setText(String.valueOf(charStatMap.get("speed")));
             mCharacterDetailInitiative.setText(String.valueOf(charStatMap.get("initiative")));
+
+            //TODO read up on iterating through view IDS so I can get rid of this mess of variables
+            mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
+            mCharacterAcClass.setText(String.valueOf(acAddModTab.get("class")));
+            mCharacterAcFeat.setText(String.valueOf(acAddModTab.get("feat")));
+            mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
+
+            mCharacterFortAbil.setText(String.valueOf(fortAddModTab.get("abil")));
+            mCharacterFortClass.setText(String.valueOf(fortAddModTab.get("class")));
+            mCharacterFortFeat.setText(String.valueOf(fortAddModTab.get("feat")));
+            mCharacterFortEnh.setText(String.valueOf(fortAddModTab.get("enh")));
+
+            mCharacterRefAbil.setText(String.valueOf(refAddModTab.get("abil")));
+            mCharacterRefClass.setText(String.valueOf(refAddModTab.get("class")));
+            mCharacterRefFeat.setText(String.valueOf(refAddModTab.get("feat")));
+            mCharacterRefEnh.setText(String.valueOf(refAddModTab.get("enh")));
+
+            mCharacterWillAbil.setText(String.valueOf(willAddModTab.get("abil")));
+            mCharacterWillClass.setText(String.valueOf(willAddModTab.get("class")));
+            mCharacterWillFeat.setText(String.valueOf(willAddModTab.get("feat")));
+            mCharacterWillEnh.setText(String.valueOf(willAddModTab.get("enh")));
 
             CharacterData.Race Races = item.fragments().characterData().race();
             CharacterData.Classql Classes = item.fragments().characterData().classql();
