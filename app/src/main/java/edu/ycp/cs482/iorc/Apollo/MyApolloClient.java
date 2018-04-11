@@ -42,198 +42,85 @@ public class MyApolloClient {
 
     public static ApolloClient getCharacterApolloClient(){
 
-        CharacterHttpCacheStore characterCacheStore = new CharacterHttpCacheStore();
+        CharacterHttpCacheStore cacheStore= createCache("/characterCache/");
+        HttpLoggingInterceptor loggingInterceptor = createLoggingInterceptor();
+        HttpCache httpCache = createHttpCache(cacheStore);
 
-        //setup character
-        characterCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/characterCache/"), cacheSize);
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(characterCacheStore, null);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //Network interceptor for http request, cache interceptor for cache
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(cache.interceptor())
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .build();
-
-        ApolloClient characterApolloClient = ApolloClient.builder()
+        return ApolloClient.builder()
                 .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(characterCacheStore))
-                .okHttpClient(okHttpClient)
+                .httpCache(new ApolloHttpCache(cacheStore))
+                .okHttpClient(createHttpClient(loggingInterceptor,httpCache))
                 .build();
-
-        return characterApolloClient;
     }
 
     public static ApolloClient getClassApolloClient(){
 
-        CharacterHttpCacheStore classCacheStore = new CharacterHttpCacheStore();
+        CharacterHttpCacheStore cacheStore= createCache("/classCache/");
+        HttpLoggingInterceptor loggingInterceptor = createLoggingInterceptor();
+        HttpCache httpCache = createHttpCache(cacheStore);
 
-        //setup class caching in memory
-        classCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/classCache/"), cacheSize);
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(classCacheStore, null);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //Network interceptor for http request, cache interceptor for cache
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(cache.interceptor())
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .build();
-
-        ApolloClient classApolloClient = ApolloClient.builder()
+        return ApolloClient.builder()
                 .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(classCacheStore))
-                .okHttpClient(okHttpClient)
+                .httpCache(new ApolloHttpCache(cacheStore))
+                .okHttpClient(createHttpClient(loggingInterceptor,httpCache))
                 .build();
-
-        return classApolloClient;
     }
 
     public static ApolloClient getRaceApolloClient(){
 
-        CharacterHttpCacheStore raceCacheStore = new CharacterHttpCacheStore();
+        CharacterHttpCacheStore cacheStore= createCache("/raceCache/");
+        HttpLoggingInterceptor loggingInterceptor = createLoggingInterceptor();
+        HttpCache httpCache = createHttpCache(cacheStore);
 
-        //setup race caching in memory
-        raceCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/raceCache/"), cacheSize);
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(raceCacheStore, null);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //Network interceptor for http request, cache interceptor for cache
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(cache.interceptor())
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .build();
-
-        ApolloClient raceApolloClient = ApolloClient.builder()
+        return ApolloClient.builder()
                 .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(raceCacheStore))
-                .okHttpClient(okHttpClient)
+                .httpCache(new ApolloHttpCache(cacheStore))
+                .okHttpClient(createHttpClient(loggingInterceptor,httpCache))
                 .build();
-
-        return raceApolloClient;
     }
 
-    public static ApolloClient getAlignmentApolloClient(){
+    public static ApolloClient getVersionSheetApolloClient(){
 
-        CharacterHttpCacheStore alignmentCacheStore = new CharacterHttpCacheStore();
+        CharacterHttpCacheStore cacheStore= createCache("/versionSheetCache/");
+        HttpLoggingInterceptor loggingInterceptor = createLoggingInterceptor();
+        HttpCache httpCache = createHttpCache(cacheStore);
 
-        //setup race caching in memory
-        alignmentCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/alignmentCache/"), cacheSize);
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(alignmentCacheStore, null);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //Network interceptor for http request, cache interceptor for cache
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(cache.interceptor())
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .build();
-
-        ApolloClient alignmentApolloClient = ApolloClient.builder()
+        return ApolloClient.builder()
                 .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(alignmentCacheStore))
-                .okHttpClient(okHttpClient)
+                .httpCache(new ApolloHttpCache(cacheStore))
+                .okHttpClient(createHttpClient(loggingInterceptor,httpCache))
                 .build();
-
-        return alignmentApolloClient;
     }
 
-    public static ApolloClient getReligionApolloClient(){
-
-        CharacterHttpCacheStore religionCacheStore = new CharacterHttpCacheStore();
-
-        //setup race caching in memory
-        religionCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/religionCache/"), cacheSize);
-
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(religionCacheStore, null);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //Network interceptor for http request, cache interceptor for cache
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(cache.interceptor())
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .build();
-
-        ApolloClient religionApolloClient = ApolloClient.builder()
-                .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(religionCacheStore))
-                .okHttpClient(okHttpClient)
-                .build();
-
-        return religionApolloClient;
-    }
-
-    public static ApolloClient getItemApolloClient(){
-
-        CharacterHttpCacheStore itemCacheStore = new CharacterHttpCacheStore();
+    private static CharacterHttpCacheStore createCache(String cachePath){
+        CharacterHttpCacheStore cacheStore = new CharacterHttpCacheStore();
 
         //setup race caching in memory
-        itemCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/itemCache/"), cacheSize);
+        cacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File(cachePath), cacheSize);
 
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(itemCacheStore, null);
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                //Network interceptor for http request, cache interceptor for cache
-                .addNetworkInterceptor(loggingInterceptor)
-                .addInterceptor(cache.interceptor())
-                .readTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .build();
-
-        ApolloClient itemApolloClient = ApolloClient.builder()
-                .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(itemCacheStore))
-                .okHttpClient(okHttpClient)
-                .build();
-
-        return itemApolloClient;
+        return cacheStore;
     }
 
-    public static ApolloClient getSkillApolloClient(){
-
-        CharacterHttpCacheStore skillCacheStore = new CharacterHttpCacheStore();
-
-        //setup skills
-        skillCacheStore.delegate = new DiskLruHttpCacheStore(inMemoryFileSystem, new File("/skillCache/"), cacheSize);
-
+    private static HttpLoggingInterceptor createLoggingInterceptor(){
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        HttpCache cache = new ApolloHttpCache(skillCacheStore, null);
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+        return loggingInterceptor;
+    }
+
+    private static HttpCache createHttpCache(CharacterHttpCacheStore cacheStore){
+        return new ApolloHttpCache(cacheStore, null);
+    }
+
+    private static OkHttpClient createHttpClient(HttpLoggingInterceptor loggingInterceptor, HttpCache cache){
+
+        return new OkHttpClient.Builder()
                 //Network interceptor for http request, cache interceptor for cache
                 .addNetworkInterceptor(loggingInterceptor)
                 .addInterceptor(cache.interceptor())
                 .readTimeout(2, TimeUnit.SECONDS)
                 .writeTimeout(2, TimeUnit.SECONDS)
                 .build();
-
-        ApolloClient skillApolloClient = ApolloClient.builder()
-                .serverUrl(BASE_URL)
-                .httpCache(new ApolloHttpCache(skillCacheStore))
-                .okHttpClient(okHttpClient)
-                .build();
-
-        return skillApolloClient;
     }
 
 }
