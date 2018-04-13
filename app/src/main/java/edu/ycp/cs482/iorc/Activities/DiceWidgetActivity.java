@@ -8,10 +8,21 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import java.util.Random;
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 
 import edu.ycp.cs482.iorc.R;
 
 public class DiceWidgetActivity extends AppCompatActivity {
+
+    private SensorManager sm;
+
+    private float acelVal;
+    private float acelLast;
+    private float shake;
 
     ImageButton androidImageButton_d20, androidImageButton_d12, androidImageButton_d10,
                 androidImageButton_d8, androidImageButton_d6, androidImageButton_d4;
@@ -28,6 +39,13 @@ public class DiceWidgetActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dice_widget);
 
+        sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sm.registerListener(sensorListener, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+
+        acelVal = SensorManager.GRAVITY_EARTH;
+        acelLast = SensorManager.GRAVITY_EARTH;
+        shake = 0.00f;
 
         /*Rolling a d20*/
         androidImageButton_d20 = findViewById(R.id.image_button_d20);
@@ -93,12 +111,20 @@ public class DiceWidgetActivity extends AppCompatActivity {
         androidImageButton_d4.setBackgroundColor(0);
         rollButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
-                rand = new Random();
-                int die = rand.nextInt(diceType) + 1;
-                String result = String.valueOf(die);
-                diceOutput = " d" + diceType + ":  " + result;
-                textOut = findViewById(R.id.txtOutput);
-                textOut.setText(diceOutput);
+
+                if(diceType != 0){
+                    rand = new Random();
+                    int die = rand.nextInt(diceType) + 1;
+                    String result = String.valueOf(die);
+                    diceOutput = " d" + diceType + ":  " + result;
+                    textOut = findViewById(R.id.txtOutput);
+                    textOut.setText(diceOutput);
+                }
+                else{
+                    textOut = findViewById(R.id.txtOutput);
+                    textOut.setText("");
+                }
+
             }
         });
     }
@@ -154,5 +180,40 @@ public class DiceWidgetActivity extends AppCompatActivity {
         }
 
     }
+
+    private final SensorEventListener sensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent sensorEvent) {
+
+            float x = sensorEvent.values[0];
+            float y = sensorEvent.values[1];
+            float z = sensorEvent.values[2];
+
+            acelLast = acelVal;
+            acelVal = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            float delta = acelVal - acelLast;
+            shake = shake * 0.9f + delta;
+
+            if(shake > 12){
+                if(diceType != 0){
+                    rand = new Random();
+                    int die = rand.nextInt(diceType) + 1;
+                    String result = String.valueOf(die);
+                    diceOutput = " d" + diceType + ":  " + result;
+                    textOut = findViewById(R.id.txtOutput);
+                    textOut.setText(diceOutput);
+                }
+                else{
+                    textOut = findViewById(R.id.txtOutput);
+                    textOut.setText("");
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int i) {
+            //DO NOTHING
+        }
+    };
 
 }
