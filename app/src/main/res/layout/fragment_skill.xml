@@ -24,7 +24,6 @@
             android:layout_height="match_parent"
             android:gravity="right"
             android:layout_marginEnd="20dp"
-            android:text="@string/skill_value"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="21sp"
             android:textStyle="bold" />

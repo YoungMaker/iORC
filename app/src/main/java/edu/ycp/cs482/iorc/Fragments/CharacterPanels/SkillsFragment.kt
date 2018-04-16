@@ -1,7 +1,5 @@
 package edu.ycp.cs482.iorc.Fragments.CharacterPanels
 
-import android.content.ClipDescription
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -10,14 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.gson.Gson
-import edu.ycp.cs482.iorc.VersionSheetQuery
 
 import edu.ycp.cs482.iorc.R
 import edu.ycp.cs482.iorc.ViewAdapters.MySkillRecyclerViewAdapter
 import edu.ycp.cs482.iorc.fragment.VersionSheetData
 import java.util.HashMap
-//import javax.swing.UIManager.put
 
 
 
@@ -33,63 +28,22 @@ import java.util.HashMap
  * fragment (e.g. upon screen orientation changes).
  */
 class SkillsFragment : Fragment() {
-    private var mSkillList : HashMap<String, String>? = hashMapOf()
-    //private var mListener: OnListFragmentInteractionListener? = null
-    private val V_DATA = "VERSION_DATA"
-    private var mItem: VersionSheetQuery.GetVersionSheet? = null
-
+    private var mSkillMap : HashMap<String, Double>? = null
+    private var mSkillList: MutableList<VersionSheetData.Stat>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val nameDescription = HashMap<String, String>()
-        val bundle = arguments
-        val skillMap = bundle.getSerializable(V_DATA) as HashMap<String, String>
-        mItem = Gson().fromJson(skillMap[V_DATA], VersionSheetQuery.GetVersionSheet::class.java)
-
-        val size = mItem!!.fragments().versionSheetData().stats()!!.size
-
-        (0 until size)
-                .filter { mItem!!.fragments().versionSheetData().stats()!![it].skill() == true }
-                .forEach {
-                    nameDescription.put(mItem!!.fragments().versionSheetData().stats()!![it].name(),
-                            mItem!!.fragments().versionSheetData().stats()!![it].description())
-                }
-
-        //val listItems = ArrayList<HashMap<String, String>>()
-
-        val it = nameDescription.iterator()
-        while (it.hasNext()) {
-            //val resultMap = HashMap<String, String>()
-            val pair = it.next()
-            mSkillList!!.put(pair.key, pair.value)
-            //mSkillList!!.put("Name", pair.key)
-            //mSkillList!!.add(resultMap)
-        }
-
-
-
-        Log.d("SERIALIZABLE", arguments.getSerializable(V_DATA).toString())
-//        if (arguments.getSerializable(V_DATA) != null) {
-//            mSkillList = arguments.getSerializable((V_DATA)) as HashMap<String, String>
-//            Log.d("mSKILL_LIST", mSkillList.toString())
-//        }
-//        else{
-//            Log.d("SKILLS_LIST", "NULL")
-//        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_skill_list, container, false)
 
-
-
         // Set the adapter
         if (view is RecyclerView) {
             Log.d("SKILL_LIST_CHECK", mSkillList.toString())
-            if(mSkillList != null){
-                view.adapter = MySkillRecyclerViewAdapter(convertBackToSkills(mSkillList!!))
+            if(mSkillList != null && mSkillMap != null){
+                view.adapter = MySkillRecyclerViewAdapter(convertBackToSkills())
             }
                 val itemDecor = DividerItemDecoration(view.context,
                         DividerItemDecoration.VERTICAL) //this should probably get the layoutManager's preference.
@@ -99,27 +53,21 @@ class SkillsFragment : Fragment() {
         return view
     }
 
-    fun convertBackToSkills(skill_list: HashMap<String, String>): List<Stats>{
+    fun convertBackToSkills(): List<Stats>{
         val outputList = mutableListOf<Stats>()
-        for((name, description) in skill_list) {
-            outputList.add(Stats(name, description))
+        //create skills list
+        for(skill in mSkillList!!) {
+            //add value to the list
+            val skillName = skill.name()
+            val skillDesc = skill.description()
+            var skillVal = 0
+            //check for key inside map first
+            if(mSkillMap!!.contains(skillName.toLowerCase())){
+                skillVal = mSkillMap!!.get(skill.name().toLowerCase())!!.toInt()
+            }
+            outputList.add(Stats(skillName, skillDesc, skillVal))
         }
         return outputList
-    }
-
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-//        if (context is OnListFragmentInteractionListener) {
-//            mListener = context
-//        } else {
-//            throw RuntimeException(context!!.toString() + " must implement OnListFragmentInteractionListener")
-//        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        //mListener = null
     }
 
     /**
@@ -153,6 +101,20 @@ class SkillsFragment : Fragment() {
 
     data class Stats(
             val name: String,
-            val description: String
+            val description: String,
+            val statVal: Int
     )
+
+    fun assignSkillList(skillList: MutableList<VersionSheetData.Stat>){
+        mSkillList = skillList
+    }
+
+    fun assignSkillMap(skillMap: HashMap<String, Double>){
+        mSkillMap = hashMapOf()
+        for((key, value) in skillMap){
+            //Log.d("KEY", key)
+            //Log.d("VALUE", value.toString())
+            mSkillMap!!.put(key, value)
+        }
+    }
 }

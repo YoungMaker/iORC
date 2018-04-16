@@ -112,7 +112,7 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
-        getVersionInfo();
+        getVersionInfo(HttpCachePolicy.CACHE_FIRST);
 
         //check if character is being deleted
         if(extras != null && extras.getBoolean(DO_DELETE)){
@@ -310,10 +310,11 @@ public class CharacterListActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void getVersionInfo(){
-        MyApolloClient.getMyApolloClient().query(
+    public void getVersionInfo(HttpCachePolicy.Policy policy){
+        MyApolloClient.getVersionSheetApolloClient().query(
                 VersionSheetQuery.builder().version("4e").build()
         )
+                .httpCachePolicy(policy)
                 .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {

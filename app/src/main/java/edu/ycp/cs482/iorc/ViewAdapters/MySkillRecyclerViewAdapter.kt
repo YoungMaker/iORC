@@ -11,7 +11,6 @@ import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment.OnListFragmentInteractionListener
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.R
-import edu.ycp.cs482.iorc.fragment.VersionSheetData
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -20,7 +19,7 @@ import edu.ycp.cs482.iorc.fragment.VersionSheetData
  */
 class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>)
     : RecyclerView.Adapter<MySkillRecyclerViewAdapter.ViewHolder>() {
-//private val mListener: OnListFragmentInteractionListener?
+    //private val mListener: OnListFragmentInteractionListener?
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.fragment_skill, parent, false)
@@ -29,20 +28,28 @@ class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.mItem = mValues[position]
+        Log.d("SKILL_OBJ", holder.mItem.toString())
         holder.mIdView.text = mValues[position].name
+
+        //determine if stat should have + or -
+        val statValue: String
+        if(mValues[position].statVal >= 0){
+            statValue = "+" + mValues[position].statVal.toString()
+        }else{
+            statValue = mValues[position].statVal.toString()
+        }
+        //set stat value as string
+        holder.mSkillVal.text = statValue
 
         if(mValues[position].description.length <  110) {
             holder.mContentView.text = mValues[position].description
         }
         else {
-            Log.d("TEXT_OUTPUT", "\'" + mValues[position].description + "\'")
+            //Log.d("TEXT_OUTPUT", "\'" + mValues[position].description + "\'")
             val outputStr = mValues[position].description.subSequence(0, 110)
             holder.mContentView.text = "%s...".format(outputStr)
         }
 
-//        holder.mView.setOnClickListener {
-//            mListener?.onListFragmentInteraction(holder.mItem!!)
-//        }
     }
 
     override fun getItemCount(): Int {
@@ -52,6 +59,7 @@ class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.findViewById(R.id.skill_name)
         val mContentView: TextView = mView.findViewById(R.id.skill_description)
+        val mSkillVal: TextView = mView.findViewById(R.id.skill_value)
         var mItem: SkillsFragment.Stats? = null
 
         override fun toString(): String {
