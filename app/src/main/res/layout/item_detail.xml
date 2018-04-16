@@ -1,40 +1,99 @@
 <android.support.v7.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/item_price"
-        style="?android:attr/textAppearanceLarge"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:padding="16dp"
-        android:textIsSelectable="true" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+        <TextView
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:padding="8dp"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="false"
+            android:text="@string/item_detail_price"
+            />
+        <TextView
+            android:id="@+id/item_price"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textIsSelectable="true" />
+        <TextView
+            android:id="@+id/item_currency_name"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textIsSelectable="true"
+            android:text="@string/currency_placeholder"
+            />
+    </LinearLayout>
+
+    <TextView
         android:id="@+id/item_detail"
         style="?android:attr/textAppearanceLarge"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="16dp"
         android:textIsSelectable="true"
-        tools:context="edu.ycp.cs482.iorc.ItemDetailFragment" />
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
+
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textIsSelectable="false"
+            android:text="@string/item_tags"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
+
+
+        <TextView
+            android:id="@+id/item_tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textIsSelectable="true"
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
+    </LinearLayout>
+
+    <TextView
+        style="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textIsSelectable="false"
+        android:text="@string/text_stats"
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@android:color/darker_gray">
+
 
         <FrameLayout
             android:id="@+id/item_modifier_frag_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:layout_margin="2dp">
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:background="@color/fadeGrey">
 
         </FrameLayout>
     </LinearLayout>
-
 
 </android.support.v7.widget.LinearLayoutCompat>

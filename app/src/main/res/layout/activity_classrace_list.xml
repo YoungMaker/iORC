@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="edu.ycp.cs482.iorc.ClassRaceListActivity">
+    tools:context="edu.ycp.cs482.iorc.Activities.ClassRaceListActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -30,6 +30,19 @@
         <include layout="@layout/classrace_list" />
     </FrameLayout>
 
+
+
+    <RelativeLayout
+        android:id="@+id/loadingIcon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->
         <!--android:layout_width="wrap_content"-->

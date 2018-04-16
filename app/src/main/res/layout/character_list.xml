@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="edu.ycp.cs482.iorc.CharacterListActivity"
+    tools:context="edu.ycp.cs482.iorc.Activities.CharacterListActivity"
     tools:listitem="@layout/character_list_content" />

@@ -3,9 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/deleteCheck"
+        android:id="@+id/itemIntent"
         android:orderInCategory="100"
-        android:title="Delete"
+        android:title="@string/itemIntent"
+        android:icon="@drawable/sword_cross"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/deleteCheck"
+        android:orderInCategory="200"
+        android:title="@string/delete"
         app:showAsAction="never"/>
 
 </menu>

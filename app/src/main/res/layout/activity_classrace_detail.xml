@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="edu.ycp.cs482.iorc.ClassRaceDetailActivity"
+    tools:context="edu.ycp.cs482.iorc.Activities.ClassRaceDetailActivity"
     tools:ignore="MergeRootFrame">
 
     <android.support.design.widget.AppBarLayout
@@ -49,6 +49,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/classrace_detail_container"
         app:layout_anchorGravity="top|end"
-        app:srcCompat="@android:drawable/stat_notify_chat" />
+        app:srcCompat="@drawable/ic_check_black_24dp"
+        android:tint="@android:color/white"/>
 
 </android.support.design.widget.CoordinatorLayout>

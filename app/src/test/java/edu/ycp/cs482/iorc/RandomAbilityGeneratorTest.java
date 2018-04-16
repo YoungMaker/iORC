@@ -1,12 +1,12 @@
 package edu.ycp.cs482.iorc;
 
-import android.util.Log;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.ycp.cs482.iorc.dummy.RandAbilityGenerator;
+import edu.ycp.cs482.iorc.Apollo.RandAbilityGenerator;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -30,36 +30,43 @@ public class RandomAbilityGeneratorTest {
     }
 
     @Test
+    public void rollParamParserTest(){
+        //TODO expand
+        int[] test1 = abilGen.rollParamParser("1d20");
+        assertEquals(1, test1[0]);
+        assertEquals(20, test1[1]);
+        int[] test2 = abilGen.rollParamParser("50d2");
+        assertEquals(50, test2[0]);
+        assertEquals(2, test2[1]);
+    }
+
+    @Test
+    public void determineMinValTest(){
+        int test1 = abilGen.determineMax(4);
+        assertEquals(4, test1);
+        int test2 = abilGen.determineMax(20);
+        assertEquals(20, test2);
+    }
+
+    @Test
+    public void determineMaxValTest(){
+        int test1 = abilGen.determineMin(4);
+        assertEquals(4, test1);
+        int test2 = abilGen.determineMin(20);
+        assertEquals(20, test2);
+    }
+
+    @Test
     public void generatedAbilTest() throws Exception {
-        //run test multiple times
-        for(int i = 0; i <= numTests; i++) {
-
-            //generate new ability scores
-            abilGen.generateAbilitiesScores();
-
-            //generate ability scores
-            str = abilGen.getStr();
-            con = abilGen.getCon();
-            dex = abilGen.getDex();
-            _int = abilGen.get_int();
-            wis = abilGen.getWis();
-            cha = abilGen.getCha();
-
-            //observation if wanted
-            System.out.println(str);
-            System.out.println(con);
-            System.out.println(dex);
-            System.out.println(_int);
-            System.out.println(wis);
-            System.out.println(cha);
-
-            //make sure the ability scores generated are not too high or too low
-            assertTrue(minVal <= str && str <= maxVal);
-            assertTrue(minVal <= con && con <= maxVal);
-            assertTrue(minVal <= dex && dex <= maxVal);
-            assertTrue(minVal <= _int && _int <= maxVal);
-            assertTrue(minVal <= wis && wis <= maxVal);
-            assertTrue(minVal <= cha && cha <= maxVal);
+        int testNums = 100;
+        for(int i = 0; i < testNums; i++){
+            int test1 = abilGen.generateRoll("1d4");
+            System.out.println("TEST" + test1);
+            assertTrue(1 <= test1 && test1 <= 4);
+            int test2 = abilGen.generateRoll("5d12");
+            System.out.println("TEST" + test2);
+            assertTrue(5 <= test2 && test2 <= 60);
         }
+
     }
 }
