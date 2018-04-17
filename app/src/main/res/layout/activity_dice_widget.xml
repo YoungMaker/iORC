@@ -126,22 +126,6 @@
 
     </GridLayout>
 
-    <Button
-        android:id="@+id/rollButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_row="3"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/roll"
-        android:textSize="20sp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-
-    />
-
     <TextView
         android:id="@+id/txtOutput"
         android:textSize="25sp"
@@ -157,6 +141,38 @@
         tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
         android:text=""
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        />
+
+    <TextView
+        android:id="@+id/lastOutput"
+        android:textSize="25sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="3"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_gravity="center_horizontal"
+        tools:context="edu.ycp.cs482.iorc.Activities.DiceWidgetActivity"
+        android:text=""
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        />
+
+    <Button
+        android:id="@+id/rollButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="4"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/roll"
+        android:textSize="20sp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         />
 
 </GridLayout>
