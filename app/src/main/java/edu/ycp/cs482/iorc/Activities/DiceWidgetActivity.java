@@ -1,6 +1,7 @@
 package edu.ycp.cs482.iorc.Activities;
 
 import android.graphics.Color;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -31,7 +32,10 @@ public class DiceWidgetActivity extends AppCompatActivity {
 
     Random rand = new Random();
     private String diceOutput;
+    private String curDiceOutput;
+    private String lastDiceOutput;
     private TextView textOut;
+    private TextView lastOut;
     private int diceType;
 
     @Override
@@ -46,6 +50,8 @@ public class DiceWidgetActivity extends AppCompatActivity {
         acelVal = SensorManager.GRAVITY_EARTH;
         acelLast = SensorManager.GRAVITY_EARTH;
         shake = 0.00f;
+
+        diceOutput = "";
 
         /*Rolling a d20*/
         androidImageButton_d20 = findViewById(R.id.image_button_d20);
@@ -112,13 +118,24 @@ public class DiceWidgetActivity extends AppCompatActivity {
         rollButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
+                String curRoll = "Current Roll: ";
+                String prevRoll = "Previous Roll: ";
                 if(diceType != 0){
+                    if(diceOutput == ""){
+                        lastDiceOutput = diceOutput;
+                    }
+                    else{
+                        lastDiceOutput = prevRoll + diceOutput;
+                    }
                     rand = new Random();
                     int die = rand.nextInt(diceType) + 1;
                     String result = String.valueOf(die);
-                    diceOutput = " d" + diceType + ":  " + result;
+                    diceOutput = "d" + diceType + ":  " + result;
+                    curDiceOutput = curRoll + diceOutput;
                     textOut = findViewById(R.id.txtOutput);
-                    textOut.setText(diceOutput);
+                    textOut.setText(curDiceOutput);
+                    lastOut = findViewById(R.id.lastOutput);
+                    lastOut.setText(lastDiceOutput);
                 }
                 else{
                     textOut = findViewById(R.id.txtOutput);
@@ -185,6 +202,11 @@ public class DiceWidgetActivity extends AppCompatActivity {
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+            String curRoll = "Current Roll: ";
+            String prevRoll = "Previous Roll: ";
+
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
@@ -196,12 +218,23 @@ public class DiceWidgetActivity extends AppCompatActivity {
 
             if(shake > 12){
                 if(diceType != 0){
+                    // Vibrate for 400 milliseconds
+                    v.vibrate(300);
+                    if(diceOutput == ""){
+                        lastDiceOutput = diceOutput;
+                    }
+                    else{
+                        lastDiceOutput = prevRoll + diceOutput;
+                    }
                     rand = new Random();
                     int die = rand.nextInt(diceType) + 1;
                     String result = String.valueOf(die);
-                    diceOutput = " d" + diceType + ":  " + result;
+                    diceOutput = "d" + diceType + ":  " + result;
+                    curDiceOutput = curRoll + diceOutput;
                     textOut = findViewById(R.id.txtOutput);
-                    textOut.setText(diceOutput);
+                    textOut.setText(curDiceOutput);
+                    lastOut = findViewById(R.id.lastOutput);
+                    lastOut.setText(lastDiceOutput);
                 }
                 else{
                     textOut = findViewById(R.id.txtOutput);
