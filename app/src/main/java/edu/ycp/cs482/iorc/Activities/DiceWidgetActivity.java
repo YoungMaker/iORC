@@ -1,9 +1,12 @@
 package edu.ycp.cs482.iorc.Activities;
 
+import android.accessibilityservice.AccessibilityService;
+import android.app.KeyguardManager;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -199,6 +202,8 @@ public class DiceWidgetActivity extends AppCompatActivity {
     }
 
     private final SensorEventListener sensorListener = new SensorEventListener() {
+        public AccessibilityService context;
+
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
@@ -216,29 +221,35 @@ public class DiceWidgetActivity extends AppCompatActivity {
             float delta = acelVal - acelLast;
             shake = shake * 0.9f + delta;
 
-            if(shake > 12){
-                if(diceType != 0){
-                    // Vibrate for 400 milliseconds
-                    v.vibrate(300);
-                    if(diceOutput == ""){
-                        lastDiceOutput = diceOutput;
+            KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+            if(myKM.inKeyguardRestrictedInputMode()){
+                Log.d("IS_SCREEN_LOCKED","TRUE");
+            }
+            else{
+                if(shake > 12){
+                    if(diceType != 0){
+                        // Vibrate for 400 milliseconds
+                        v.vibrate(300);
+                        if(diceOutput == ""){
+                            lastDiceOutput = diceOutput;
+                        }
+                        else{
+                            lastDiceOutput = prevRoll + diceOutput;
+                        }
+                        rand = new Random();
+                        int die = rand.nextInt(diceType) + 1;
+                        String result = String.valueOf(die);
+                        diceOutput = "d" + diceType + ":  " + result;
+                        curDiceOutput = curRoll + diceOutput;
+                        textOut = findViewById(R.id.txtOutput);
+                        textOut.setText(curDiceOutput);
+                        lastOut = findViewById(R.id.lastOutput);
+                        lastOut.setText(lastDiceOutput);
                     }
                     else{
-                        lastDiceOutput = prevRoll + diceOutput;
+                        textOut = findViewById(R.id.txtOutput);
+                        textOut.setText("");
                     }
-                    rand = new Random();
-                    int die = rand.nextInt(diceType) + 1;
-                    String result = String.valueOf(die);
-                    diceOutput = "d" + diceType + ":  " + result;
-                    curDiceOutput = curRoll + diceOutput;
-                    textOut = findViewById(R.id.txtOutput);
-                    textOut.setText(curDiceOutput);
-                    lastOut = findViewById(R.id.lastOutput);
-                    lastOut.setText(lastDiceOutput);
-                }
-                else{
-                    textOut = findViewById(R.id.txtOutput);
-                    textOut.setText("");
                 }
             }
         }
