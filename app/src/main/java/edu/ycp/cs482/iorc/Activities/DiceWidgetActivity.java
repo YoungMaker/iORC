@@ -121,6 +121,8 @@ public class DiceWidgetActivity extends AppCompatActivity {
         rollButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
+                Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vib.vibrate(200);
                 String curRoll = "Current Roll: ";
                 String prevRoll = "Previous Roll: ";
                 if(diceType != 0){
@@ -202,7 +204,7 @@ public class DiceWidgetActivity extends AppCompatActivity {
     }
 
     private final SensorEventListener sensorListener = new SensorEventListener() {
-        public AccessibilityService context;
+
 
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
@@ -221,15 +223,15 @@ public class DiceWidgetActivity extends AppCompatActivity {
             float delta = acelVal - acelLast;
             shake = shake * 0.9f + delta;
 
-            KeyguardManager myKM = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-            if(myKM.inKeyguardRestrictedInputMode()){
-                Log.d("IS_SCREEN_LOCKED","TRUE");
-            }
-            else{
-                if(shake > 12){
+            KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            assert myKM != null;
+            boolean locked = myKM.inKeyguardRestrictedInputMode();
+            if(!locked){
+                if(shake > 15){
                     if(diceType != 0){
-                        // Vibrate for 400 milliseconds
-                        v.vibrate(300);
+                        // Vibrate for 200 milliseconds
+                        assert v != null;
+                        v.vibrate(200);
                         if(diceOutput == ""){
                             lastDiceOutput = diceOutput;
                         }
@@ -251,6 +253,9 @@ public class DiceWidgetActivity extends AppCompatActivity {
                         textOut.setText("");
                     }
                 }
+            }
+            else{
+                //Do nothing
             }
         }
 
