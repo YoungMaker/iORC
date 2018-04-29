@@ -1,6 +1,5 @@
 package edu.ycp.cs482.iorc.Activities;
 
-import android.accessibilityservice.AccessibilityService;
 import android.app.KeyguardManager;
 import android.graphics.Color;
 import android.os.Vibrator;
@@ -122,6 +121,7 @@ public class DiceWidgetActivity extends AppCompatActivity {
             public void onClick(View v){
 
                 Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                assert vib != null;
                 vib.vibrate(200);
                 String curRoll = "Current Roll: ";
                 String prevRoll = "Previous Roll: ";
@@ -204,8 +204,6 @@ public class DiceWidgetActivity extends AppCompatActivity {
     }
 
     private final SensorEventListener sensorListener = new SensorEventListener() {
-
-
         @Override
         public void onSensorChanged(SensorEvent sensorEvent) {
 
@@ -255,7 +253,7 @@ public class DiceWidgetActivity extends AppCompatActivity {
                 }
             }
             else{
-                //Do nothing
+                Log.d("TEST", "STILL POLLING");
             }
         }
 
