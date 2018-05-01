@@ -211,22 +211,22 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
             mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
             mCharacterAcFeat = mCharacterAcTab.findViewById(R.id.mod_feat);
-            mCharacterAcEnh = mCharacterAcTab.findViewById(R.id.mod_enh);
+            //mCharacterAcEnh = mCharacterAcTab.findViewById(R.id.mod_enh);
 
             mCharacterFortAbil = mCharacterFortTab.findViewById(R.id.mod_abil);
             mCharacterFortClass = mCharacterFortTab.findViewById(R.id.mod_class);
             mCharacterFortFeat = mCharacterFortTab.findViewById(R.id.mod_feat);
-            mCharacterFortEnh = mCharacterFortTab.findViewById(R.id.mod_enh);
+            //mCharacterFortEnh = mCharacterFortTab.findViewById(R.id.mod_enh);
 
             mCharacterRefAbil = mCharacterRefTab.findViewById(R.id.mod_abil);
             mCharacterRefClass = mCharacterRefTab.findViewById(R.id.mod_class);
             mCharacterRefFeat = mCharacterRefTab.findViewById(R.id.mod_feat);
-            mCharacterRefEnh = mCharacterRefTab.findViewById(R.id.mod_enh);
+            //mCharacterRefEnh = mCharacterRefTab.findViewById(R.id.mod_enh);
 
             mCharacterWillAbil = mCharacterWillTab.findViewById(R.id.mod_abil);
             mCharacterWillClass = mCharacterWillTab.findViewById(R.id.mod_class);
             mCharacterWillFeat = mCharacterWillTab.findViewById(R.id.mod_feat);
-            mCharacterWillEnh = mCharacterWillTab.findViewById(R.id.mod_enh);
+            //mCharacterWillEnh = mCharacterWillTab.findViewById(R.id.mod_enh);
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
@@ -251,22 +251,22 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
             mCharacterAcClass.setText(String.valueOf(acAddModTab.get("class")));
             mCharacterAcFeat.setText(String.valueOf(acAddModTab.get("feat")));
-            mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
+            //mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
 
             mCharacterFortAbil.setText(String.valueOf(fortAddModTab.get("abil")));
             mCharacterFortClass.setText(String.valueOf(fortAddModTab.get("class")));
             mCharacterFortFeat.setText(String.valueOf(fortAddModTab.get("feat")));
-            mCharacterFortEnh.setText(String.valueOf(fortAddModTab.get("enh")));
+            //mCharacterFortEnh.setText(String.valueOf(fortAddModTab.get("enh")));
 
             mCharacterRefAbil.setText(String.valueOf(refAddModTab.get("abil")));
             mCharacterRefClass.setText(String.valueOf(refAddModTab.get("class")));
             mCharacterRefFeat.setText(String.valueOf(refAddModTab.get("feat")));
-            mCharacterRefEnh.setText(String.valueOf(refAddModTab.get("enh")));
+            //mCharacterRefEnh.setText(String.valueOf(refAddModTab.get("enh")));
 
             mCharacterWillAbil.setText(String.valueOf(willAddModTab.get("abil")));
             mCharacterWillClass.setText(String.valueOf(willAddModTab.get("class")));
             mCharacterWillFeat.setText(String.valueOf(willAddModTab.get("feat")));
-            mCharacterWillEnh.setText(String.valueOf(willAddModTab.get("enh")));
+            //mCharacterWillEnh.setText(String.valueOf(willAddModTab.get("enh")));
 
             CharacterData.Race Races = item.fragments().characterData().race();
             CharacterData.Classql Classes = item.fragments().characterData().classql();
