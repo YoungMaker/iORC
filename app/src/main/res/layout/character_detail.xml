@@ -6,14 +6,55 @@
     android:layout_width="match_parent">
 
 
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="2"
+        android:columnCount="1"
+        android:rowCount="4"
+        android:background="@drawable/border">
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_column="0"
+            android:layout_row="0">
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:gravity="center"
+            android:text="AC "
+            android:background="@drawable/shield_outline"
+            android:width="45dp"
+            />
+        <TextView
+            android:id="@+id/character_abil_ac"
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:gravity="center_vertical"
+            />
+
+        </LinearLayout>
+
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_column="1"
+        android:layout_column="0"
         android:layout_row="2"
-        android:background="@drawable/border"
         >
         <TextView
             style="?android:attr/textAppearanceListItemSmall"
@@ -38,7 +79,16 @@
             android:paddingBottom="10dp"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
+    </LinearLayout>
 
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_column="0"
+            android:layout_row="1"
+            >
         <TextView
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
@@ -62,7 +112,16 @@
             android:paddingBottom="10dp"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
+        </LinearLayout>
 
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_column="0"
+            android:layout_row="3"
+            >
         <TextView
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
@@ -86,7 +145,8 @@
             android:paddingBottom="10dp"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
-    </LinearLayout>
+        </LinearLayout>
+    </GridLayout>
 
 
     <TextView
@@ -100,9 +160,26 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="@string/abil_title"
-        android:layout_gravity="start"
+        android:layout_gravity="center_horizontal"
         tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
         android:layout_column="0"
+        android:layout_row="1"
+        />
+
+    <TextView
+        android:id="@+id/character_stat_title"
+        style="@style/Base.DialogWindowTitle.AppCompat"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/stats_title"
+        android:layout_gravity="center_horizontal"
+        tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
+        android:layout_column="1"
         android:layout_row="1"
         />
 
@@ -261,19 +338,18 @@
         android:paddingRight="8dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:text="@string/def_title"
+        android:text="@string/saving_throws_title"
         android:layout_gravity="center_horizontal"
         tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
         android:layout_column="0"
-        android:layout_row="5"
+        android:layout_row="3"
         />
 
     <include layout="@layout/defense_layout"
         android:layout_column="0"
-        android:layout_row="6"
+        android:layout_row="4"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:background = "@drawable/border"
         />
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -297,17 +373,21 @@
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:text="@string/race"/>
 
-        <TextView
+        <Button
             android:id="@+id/character_race"
             style="@style/Base.DialogWindowTitle.AppCompat"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="start"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"/>
+            android:text=""
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
+            />
 
     </LinearLayout>
 
@@ -316,7 +396,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="start"
         android:layout_column="1"
         android:layout_row="0">
         <TextView
@@ -332,16 +412,21 @@
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:text="@string/Class"/>
 
-        <TextView
+        <Button
             android:id="@+id/character_class"
             style="@style/Base.DialogWindowTitle.AppCompat"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="start"
             android:paddingLeft="4dp"
             android:paddingRight="8dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"/>
+            android:text=""
+            tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
+            />
+
     </LinearLayout>
 </GridLayout>

@@ -182,7 +182,7 @@ public class CharacterDetailFragment extends Fragment {
 
         private CharacterView(View rootView){
 
-            mCharacterAcTab = rootView.findViewById(R.id.ac_mod_table);
+            //mCharacterAcTab = rootView.findViewById(R.id.ac_mod_table);
             mCharacterFortTab = rootView.findViewById(R.id.fort_mod_table);
             mCharacterRefTab = rootView.findViewById(R.id.ref_mod_table);
             mCharacterWillTab = rootView.findViewById(R.id.will_mod_table);
@@ -208,9 +208,9 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterRace = rootView.findViewById(R.id.character_race);
             mCharacterClass = rootView.findViewById(R.id.character_class);
 
-            mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
-            mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
-            mCharacterAcFeat = mCharacterAcTab.findViewById(R.id.mod_feat);
+            //mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
+            //mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
+            //mCharacterAcFeat = mCharacterAcTab.findViewById(R.id.mod_feat);
             //mCharacterAcEnh = mCharacterAcTab.findViewById(R.id.mod_enh);
 
             mCharacterFortAbil = mCharacterFortTab.findViewById(R.id.mod_abil);
@@ -248,10 +248,10 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterDetailInitiative.setText(String.valueOf(charStatMap.get("initiative")));
 
             //TODO read up on iterating through view IDS so I can get rid of this mess of variables
-            mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
-            mCharacterAcClass.setText(String.valueOf(acAddModTab.get("class")));
-            mCharacterAcFeat.setText(String.valueOf(acAddModTab.get("feat")));
-            //mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
+//            mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
+//            mCharacterAcClass.setText(String.valueOf(acAddModTab.get("class")));
+//            mCharacterAcFeat.setText(String.valueOf(acAddModTab.get("feat")));
+//            mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
 
             mCharacterFortAbil.setText(String.valueOf(fortAddModTab.get("abil")));
             mCharacterFortClass.setText(String.valueOf(fortAddModTab.get("class")));

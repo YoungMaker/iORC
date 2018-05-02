@@ -195,7 +195,7 @@
 
     <!-- character_detail.xml - fragment -->
     <string name="empty_char_name">Character Name</string>
-    <string name="abil_title">Ability Points:</string>
+    <string name="abil_title">Ability Scores</string>
     <string name="pref_dex">%1$s</string>
     <string name="pref_con">%1$s</string>
     <string name="pref_str">%1$s</string>
@@ -292,5 +292,7 @@
     <string name="itemIntent">Items</string>
     <string name="skill_value">+0</string>
     <string name="roll">ROLL</string>
+    <string name="saving_throws_title">Saving Throws</string>
+    <string name="stats_title">Stats</string>
 
 </resources>
