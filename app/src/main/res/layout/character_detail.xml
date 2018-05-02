@@ -9,11 +9,12 @@
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_column="1"
+        android:layout_column="0"
         android:layout_row="2"
         android:columnCount="1"
         android:rowCount="4"
-        android:background="@drawable/border">
+        android:layout_gravity="end"
+        android:background="@drawable/layer_border">
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -30,20 +31,20 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center"
-            android:text="AC "
-            android:background="@drawable/shield_outline"
-            android:width="45dp"
+            android:text="AC:"
             />
         <TextView
             android:id="@+id/character_abil_ac"
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="5dp"
+            android:paddingStart="12.5dp"
             android:paddingEnd="0dp"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center_vertical"
+            android:background="@drawable/shield_outline"
+            android:width="45dp"
             />
 
         </LinearLayout>
@@ -63,7 +64,7 @@
             android:paddingStart="8dp"
             android:paddingEnd="0dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="12.5dp"
             android:text="@string/initiative"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
@@ -80,7 +81,16 @@
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             />
     </LinearLayout>
-
+    </GridLayout>
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="2"
+        android:columnCount="1"
+        android:rowCount="4"
+        android:layout_gravity="start"
+        android:background="@drawable/layer_border_flipped">
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
@@ -106,11 +116,13 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingLeft="12.5dp"
             android:paddingRight="8dp"
             android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="12.5dp"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
+            android:background="@drawable/heart_outline"
+            android:width="45dp"
             />
         </LinearLayout>
 
@@ -157,13 +169,13 @@
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingTop="5dp"
+        android:paddingTop="12dp"
         android:paddingBottom="5dp"
         android:text="@string/abil_title"
         android:layout_gravity="center_horizontal"
         tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
         android:layout_column="0"
-        android:layout_row="1"
+        android:layout_row="3"
         />
 
     <TextView
@@ -177,7 +189,7 @@
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="@string/stats_title"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="start"
         tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
         android:layout_column="1"
         android:layout_row="1"
@@ -187,9 +199,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_column="0"
-        android:layout_row="2"
+        android:layout_row="4"
         android:columnCount="6"
         android:rowCount="4"
+        android:layout_gravity="center_horizontal"
         android:background="@drawable/border"
         >
 
@@ -210,7 +223,6 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="1"
             android:layout_row="0"
@@ -232,7 +244,6 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="3"
             android:layout_row="0"
@@ -254,7 +265,6 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="1"
             android:layout_row="1"
@@ -276,7 +286,6 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="3"
             android:layout_row="1"
@@ -298,7 +307,6 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="1"
             android:layout_row="2"
@@ -320,7 +328,6 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/stat_padding"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:layout_column="3"
             android:layout_row="2"
@@ -336,20 +343,21 @@
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:paddingTop="5dp"
+        android:paddingTop="12dp"
         android:paddingBottom="5dp"
         android:text="@string/saving_throws_title"
         android:layout_gravity="center_horizontal"
         tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
-        android:layout_column="0"
+        android:layout_column="1"
         android:layout_row="3"
         />
 
     <include layout="@layout/defense_layout"
-        android:layout_column="0"
+        android:layout_column="1"
         android:layout_row="4"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
         />
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
