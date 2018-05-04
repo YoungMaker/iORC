@@ -294,5 +294,7 @@
     <string name="roll">ROLL</string>
     <string name="saving_throws_title">Saving Throws</string>
     <string name="stats_title">Stats</string>
+    <string name="ac_title">AC:</string>
+    <string name="ac_title">AC:</string>
 
 </resources>

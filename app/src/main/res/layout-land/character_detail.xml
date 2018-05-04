@@ -291,20 +291,20 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:gravity="center"
-                android:text="AC "
-                android:background="@drawable/shield_outline"
-                android:width="45dp"
+                android:text="@string/ac_title"
                 />
             <TextView
                 android:id="@+id/character_abil_ac"
                 style="?android:attr/textAppearanceListItemSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="5dp"
+                android:paddingStart="12.5dp"
                 android:paddingEnd="0dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:gravity="center_vertical"
+                android:background="@drawable/shield_outline"
+                android:width="45dp"
                 />
         </LinearLayout>
         <LinearLayout
@@ -354,8 +354,13 @@
             style="?android:attr/textAppearanceListItemSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:paddingStart="12.5dp"
+            android:paddingEnd="0dp"
+            android:paddingBottom="12.5dp"
+            android:paddingTop="10dp"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
+            android:background="@drawable/heart_outline"
+            android:width="45dp"
             />
     </LinearLayout>
 
