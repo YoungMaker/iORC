@@ -290,5 +290,7 @@
     <string name="currency_placeholder"><![CDATA[<Gold Pieces>]]></string>
     <string name="delete">Delete</string>
     <string name="itemIntent">Items</string>
+    <string name="skill_value">+0</string>
+    <string name="roll">ROLL</string>
 
 </resources>
