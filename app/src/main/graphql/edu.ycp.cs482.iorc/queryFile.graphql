@@ -68,6 +68,12 @@
    }
  }
 
+ mutation PurchaseItemMutation($id:ID!, $itemID:ID!){
+    purchaseItem(id:$id, itemid:$itemID){
+      ...CharacterData
+    }
+ }
+
 fragment CharacterData on Character{
   id
   name

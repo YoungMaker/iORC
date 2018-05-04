@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import edu.ycp.cs482.iorc.AddItemToCharMutation;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
+import edu.ycp.cs482.iorc.PurchaseItemMutation;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.VersionItemsQuery;
 import edu.ycp.cs482.iorc.fragment.ItemData;
@@ -234,18 +235,18 @@ public class ItemListActivity extends AppCompatActivity {
                 });
     }
 
-    private void addItemtoChar(String itemID){
+    private void purchaseItemforChar(String itemID){
         MyApolloClient.getMyApolloClient().mutate(
-            AddItemToCharMutation.builder().itemId(itemID).charID(charIDVal).build())
-               .enqueue(new ApolloCall.Callback<AddItemToCharMutation.Data>() {
+            PurchaseItemMutation.builder().itemID(itemID).id(charIDVal).build())
+               .enqueue(new ApolloCall.Callback<PurchaseItemMutation.Data>() {
                    @Override
-                   public void onResponse(@Nonnull Response<AddItemToCharMutation.Data> response) {
-                       Log.d("ADD_ITEM_RESPONSE", "COMPLETE");
+                   public void onResponse(@Nonnull Response<PurchaseItemMutation.Data> response) {
+                       Log.d("Purchase_ITEM_RESPONSE", "COMPLETE");
                    }
 
                    @Override
                    public void onFailure(@Nonnull ApolloException e) {
-                       Log.d("ADD_ITEM_RESPONSE", "ERROR");
+                       Log.d("Purchase_ITEM_RESPONSE", "ERROR");
                    }
                });
     }
@@ -265,7 +266,7 @@ public class ItemListActivity extends AppCompatActivity {
         if(requestCode == ITEM_SELECTION_REQ_CODE && resultCode == RESULT_OK){
             String dataReturn = data.getStringExtra("result");
             Log.d("DATA_RETURN_TEST", dataReturn);
-            addItemtoChar(dataReturn);
+            purchaseItemforChar(dataReturn);
         }
     }
 }
