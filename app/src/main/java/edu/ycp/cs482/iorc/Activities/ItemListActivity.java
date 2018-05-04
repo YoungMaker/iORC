@@ -242,6 +242,7 @@ public class ItemListActivity extends AppCompatActivity {
                    @Override
                    public void onResponse(@Nonnull Response<PurchaseItemMutation.Data> response) {
                        Log.d("Purchase_ITEM_RESPONSE", "COMPLETE");
+                       //TODO reload character data so that updated inventory is available
                    }
 
                    @Override
@@ -249,6 +250,23 @@ public class ItemListActivity extends AppCompatActivity {
                        Log.d("Purchase_ITEM_RESPONSE", "ERROR");
                    }
                });
+    }
+
+    private void addItemtoCharacter(String itemID){
+        MyApolloClient.getMyApolloClient().mutate(
+                AddItemToCharMutation.builder().itemId(itemID).charID(charIDVal).build())
+                .enqueue(new ApolloCall.Callback<AddItemToCharMutation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<AddItemToCharMutation.Data> response) {
+                        Log.d("ADD_ITEM_RESPONSE", "COMPLETE");
+                        //TODO reload character data so that updated inventory is available
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.d("ADD_ITEM_RESPONSE", "ERROR");
+                    }
+                });
     }
 
     //TODO implment other queries for specific item lookups
