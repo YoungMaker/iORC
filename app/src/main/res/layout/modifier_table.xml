@@ -55,18 +55,7 @@
             android:gravity="center"
             
             />
-    
-        <TextView
-            android:id="@+id/mod_enh"
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            
-            android:textSize="14sp"
-            android:gravity="center"
-            android:text="@string/double_placeholder"
-            />
+
         
         
     </LinearLayout>
@@ -128,17 +117,6 @@
             
             />
 
-        <TextView
-            android:id="@+id/mod_enh_title"
-            style="?android:attr/textAppearanceListItemSmall"
-            android:layout_width="45dp"
-            android:layout_height="wrap_content"
-            android:padding="3dp"
-            
-            android:gravity="center"
-            android:textSize="12sp"
-            android:text="@string/desc_enh"
-            />
 
 
     </LinearLayout>

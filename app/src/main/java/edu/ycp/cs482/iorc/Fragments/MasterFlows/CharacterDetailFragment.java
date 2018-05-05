@@ -88,6 +88,7 @@ public class CharacterDetailFragment extends Fragment {
 
         if(getArguments().containsKey(ARG_CHAR_STAT_DATA)){
             charStatMap = (HashMap<String, Double>) getArguments().getSerializable(ARG_CHAR_STAT_DATA);
+            //Log.d("KEY SET", charStatMap.keySet().toString());
         }
 
         if(getArguments().containsKey(ARG_DEF_TABLE_DATA)){
@@ -144,8 +145,18 @@ public class CharacterDetailFragment extends Fragment {
         private TextView mCharacterAbilInt;
         private TextView mCharacterAbilWis;
         private TextView mCharacterAbilCha;
+        private TextView mCharacterAbilStrMod;
+        private TextView mCharacterAbilConMod;
+        private TextView mCharacterAbilDexMod;
+        private TextView mCharacterAbilIntMod;
+        private TextView mCharacterAbilWisMod;
+        private TextView mCharacterAbilChaMod;
+
         private TextView mCharacterRace;
         private TextView mCharacterClass;
+        private TextView mCharacterRaceDesc;
+        private TextView mCharacterClassDesc;
+
 
         //TODO read up on iterating through view IDS so I can get rid of this mess of variables
         private List<View> mCharAcList = new ArrayList<>();
@@ -174,6 +185,8 @@ public class CharacterDetailFragment extends Fragment {
         private View mCharacterRefTab;
         private View mCharacterWillTab;
 
+        private TextView mCharacterWealth;
+
 
         private List<View> mCharFortList = new ArrayList<>();
         private List<View> mCharRefList = new ArrayList<>();
@@ -182,7 +195,7 @@ public class CharacterDetailFragment extends Fragment {
 
         private CharacterView(View rootView){
 
-            mCharacterAcTab = rootView.findViewById(R.id.ac_mod_table);
+            //mCharacterAcTab = rootView.findViewById(R.id.ac_mod_table);
             mCharacterFortTab = rootView.findViewById(R.id.fort_mod_table);
             mCharacterRefTab = rootView.findViewById(R.id.ref_mod_table);
             mCharacterWillTab = rootView.findViewById(R.id.will_mod_table);
@@ -199,86 +212,112 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterDetailFort = rootView.findViewById(R.id.character_abil_fort);
             mCharacterDetailRef = rootView.findViewById(R.id.character_abil_ref);
             mCharacterDetailSpd = rootView.findViewById(R.id.character_detail_spd);
+            //abils
             mCharacterAbilStr = rootView.findViewById(R.id.character_abil_str);
             mCharacterAbilCon = rootView.findViewById(R.id.character_abil_con);
             mCharacterAbilDex = rootView.findViewById(R.id.character_abil_dex);
             mCharacterAbilInt = rootView.findViewById(R.id.character_abil_int);
             mCharacterAbilWis = rootView.findViewById(R.id.character_abil_wis);
             mCharacterAbilCha = rootView.findViewById(R.id.character_abil_cha);
+            //abilmods
+            mCharacterAbilStrMod = rootView.findViewById(R.id.character_abil_str_mod);
+            mCharacterAbilConMod = rootView.findViewById(R.id.character_abil_con_mod);
+            mCharacterAbilDexMod = rootView.findViewById(R.id.character_abil_dex_mod);
+            mCharacterAbilIntMod = rootView.findViewById(R.id.character_abil_int_mod);
+            mCharacterAbilWisMod = rootView.findViewById(R.id.character_abil_wis_mod);
+            mCharacterAbilChaMod = rootView.findViewById(R.id.character_abil_cha_mod);
+
             mCharacterRace = rootView.findViewById(R.id.character_race);
             mCharacterClass = rootView.findViewById(R.id.character_class);
 
-            mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
-            mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
-            mCharacterAcFeat = mCharacterAcTab.findViewById(R.id.mod_feat);
-            mCharacterAcEnh = mCharacterAcTab.findViewById(R.id.mod_enh);
+            mCharacterRaceDesc = rootView.findViewById(R.id.character_race_desc);
+            mCharacterClassDesc = rootView.findViewById(R.id.character_class_desc);
+            mCharacterWealth = rootView.findViewById(R.id.money_amount);
+
+            //mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
+            //mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
+            //mCharacterAcFeat = mCharacterAcTab.findViewById(R.id.mod_feat);
+            //mCharacterAcEnh = mCharacterAcTab.findViewById(R.id.mod_enh);
 
             mCharacterFortAbil = mCharacterFortTab.findViewById(R.id.mod_abil);
             mCharacterFortClass = mCharacterFortTab.findViewById(R.id.mod_class);
             mCharacterFortFeat = mCharacterFortTab.findViewById(R.id.mod_feat);
-            mCharacterFortEnh = mCharacterFortTab.findViewById(R.id.mod_enh);
 
             mCharacterRefAbil = mCharacterRefTab.findViewById(R.id.mod_abil);
             mCharacterRefClass = mCharacterRefTab.findViewById(R.id.mod_class);
             mCharacterRefFeat = mCharacterRefTab.findViewById(R.id.mod_feat);
-            mCharacterRefEnh = mCharacterRefTab.findViewById(R.id.mod_enh);
 
             mCharacterWillAbil = mCharacterWillTab.findViewById(R.id.mod_abil);
             mCharacterWillClass = mCharacterWillTab.findViewById(R.id.mod_class);
             mCharacterWillFeat = mCharacterWillTab.findViewById(R.id.mod_feat);
-            mCharacterWillEnh = mCharacterWillTab.findViewById(R.id.mod_enh);
+
+
         }
 
         private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
             //TODO find better way to create and assign values for textviews
             //convert the long values (of each ability score) to strings that can be shown as the character ability score values
-            mCharacterAbilStr.setText(String.valueOf(charStatMap.get("str")));
-            mCharacterAbilCon.setText(String.valueOf(charStatMap.get("con")));
-            mCharacterAbilDex.setText(String.valueOf(charStatMap.get("dex")));
-            mCharacterAbilInt.setText(String.valueOf(charStatMap.get("int")));
-            mCharacterAbilWis.setText(String.valueOf(charStatMap.get("wis")));
-            mCharacterAbilCha.setText(String.valueOf(charStatMap.get("cha")));
+            mCharacterAbilStr.setText(String.valueOf(Math.round(charStatMap.get("str"))));
+            mCharacterAbilCon.setText(String.valueOf(Math.round(charStatMap.get("con"))));
+            mCharacterAbilDex.setText(String.valueOf(Math.round(charStatMap.get("dex"))));
+            mCharacterAbilInt.setText(String.valueOf(Math.round(charStatMap.get("int"))));
+            mCharacterAbilWis.setText(String.valueOf(Math.round(charStatMap.get("wis"))));
+            mCharacterAbilCha.setText(String.valueOf(Math.round(charStatMap.get("cha"))));
 
-            mCharacterDetailAC.setText(String.valueOf(charStatMap.get("ac")));
-            mCharacterDetailFort.setText(String.valueOf(charStatMap.get("fort")));
-            mCharacterDetailRef.setText(String.valueOf(charStatMap.get("ref")));
-            mCharacterDetailWill.setText(String.valueOf(charStatMap.get("will")));
-            mCharacterDetailHp.setText(String.valueOf(charStatMap.get("hp")));
-            mCharacterDetailSpd.setText(String.valueOf(charStatMap.get("speed")));
-            mCharacterDetailInitiative.setText(String.valueOf(charStatMap.get("initiative")));
+            //abilmods
+            mCharacterAbilStrMod.setText(String.valueOf(Math.round(charStatMap.get("str_mod"))));
+            mCharacterAbilConMod.setText(String.valueOf(Math.round(charStatMap.get("con_mod"))));
+            mCharacterAbilDexMod.setText(String.valueOf(Math.round(charStatMap.get("dex_mod"))));
+            mCharacterAbilIntMod.setText(String.valueOf(Math.round(charStatMap.get("int_mod"))));
+            mCharacterAbilWisMod.setText(String.valueOf(Math.round(charStatMap.get("wis_mod"))));
+            mCharacterAbilChaMod.setText(String.valueOf(Math.round(charStatMap.get("cha_mod"))));
+
+            mCharacterDetailAC.setText(String.valueOf(Math.round(charStatMap.get("ac"))));
+            mCharacterDetailFort.setText(String.valueOf(Math.round(charStatMap.get("fort"))));
+            mCharacterDetailRef.setText(String.valueOf(Math.round(charStatMap.get("ref"))));
+            mCharacterDetailWill.setText(String.valueOf(Math.round(charStatMap.get("will"))));
+            mCharacterDetailHp.setText(String.valueOf(Math.round(charStatMap.get("hp"))));
+            mCharacterDetailSpd.setText(String.valueOf(Math.round(charStatMap.get("speed"))));
+            mCharacterDetailInitiative.setText(String.valueOf(Math.round(charStatMap.get("initiative"))));
 
             //TODO read up on iterating through view IDS so I can get rid of this mess of variables
-            mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
-            mCharacterAcClass.setText(String.valueOf(acAddModTab.get("class")));
-            mCharacterAcFeat.setText(String.valueOf(acAddModTab.get("feat")));
-            mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
+//            mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
+//            mCharacterAcClass.setText(String.valueOf(acAddModTab.get("class")));
+//            mCharacterAcFeat.setText(String.valueOf(acAddModTab.get("feat")));
+//            mCharacterAcEnh.setText(String.valueOf(acAddModTab.get("enh")));
 
-            mCharacterFortAbil.setText(String.valueOf(fortAddModTab.get("abil")));
-            mCharacterFortClass.setText(String.valueOf(fortAddModTab.get("class")));
-            mCharacterFortFeat.setText(String.valueOf(fortAddModTab.get("feat")));
-            mCharacterFortEnh.setText(String.valueOf(fortAddModTab.get("enh")));
+            mCharacterFortAbil.setText(String.valueOf(Math.round(Float.parseFloat(fortAddModTab.get("abil")))));
+            mCharacterFortClass.setText(String.valueOf(Math.round(Float.parseFloat(fortAddModTab.get("class")))));
+            mCharacterFortFeat.setText(String.valueOf(Math.round(Float.parseFloat(fortAddModTab.get("feat")))));
+            //mCharacterFortEnh.setText(String.valueOf(fortAddModTab.get("enh")));
 
-            mCharacterRefAbil.setText(String.valueOf(refAddModTab.get("abil")));
-            mCharacterRefClass.setText(String.valueOf(refAddModTab.get("class")));
-            mCharacterRefFeat.setText(String.valueOf(refAddModTab.get("feat")));
-            mCharacterRefEnh.setText(String.valueOf(refAddModTab.get("enh")));
+            mCharacterRefAbil.setText(String.valueOf(Math.round(Float.parseFloat(refAddModTab.get("abil")))));
+            mCharacterRefClass.setText(String.valueOf(Math.round(Float.parseFloat(refAddModTab.get("class")))));
+            mCharacterRefFeat.setText(String.valueOf(Math.round(Float.parseFloat(refAddModTab.get("feat")))));
+            //mCharacterRefEnh.setText(String.valueOf(refAddModTab.get("enh")));
 
-            mCharacterWillAbil.setText(String.valueOf(willAddModTab.get("abil")));
-            mCharacterWillClass.setText(String.valueOf(willAddModTab.get("class")));
-            mCharacterWillFeat.setText(String.valueOf(willAddModTab.get("feat")));
-            mCharacterWillEnh.setText(String.valueOf(willAddModTab.get("enh")));
+            mCharacterWillAbil.setText(String.valueOf(Math.round(Float.parseFloat(willAddModTab.get("abil")))));
+            mCharacterWillClass.setText(String.valueOf(Math.round(Float.parseFloat(willAddModTab.get("class")))));
+            mCharacterWillFeat.setText(String.valueOf(Math.round(Float.parseFloat(willAddModTab.get("feat")))));
+            //mCharacterWillEnh.setText(String.valueOf(willAddModTab.get("enh")));
 
             CharacterData.Race Races = item.fragments().characterData().race();
             CharacterData.Classql Classes = item.fragments().characterData().classql();
+            //item.fragments().characterData().
             //Log.d("RACE", Races.fragments().raceData().name());
             if(Races != null){
                 //Log.d("RACE DATA", Races.toString());
                 mCharacterRace.setText(getResources().getString(R.string.pref_race, Races.fragments().raceData().name()));
+                //mCharacterRaceDesc.setText(getResources().getString(R.string.pref_race_desc, Races.fragments().raceData().description()));
             }
 
             if(Classes != null){
                 mCharacterClass.setText(getResources().getString(R.string.pref_class, Classes.fragments().classData().name()));
+                //mCharacterClassDesc.setText(getResources().getString(R.string.pref_class_desc, Classes.fragments().classData().description()));
             }
+
+            //TODO find out why character data does not have money and implement gold from version
+            mCharacterWealth.setText(String.valueOf("32"));
         }
 
         private String longToString(long longValue){
