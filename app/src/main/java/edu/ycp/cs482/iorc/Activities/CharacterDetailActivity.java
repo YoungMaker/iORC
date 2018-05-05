@@ -61,12 +61,18 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
     private CharacterVersionQuery.GetCharactersByVersion mItem;
+    private CharacterData mCharacterData;
     private String CHARCTER_ID = "";
     private VersionSheetQuery.GetVersionSheet versionData;
     private HashMap<String, Double> charStatMap = new HashMap<>();
     private List<VersionSheetData.Stat> skillList = new ArrayList<>();
     private HashMap<String, Double> skillValueMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
+
+    public static final String ITEM_ID = "item_id";
+    public static final String MAP_ID = "map_id";
+    public static final String CHAR_ID = "CHAR_ID";
+
     private HashMap<String, String> creationData;
     private HashMap<String, String> defenseTableData = new HashMap<>();
 
@@ -124,6 +130,25 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         }
 
         //Display Character name on Toolbar
+        Bundle char_Arguments = new Bundle();
+        char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+        char_Arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
+                getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
+        char_Arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
+                getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
+        CharacterDetailFragment char_Fragment = new CharacterDetailFragment();
+        char_Fragment.setArguments(char_Arguments);
+
+        HashMap<String, String> charMap =(HashMap<String, String>)char_Arguments.getSerializable(CharacterDetailFragment.ARG_MAP_ID);
+        String charObj = "";
+        if(charMap != null){
+            charObj = charMap.get(char_Arguments.getString((CharacterDetailFragment.ARG_ITEM_ID)));
+        }
+        mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
+
+        //get character data to be used in fragments
+        mCharacterData = mItem.fragments().characterData();
+
         CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
         if (appBarLayout != null && mItem != null) {
             appBarLayout.setTitle(mItem.fragments().characterData().name());
@@ -177,6 +202,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
             case R.id.itemIntent:
                 Intent itemIntent = new Intent(CharacterDetailActivity.this, ItemListActivity.class);
+                itemIntent.putExtra(CHAR_ID, mCharacterData.id());
                 itemIntent.putExtra(CREATION_DATA, creationData);
                 startActivity(itemIntent);
                 break;

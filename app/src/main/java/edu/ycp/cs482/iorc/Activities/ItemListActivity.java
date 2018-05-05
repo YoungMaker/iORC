@@ -23,8 +23,10 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.AddItemToCharMutation;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
+import edu.ycp.cs482.iorc.PurchaseItemMutation;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.VersionItemsQuery;
 import edu.ycp.cs482.iorc.fragment.ItemData;
@@ -55,6 +57,9 @@ public class ItemListActivity extends AppCompatActivity {
     private HashMap<String, String> creationMap;
     private VersionItemsQuery.Data versionItemQueryData;
     private List<ItemData> itemList = new ArrayList<>();
+    public static final String CHAR_ID = "CHAR_ID";
+    private static final int ITEM_SELECTION_REQ_CODE = 1;
+    private static String charIDVal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +70,20 @@ public class ItemListActivity extends AppCompatActivity {
         Bundle extra = getIntent().getExtras();
 
         //create our character creation data map
-        creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+        if(extra != null){
+            if(extra.containsKey(CREATION_DATA)){
+                creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+            }
+            if(extra.containsKey(CHAR_ID)){
+                charIDVal = extra.getString(CHAR_ID);
+            }
+        }
+
         Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-
         getAllItems();
 
         if (findViewById(R.id.item_detail_container) != null) {
@@ -137,11 +149,13 @@ public class ItemListActivity extends AppCompatActivity {
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
                 } else {
+
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
                     intent.putExtra(CREATION_DATA, mCreationData);
-                    context.startActivity(intent);
+                    mParentActivity.startActivityForResult(intent, ITEM_SELECTION_REQ_CODE);
+                    //context.startActivityResult(intent);
                 }
             }
         };
@@ -221,6 +235,40 @@ public class ItemListActivity extends AppCompatActivity {
                 });
     }
 
+    private void purchaseItemforChar(String itemID){
+        MyApolloClient.getMyApolloClient().mutate(
+            PurchaseItemMutation.builder().itemID(itemID).id(charIDVal).build())
+               .enqueue(new ApolloCall.Callback<PurchaseItemMutation.Data>() {
+                   @Override
+                   public void onResponse(@Nonnull Response<PurchaseItemMutation.Data> response) {
+                       Log.d("Purchase_ITEM_RESPONSE", "COMPLETE");
+                       //TODO reload character data so that updated inventory is available
+                   }
+
+                   @Override
+                   public void onFailure(@Nonnull ApolloException e) {
+                       Log.d("Purchase_ITEM_RESPONSE", "ERROR");
+                   }
+               });
+    }
+
+    private void addItemtoCharacter(String itemID){
+        MyApolloClient.getMyApolloClient().mutate(
+                AddItemToCharMutation.builder().itemId(itemID).charID(charIDVal).build())
+                .enqueue(new ApolloCall.Callback<AddItemToCharMutation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<AddItemToCharMutation.Data> response) {
+                        Log.d("ADD_ITEM_RESPONSE", "COMPLETE");
+                        //TODO reload character data so that updated inventory is available
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.d("ADD_ITEM_RESPONSE", "ERROR");
+                    }
+                });
+    }
+
     //TODO implment other queries for specific item lookups
 
     //TODO create method(s) for sorting list by different parameters
@@ -228,5 +276,15 @@ public class ItemListActivity extends AppCompatActivity {
     //refresh recycler view
     public void refreshView(){
         mSimpleAdapter.notifyDataSetChanged();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == ITEM_SELECTION_REQ_CODE && resultCode == RESULT_OK){
+            String dataReturn = data.getStringExtra("result");
+            Log.d("DATA_RETURN_TEST", dataReturn);
+            purchaseItemforChar(dataReturn);
+        }
     }
 }

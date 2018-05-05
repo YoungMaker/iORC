@@ -52,6 +52,12 @@
      }
  }
 
+ mutation AddItemToCharMutation($itemId :ID!, $charID :ID!){
+   addItemToCharacter(itemid:$itemId, id:$charID){
+     ...CharacterData
+   }
+ }
+
  mutation DeleteCharacterMutation($id:ID!){
    deleteCharacter(id:$id)
  }
@@ -60,6 +66,12 @@
    updateCharacter(id:$id, name:$name, abilityPoints:$abil, raceid:$raceid, classid:$classid){
      ...CharacterData
    }
+ }
+
+ mutation PurchaseItemMutation($id:ID!, $itemID:ID!){
+    purchaseItem(id:$id, itemid:$itemID){
+      ...CharacterData
+    }
  }
 
 fragment CharacterData on Character{
@@ -143,6 +155,7 @@ fragment VersionInfoData on Version{
 }
 
 fragment ItemData on Item {
+  id
   name
   version
   description
