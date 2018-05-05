@@ -53,12 +53,13 @@ public class CharacterDetailFragment extends Fragment {
      * The dummy content this fragment is presenting.
      */
     private CharacterVersionQuery.GetCharactersByVersion mItem;
-    private VersionSheetQuery.GetVersionSheet versionData;
+    private VersionSheetData versionData;
     private HashMap<String, Double> charStatMap;
     private HashMap<String, String> acAddModTab = new HashMap<>();
     private HashMap<String, String> fortAddModTab = new HashMap<>();
     private HashMap<String, String> refAddModTab = new HashMap<>();
     private HashMap<String, String> willAddModTab = new HashMap<>();
+    private final String currencyType = "currency";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -186,6 +187,7 @@ public class CharacterDetailFragment extends Fragment {
         private View mCharacterWillTab;
 
         private TextView mCharacterWealth;
+        private TextView mCurrencyType;
 
 
         private List<View> mCharFortList = new ArrayList<>();
@@ -233,6 +235,7 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterRaceDesc = rootView.findViewById(R.id.character_race_desc);
             mCharacterClassDesc = rootView.findViewById(R.id.character_class_desc);
             mCharacterWealth = rootView.findViewById(R.id.money_amount);
+            mCurrencyType = rootView.findViewById(R.id.currency_type);
 
             //mCharacterAcAbil = mCharacterAcTab.findViewById(R.id.mod_abil);
             //mCharacterAcClass = mCharacterAcTab.findViewById(R.id.mod_class);
@@ -316,14 +319,32 @@ public class CharacterDetailFragment extends Fragment {
             }
 
             //find out why character data does not have money
-            //TODO and implement gold from version
+            //get currency from version
+            String currencyName = "NONE";
             mCharacterWealth.setText(String.valueOf(item.fragments().characterData().money()));
+            if(versionData != null){
+                for(int i = 0; i < versionData.infoList().size(); i++){
+                    VersionSheetData.InfoList info = versionData.infoList().get(i);
+                    if(info.type().equals(currencyType)){
+                        currencyName = info.value();
+                        //Log.d("CURRENCY_NAME", currencyName);
+                        break;
+                    }
+                    //Log.d("LOOPY_BOI", info.type());
+                }
+
+            }
+            mCurrencyType.setText(currencyName);
         }
 
         private String longToString(long longValue){
             return String.valueOf(longValue);
         }
 
+    }
+
+    public void loadVersionData(VersionSheetData versionSheetData){
+        versionData = versionSheetData;
     }
 }
 

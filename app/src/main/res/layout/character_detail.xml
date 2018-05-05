@@ -643,14 +643,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
-            android:text="@string/money_title"
-            />
+            android:text="@string/money_title" />
         <TextView
             style="?android:attr/textAppearanceListItemSmall"
             tools:context="edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment"
             android:id="@+id/money_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+            style="?android:attr/textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/currency_type"
+            android:paddingLeft="8sp" />
     </LinearLayout>
 
 </GridLayout>
