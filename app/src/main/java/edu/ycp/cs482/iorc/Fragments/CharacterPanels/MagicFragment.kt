@@ -3,20 +3,14 @@ package edu.ycp.cs482.iorc.Fragments.CharacterPanels
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.gson.Gson
-import edu.ycp.cs482.iorc.CharacterVersionQuery
 
 import edu.ycp.cs482.iorc.R
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
-import edu.ycp.cs482.iorc.ViewAdapters.MyItemRecyclerViewAdapter
 import edu.ycp.cs482.iorc.fragment.ItemData
 
 /**
@@ -30,7 +24,7 @@ import edu.ycp.cs482.iorc.fragment.ItemData
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
-class EquipmentFragment : Fragment() {
+class MagicFragment : Fragment() {
     private var mListener: OnListFragmentInteractionListener? = null
     private var mItemsList: MutableList<ItemData>? = null
 
@@ -39,14 +33,14 @@ class EquipmentFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         if (arguments != null) {
-            val invMap = arguments.getSerializable(ARG_INV_DATA) as java.util.HashMap<String, String>
+            val magicMap = arguments.getSerializable(ARG_INV_DATA) as java.util.HashMap<String, String>
             //Log.d("HELLO", invMap.ke)
-            Log.d("WEAPON_TESTING",""+invMap)
+            Log.d("MAGIC_TESTING",""+magicMap)
             mItemsList = mutableListOf()
-            invMap.keys.forEach {
-                val invItemData = (Gson()).fromJson(invMap.get(it), ItemData::class.java)
+            magicMap.keys.forEach {
+                val invItemData = (Gson()).fromJson(magicMap.get(it), ItemData::class.java)
                 if(invItemData != null){
-                    if(invItemData.type().toString() == "ITEM_WEAPON" || invItemData.type().toString() == "ITEM"){
+                    if(invItemData.type().toString() == "ITEM_SPELL"){
                         mItemsList!!.add(invItemData)
                     }
                 }
@@ -70,7 +64,6 @@ class EquipmentFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        Log.d("CONTEXT TEST",context.toString())
         if (context is OnListFragmentInteractionListener) {
             mListener = context
         } else {
@@ -100,10 +93,10 @@ class EquipmentFragment : Fragment() {
 
         private val ARG_INV_DATA = "ITEM_INV_DATA"
 
-        fun newInstance(invMap: HashMap<String, String>): EquipmentFragment {
-            val fragment = EquipmentFragment()
+        fun newInstance(magicMap: HashMap<String, String>): MagicFragment {
+            val fragment = MagicFragment()
             val args = Bundle()
-            args.putSerializable(ARG_INV_DATA, invMap)
+            args.putSerializable(ARG_INV_DATA, magicMap)
             fragment.arguments = args
             return fragment
         }

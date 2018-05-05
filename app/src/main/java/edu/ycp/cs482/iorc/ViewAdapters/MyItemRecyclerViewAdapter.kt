@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment.OnListFragmentInteractionListener
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment.OnListFragmentInteractionListener
+
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.R
 import edu.ycp.cs482.iorc.fragment.ItemData

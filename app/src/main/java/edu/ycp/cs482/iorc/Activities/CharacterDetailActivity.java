@@ -1,6 +1,5 @@
 package edu.ycp.cs482.iorc.Activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,13 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +20,6 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -34,9 +28,9 @@ import java.util.List;
 
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
 
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
@@ -277,7 +271,28 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_magic:
-                    MagicFragment fragment4 = new MagicFragment();
+                    //get key for character map
+                    String magicItemKey = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
+                    //get character map
+                    HashMap<String, String> characterMap =
+                            (HashMap<String, String>) getIntent()
+                                    .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
+                    //unwrap character data
+                    CharacterData charData = (new Gson()).fromJson(characterMap.get(magicItemKey),
+                            CharacterVersionQuery.GetCharactersByVersion.class).fragments().characterData();
+
+                    //get items from character inventory and put into map, key is just i for now
+                    //value is just name for now
+                    HashMap<String, String> magicMap = new HashMap<>();
+                    for (int i = 0; i < charData.inventory().size(); i++) {
+                        CharacterData.Inventory invItem = charData.inventory().get(i);
+                        ItemData itemDataobj = invItem.fragments().itemData();
+                        String magicData = new Gson().toJson(itemDataobj);
+                        magicMap.put(String.valueOf(i), magicData);
+                        Log.d("MAGIC_ITEM", magicData);
+                    }
+                    //inject character inventory into fragment
+                    MagicFragment fragment4 = MagicFragment.Companion.newInstance(magicMap);
                     android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
                     fragmentTransaction4.commit();
