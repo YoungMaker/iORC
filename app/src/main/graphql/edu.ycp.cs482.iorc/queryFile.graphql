@@ -52,6 +52,12 @@
      }
  }
 
+ mutation EquipItemMutation($charId: ID!, $itemId: ID!, $slotid: String!){
+    equipItem(id:$charId, itemid:$itemId, slotid:$slotid){
+        ...CharacterData
+    }
+ }
+
  mutation AddItemToCharMutation($itemId :ID!, $charID :ID!){
    addItemToCharacter(itemid:$itemId, id:$charID){
      ...CharacterData

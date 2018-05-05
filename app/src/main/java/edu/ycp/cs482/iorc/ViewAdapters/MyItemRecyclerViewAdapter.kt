@@ -50,6 +50,10 @@ class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private va
             holder.mView.setOnClickListener {
                 mListener?.onListFragmentInteraction(holder.mItem!!)
             }
+
+            holder.mView.setOnLongClickListener {
+                mListener?.onListFragmentLongpress(holder.mItem!!)!!
+            }
         }
     }
 

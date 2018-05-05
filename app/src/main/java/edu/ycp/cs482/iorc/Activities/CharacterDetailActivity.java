@@ -21,6 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
+import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,8 +36,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
 
+import edu.ycp.cs482.iorc.CreateCharacterMutation;
+import edu.ycp.cs482.iorc.EquipItemMutation;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
@@ -74,6 +83,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     public static final String CHAR_ID = "CHAR_ID";
 
     private HashMap<String, String> creationData;
+    private String char_id;
     private HashMap<String, String> defenseTableData = new HashMap<>();
 
 
@@ -153,6 +163,10 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         if (appBarLayout != null && mItem != null) {
             appBarLayout.setTitle(mItem.fragments().characterData().name());
 
+        }
+
+        if(mItem != null){
+            char_id = mItem.fragments().characterData().id();
         }
 
         // savedInstanceState is non-null when there is fragment state
@@ -321,6 +335,8 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         builder.show();
     }
 
+
+    //Equipment item clicked
     @Override
     public void onListFragmentInteraction(@NotNull ItemData item) {
         Log.d("ITEM_CLICKED", item.name());
@@ -329,6 +345,65 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         Intent intent = new Intent(this, ItemDetailActivity.class);
         intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
         startActivity(intent);
+    }
+    //Equipment item longpressed
+    @Override
+    public boolean onListFragmentLongpress(@NotNull final ItemData item) {
+        //TODO: Equip item
+        //Log.d("ITEM_LONGPRESSED", item.name());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Equip  " + item.name() + "?");
+        // Set up the buttons
+        builder.setPositiveButton("Equip", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO: handle equip items
+                equipItem(item);
+                Log.d("ITEM_EQUIP", item.name());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+        return true;
+    }
+
+    private void equipItem(@NonNull final ItemData item) {
+        MyApolloClient.getMyApolloClient().mutate(
+
+                EquipItemMutation.builder().charId(char_id).itemId(item.id()).slotid("head").build())
+                .enqueue(new ApolloCall.Callback<EquipItemMutation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<EquipItemMutation.Data> response) {
+                        //loadingView.setVisibility(View.GONE);
+                        HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                        //getIds(policy);
+                        //notify user the network response has been received.
+
+                        //loadingView.setVisibility(View.GONE);
+                       if(response.data() == null) {
+                           Log.d("ITEM_EQUIPPED", "Item " + item.id() + " has been equipped");
+                           Snackbar.make(findViewById(R.id.character_detail_container), "Item \"" + item.name() + "\" equipped" , Snackbar.LENGTH_LONG)
+                                   .setAction("Action", null).show();
+                       }
+                       else{
+                           Snackbar.make(findViewById(R.id.character_detail_container), "Item \"" + item.name() + "\" failed to equip" , Snackbar.LENGTH_LONG)
+                                   .setAction("Action", null).show();
+                       }
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Snackbar.make(findViewById(R.id.character_detail_container), "Error communicating with server" , Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
     }
 
     public void generateCharacterStats(){
@@ -559,4 +634,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         }
         Log.d("DEFENSES_FOUND", "Exiting");
     }
+
+
 }
