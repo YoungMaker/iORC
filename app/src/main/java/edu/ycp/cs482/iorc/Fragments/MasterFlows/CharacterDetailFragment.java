@@ -303,7 +303,6 @@ public class CharacterDetailFragment extends Fragment {
 
             CharacterData.Race Races = item.fragments().characterData().race();
             CharacterData.Classql Classes = item.fragments().characterData().classql();
-            //item.fragments().characterData().
             //Log.d("RACE", Races.fragments().raceData().name());
             if(Races != null){
                 //Log.d("RACE DATA", Races.toString());
@@ -316,8 +315,9 @@ public class CharacterDetailFragment extends Fragment {
                 //mCharacterClassDesc.setText(getResources().getString(R.string.pref_class_desc, Classes.fragments().classData().description()));
             }
 
-            //TODO find out why character data does not have money and implement gold from version
-            mCharacterWealth.setText(String.valueOf("32"));
+            //find out why character data does not have money
+            //TODO and implement gold from version
+            mCharacterWealth.setText(String.valueOf(item.fragments().characterData().money()));
         }
 
         private String longToString(long longValue){
