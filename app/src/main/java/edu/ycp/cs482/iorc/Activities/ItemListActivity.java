@@ -32,6 +32,8 @@ import edu.ycp.cs482.iorc.VersionItemsQuery;
 import edu.ycp.cs482.iorc.fragment.ItemData;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -223,6 +225,7 @@ public class ItemListActivity extends AppCompatActivity {
                                 for(int i = 0; i < numItems; i++){
                                     itemList.add(versionItems.get(i).fragments().itemData());
                                 }
+                                sortAlpahbetical();
                                 refreshView();
                             }
                         });
@@ -272,6 +275,76 @@ public class ItemListActivity extends AppCompatActivity {
     //TODO implment other queries for specific item lookups
 
     //TODO create method(s) for sorting list by different parameters
+    public void sortAlpahbetical(){
+        mergeSort(itemList);
+    }
+
+    public List<ItemData> mergeSort(List<ItemData> input){
+        List<ItemData> left = new ArrayList<>();
+        List<ItemData> right = new ArrayList<>();
+
+
+        if(input.size() <= 1){ //return the list if the list is 1 element (base case)
+            return input;
+        } else { //handle list with more than 1 element
+
+            //get the center index of our list
+            int mid = input.size()/2;
+
+            //add left half of our list to the left list
+            for(int i = 0; i < mid; i++){
+                left.add(input.get(i));
+            }
+            //same but with the right side to the right list
+            for(int i = mid; i < input.size(); i++){
+                right.add(input.get(i));
+            }
+
+            //recurse with the left and right lists
+            left = mergeSort(left);
+            right = mergeSort(right);
+
+            //put the left/right from lower level recursion into inputted list
+            mergeLists(left, right, input);
+
+        }
+        //return sorted list
+        return input;
+    }
+
+    //TODO modify sort to work for different categories (ex. weight, price, etc.)
+    public void mergeLists(List<ItemData> left, List<ItemData> right, List<ItemData> input){
+        //index holder for each list
+        int leftInd = 0, rightInd = 0, inputInd = 0, finishInd = 0;
+        List<ItemData> finish;
+
+        while(leftInd < left.size() && rightInd < right.size()){
+            String leftName = left.get(leftInd).name();
+            String rightName = right.get(rightInd).name();
+            if((leftName.compareTo(rightName)) < 0){
+                input.set(inputInd, left.get(leftInd));
+                leftInd++;
+            }else{
+                input.set(inputInd, right.get(rightInd));
+                rightInd++;
+            }
+            inputInd++;
+        }
+
+        if(leftInd >= left.size()){
+            finish = right;
+            finishInd = rightInd;
+        } else {
+            finish = left;
+            finishInd = leftInd;
+        }
+
+        for(int i = finishInd; i < finish.size(); i++){
+            input.set(inputInd, finish.get(i));
+            inputInd++;
+        }
+
+    }
 
     //refresh recycler view
     public void refreshView(){
