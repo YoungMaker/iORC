@@ -1,9 +1,11 @@
 package edu.ycp.cs482.iorc.Activities;
 
+import android.app.KeyguardManager;
 import android.graphics.Color;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -118,6 +120,9 @@ public class DiceWidgetActivity extends AppCompatActivity {
         rollButton.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v){
 
+                Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                assert vib != null;
+                vib.vibrate(200);
                 String curRoll = "Current Roll: ";
                 String prevRoll = "Previous Roll: ";
                 if(diceType != 0){
@@ -216,30 +221,39 @@ public class DiceWidgetActivity extends AppCompatActivity {
             float delta = acelVal - acelLast;
             shake = shake * 0.9f + delta;
 
-            if(shake > 12){
-                if(diceType != 0){
-                    // Vibrate for 400 milliseconds
-                    v.vibrate(300);
-                    if(diceOutput == ""){
-                        lastDiceOutput = diceOutput;
+            KeyguardManager myKM = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+            assert myKM != null;
+            boolean locked = myKM.inKeyguardRestrictedInputMode();
+            if(!locked){
+                if(shake > 15){
+                    if(diceType != 0){
+                        // Vibrate for 200 milliseconds
+                        assert v != null;
+                        v.vibrate(200);
+                        if(diceOutput == ""){
+                            lastDiceOutput = diceOutput;
+                        }
+                        else{
+                            lastDiceOutput = prevRoll + diceOutput;
+                        }
+                        rand = new Random();
+                        int die = rand.nextInt(diceType) + 1;
+                        String result = String.valueOf(die);
+                        diceOutput = "d" + diceType + ":  " + result;
+                        curDiceOutput = curRoll + diceOutput;
+                        textOut = findViewById(R.id.txtOutput);
+                        textOut.setText(curDiceOutput);
+                        lastOut = findViewById(R.id.lastOutput);
+                        lastOut.setText(lastDiceOutput);
                     }
                     else{
-                        lastDiceOutput = prevRoll + diceOutput;
+                        textOut = findViewById(R.id.txtOutput);
+                        textOut.setText("");
                     }
-                    rand = new Random();
-                    int die = rand.nextInt(diceType) + 1;
-                    String result = String.valueOf(die);
-                    diceOutput = "d" + diceType + ":  " + result;
-                    curDiceOutput = curRoll + diceOutput;
-                    textOut = findViewById(R.id.txtOutput);
-                    textOut.setText(curDiceOutput);
-                    lastOut = findViewById(R.id.lastOutput);
-                    lastOut.setText(lastDiceOutput);
                 }
-                else{
-                    textOut = findViewById(R.id.txtOutput);
-                    textOut.setText("");
-                }
+            }
+            else{
+                Log.d("TEST", "STILL POLLING");
             }
         }
 
