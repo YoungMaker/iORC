@@ -78,6 +78,7 @@ fragment CharacterData on Character{
   id
   name
   version
+  money
   abilityPoints{
     str
     int

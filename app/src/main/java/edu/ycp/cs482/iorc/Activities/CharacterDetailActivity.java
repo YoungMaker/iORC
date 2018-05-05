@@ -176,10 +176,12 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
                     getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
             arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
-            CharacterDetailFragment fragment = new CharacterDetailFragment();
-            fragment.setArguments(arguments);
+            CharacterDetailFragment detailFragment = new CharacterDetailFragment();
+            detailFragment.setArguments(arguments);
+            //if(versionData.fragments().versionSheetData() != null){
+            detailFragment.loadVersionData(versionData.fragments().versionSheetData());
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.character_detail_container, fragment)
+                    .add(R.id.character_detail_container, detailFragment)
                     .commit();
         }
     }
@@ -221,7 +223,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             switch (item.getItemId()) {
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
-                    arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+                    getIntent().getSerializableExtra(V_DATA);
                     Log.d("V_DATA", arguments.toString());
                     arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                             getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
@@ -229,10 +231,15 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
                             getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
                     arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
-                    CharacterDetailFragment fragment = new CharacterDetailFragment();
-                    fragment.setArguments(arguments);
+
+                    CharacterDetailFragment detailFragment = new CharacterDetailFragment();
+                    detailFragment.setArguments(arguments);
+                    //if(versionData.fragments().versionSheetData() != null){
+                    detailFragment.loadVersionData(versionData.fragments().versionSheetData());
+                    //}
+
                     getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.character_detail_container, fragment)
+                            .replace(R.id.character_detail_container, detailFragment)
                             .commit();
                     break;
 
