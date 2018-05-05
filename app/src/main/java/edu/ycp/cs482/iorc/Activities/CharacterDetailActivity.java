@@ -314,6 +314,8 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         builder.show();
     }
 
+
+    //Equipment item clicked
     @Override
     public void onListFragmentInteraction(@NotNull ItemData item) {
         Log.d("ITEM_CLICKED", item.name());
@@ -322,6 +324,32 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         Intent intent = new Intent(this, ItemDetailActivity.class);
         intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
         startActivity(intent);
+    }
+    //Equipment item longpressed
+    @Override
+    public boolean onListFragmentLongpress(@NotNull final ItemData item) {
+        //TODO: Equip item
+        //Log.d("ITEM_LONGPRESSED", item.name());
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Equip  " + item.name() + "?");
+        // Set up the buttons
+        builder.setPositiveButton("Equip", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO: handle equip items
+                Log.d("ITEM_EQUIP", item.name());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+        return true;
     }
 
     public void generateCharacterStats(){
@@ -552,4 +580,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         }
         Log.d("DEFENSES_FOUND", "Exiting");
     }
+
+
 }

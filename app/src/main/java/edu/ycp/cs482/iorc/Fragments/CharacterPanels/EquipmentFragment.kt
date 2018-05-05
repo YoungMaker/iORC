@@ -90,6 +90,7 @@ class EquipmentFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         fun onListFragmentInteraction(item: ItemData)
+        fun onListFragmentLongpress(item: ItemData): Boolean
     }
 
     companion object {
