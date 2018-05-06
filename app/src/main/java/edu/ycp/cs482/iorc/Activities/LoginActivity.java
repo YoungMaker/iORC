@@ -74,6 +74,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
+    private final String LOGOUT_BOOL = "LOGOUT_BOOL";
+
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -110,6 +112,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        final Bundle extra = getIntent().getExtras();
+
+        if(extra != null){ //if we have intent extras
+            if(extra.containsKey(LOGOUT_BOOL)){ //if we have logout bool
+               if(extra.getBoolean(LOGOUT_BOOL)){ //if its true
+                   logoutToken(); //logout
+               }
+            }
+        }
     }
 
     private void populateAutoComplete() {
