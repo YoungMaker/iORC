@@ -40,12 +40,14 @@ import com.apollographql.apollo.exception.ApolloException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.CreateAccountMutation;
 import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.LogoutMutation;
 import edu.ycp.cs482.iorc.R;
@@ -74,13 +76,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
-    private final String LOGOUT_BOOL = "LOGOUT_BOOL";
+    private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
+    private static final String CREATE_ACCOUNT = "CREATE_ACCOUNT";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mConfirmPasswordView;
+    private AutoCompleteTextView mUnameView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView mCreateAcctLink;
+    private boolean creatingAccount = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mConfirmPasswordView = (EditText) findViewById(R.id.confirm_password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -106,12 +114,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                if(creatingAccount){
+                    attemptCreateUser();
+                }else {
+                    attemptLogin();
+                }
             }
         });
 
+        mCreateAcctLink = findViewById(R.id.create_acct);
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mUnameView = findViewById(R.id.uname);
 
         final Bundle extra = getIntent().getExtras();
 
@@ -122,7 +136,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                    getIntent().removeExtra(LOGOUT_BOOL);
                }
             }
+            if(extra.containsKey(CREATE_ACCOUNT)){
+                if(extra.getBoolean(CREATE_ACCOUNT)){
+                    //TODO: setup for create account!
+                    setupForCreateAccount();
+                    Log.d("CREATE_ACCT", "Login intent set for create account");
+                    getIntent().removeExtra(CREATE_ACCOUNT);
+                }
+            }
         }
+
+        mCreateAcctLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!creatingAccount) {
+                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                    intent.putExtra(CREATE_ACCOUNT, true);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                    intent.putExtra(CREATE_ACCOUNT, false);
+                    startActivity(intent);
+                }
+            }
+        });
+    }
+
+    private void setupForCreateAccount(){
+        mUnameView.setVisibility(View.VISIBLE);
+        mConfirmPasswordView.setVisibility(View.VISIBLE);
+        mCreateAcctLink.setText(R.string.login_text);
+        creatingAccount = true;
     }
 
     private void populateAutoComplete() {
@@ -169,35 +213,129 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
+
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
+    private void attemptCreateUser() {
+//        if (mAuthTask != null) {
+//            return;
+//        }
+
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+        mUnameView.setError(null);
+
+        // Store values at the time of the login attempt.
+        final String email = mEmailView.getText().toString().toLowerCase();
+        final String password = mPasswordView.getText().toString();
+        final String confirm_password = mConfirmPasswordView.getText().toString();
+        final String uname = mUnameView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        String validPassword = isPasswordValid(password);
+        String validUname = isUsernameValid(uname);
+
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+                mEmailView.setError(getString(R.string.error_invalid_email));
+                focusView = mEmailView;
+                cancel = true;
+        }
+
+        if (TextUtils.isEmpty(uname)) {
+            mUnameView.setError(getString(R.string.error_field_required));
+            focusView = mUnameView;
+            cancel = true;
+        } else if (!validUname.equals("")) {
+            String text = getString(R.string.error_invalid_username, validUname);
+            mUnameView.setError(text);
+            focusView = mUnameView;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!validPassword.equals("")) {
+            String text = getString(R.string.error_invalid_password, validPassword);
+            mPasswordView.setError(text);
+            focusView = mPasswordView;
+            cancel = true;
+        } else if(!confirm_password.equals(password)){
+            String text = getString(R.string.error_invalid_password, "Passwords Must Match!");
+            mConfirmPasswordView.setError(text);
+            focusView = mConfirmPasswordView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            QueryControllerProvider.getInstance().getQueryController().createAccountMutation(email, password, uname)
+                    .enqueue(new ApolloCall.Callback<CreateAccountMutation.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<CreateAccountMutation.Data> response) {
+                            try {
+                                QueryControllerProvider.getInstance().getQueryController().parseCreateAccountMutation(response);
+                                //proceed();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        attemptLogin(); //now logs you in!
+                                    }
+                                });
+                            }catch (QueryException e){
+                                popInvalidError(e.getMessage());
+                            }
+                            Log.d("WORKED", "LOGGED IN");
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                            Log.d("LOGIN_FAILED", "communication error");
+                        }
+                    });
+        }
+    }
+
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
+//        if (mAuthTask != null) {
+//            return;
+//        }
 
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        final String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString().toLowerCase();
         final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
@@ -205,6 +343,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
         }
 
@@ -224,7 +367,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 QueryControllerProvider.getInstance().getQueryController().parseLoginQuery(getApplicationContext(), response);
                                 proceed();
                             }catch (AuthQueryException e){
-                                popInvalidError();
+                                popInvalidError(e.getMessage());
                             }
                             Log.d("WORKED", "LOGGED IN");
                         }
@@ -243,10 +386,49 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        //is handle on back end, should be handled on front as well???
-        return password.length() > 4;
+    private String isPasswordValid(String password) {
+            if ( password.length() < 8) {
+                return "Too Short!";
+            }
+            String upperCaseChars = "(.*[A-Z].*)";
+            if (!password.matches(upperCaseChars)) {
+                return "Does not contain uppercase or lowercase letters";
+            }
+            String lowerCaseChars = "(.*[a-z].*)";
+            if (!password.matches(lowerCaseChars)) {
+                return "Does not contain uppercase or lowercase letters";
+            }
+            String numbers = "(.*[0-9].*)";
+            if (!password.matches(numbers)) {
+                return "Must contain one digit 0-9 and a special character i.e: ~,!,@,#,$,%,^,&,*,?";
+            }
+            if(password.contains(" ")){
+                return "Cannot contain spaces!";
+            }
+            //FIXME: will not detect ` character as special. Dunno why
+            String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+            if (!password.matches(specialChars)) {
+                return "Must contain one digit 0-9 and a special character i.e: ~,!,@,#,$,%,^,&,*,?";
+            }
+            return "";
+    }
+
+    private String isUsernameValid(String password) {
+        if ( password.length() < 4) {
+            return "Too Short!";
+        }
+        if ( password.length() > 20) {
+            return "Too Long!";
+        }
+        if(password.contains(" ")){
+            return "Cannot contain spaces!";
+        }
+        //FIXME: will not detect ` character as special. Dunno why
+        String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+        if (password.matches(specialChars)) {
+            return "Cannot contain special characters!";
+        }
+        return "";
     }
 
     private void logoutToken(){
@@ -274,13 +456,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private void popInvalidError(){
+    private void popInvalidError(final String err){
         LoginActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
                 alertDialog.setTitle("Login Failed");
-                alertDialog.setMessage("Login attempt failed: Bad Credentials");
+                alertDialog.setMessage("Login attempt failed: " + err);
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

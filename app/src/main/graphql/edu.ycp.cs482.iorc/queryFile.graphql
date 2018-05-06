@@ -64,6 +64,12 @@
     }
  }
 
+ mutation CreateAccountMutation($uname:String!, $email:String!, $password:String!){
+    createUser(email:$email, name:$uname, password:$password){
+        ...UserData
+    }
+ }
+
  mutation LoginMutation($email: String!, $password: String!){
     loginUser(email:$email, password:$password){
         token
@@ -94,6 +100,13 @@
     purchaseItem(id:$id, itemid:$itemID, context:$context){
       ...CharacterData
     }
+ }
+
+ fragment UserData on User{
+    id
+    email
+    uname
+    authorityLevels
  }
 
 

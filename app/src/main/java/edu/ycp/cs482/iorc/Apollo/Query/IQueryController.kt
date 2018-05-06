@@ -30,6 +30,11 @@ interface IQueryController {
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseVersionQuery(version: String, context: Context, response: Response<VersionSheetQuery.Data>): QueryData?
 
+
+    fun createAccountMutation(email: String, password: String, uname: String): ApolloMutationCall<CreateAccountMutation.Data>?
+    @Throws(QueryException::class)
+    fun parseCreateAccountMutation(response: Response<CreateAccountMutation.Data>): QueryData?
+
     @Throws(AuthQueryException::class)
     fun versionRacesQuery(version:String, context:Context): ApolloQueryCall<RaceVersionQuery.Data>?
     @Throws(QueryException::class, AuthQueryException::class)

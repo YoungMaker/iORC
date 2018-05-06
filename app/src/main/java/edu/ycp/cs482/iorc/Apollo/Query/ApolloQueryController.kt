@@ -26,8 +26,31 @@ import edu.ycp.cs482.iorc.type.Context as ContextQL
 
 
 class ApolloQueryCntroller: IQueryController {
+
     //TODO: Re-enable HTTP caching
     private val PREFS_FILE = "iorctkfile"
+
+    override fun createAccountMutation(email: String, password: String, uname: String): ApolloMutationCall<CreateAccountMutation.Data>? {
+       return MyApolloClient.getMyApolloClient().mutate(
+               CreateAccountMutation.builder().email(email).password(password).uname(uname).build()
+       )
+    }
+
+    override fun parseCreateAccountMutation(response: Response<CreateAccountMutation.Data>): QueryData? {
+        if(response.data() == null || response.data()!!.createUser() == null){
+            if(!response.errors().isEmpty()){
+                var errStr = ""
+                for (error in response.errors()){
+                    errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+                }
+                throw QueryException(errStr) // throws query exception
+            }
+            throw QueryException("Invalid Response!")
+        }
+        else {
+            return QueryData(Gson().toJson(response.data()!!.createUser()), mapOf())
+        }
+    }
 
     override fun versionQuery(version: String, context: Context): ApolloQueryCall<VersionSheetQuery.Data>? {
         return MyApolloClient.getMyApolloClient().query(
@@ -35,7 +58,7 @@ class ApolloQueryCntroller: IQueryController {
     }
 
     override fun parseVersionQuery(version: String, context: Context, response: Response<VersionSheetQuery.Data>): QueryData? {
-        if(response.data() == null) {
+        if(response.data() == null || response.data()!!.versionSheet == null) {
             if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
             else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
                 throw AuthQueryException("Invalid Token")
@@ -54,7 +77,7 @@ class ApolloQueryCntroller: IQueryController {
 
     override fun logoutMutationParse(response: Response<LogoutMutation.Data>, context: Context): String? {
         val editor = context.getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit()
-        if(response.data() == null) {
+        if(response.data() == null || response.data()!!.logout() == null) {
             if(response.errors().isEmpty()){ throw  QueryException("Invalid Response!")}
             val err = response.errors()[0] //assumes we only have 1 error, which is true always but risky boi
             if(err.message()!!.contains("Invalid Token!")){
@@ -78,12 +101,16 @@ class ApolloQueryCntroller: IQueryController {
     override fun parseLoginQuery(context: Context, response: Response<LoginMutation.Data>){
         val editor = context.getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit()
 
-        if(response.data() == null){
-            var errStr = ""
-            for (error in response.errors()){
-                errStr += error.message() + ", "
+        if(response.data() == null || response.data()!!.loginUser().token() == ""){
+            if(!response.errors().isEmpty()) {
+                var errStr = ""
+                for (error in response.errors()) {
+                    errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+                }
+                throw AuthQueryException(errStr) // throws query exception
+            } else {
+                throw AuthQueryException("Invalid Response!")
             }
-            throw AuthQueryException(errStr) // throws query exception
         }else{
             //stores token in Shared Prefs
             val token =  response.data()!!.loginUser().token()
