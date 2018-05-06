@@ -41,7 +41,7 @@ interface IQueryController {
     fun parseRacesQuery(version:String, context:Context, response: Response<RaceVersionQuery.Data>): QueryData?
 
     @Throws(AuthQueryException::class)
-    fun versionClassesQuery(version: String, context: Context, response:Response<ClassVersionQuery.Data>): ApolloQueryCall<ClassVersionQuery.Data>?
+    fun versionClassesQuery(version: String, context: Context): ApolloQueryCall<ClassVersionQuery.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseClassesQuery(version: String, context: Context, response: Response<ClassVersionQuery.Data>):QueryData?
 }

@@ -144,7 +144,7 @@ class ApolloQueryCntroller: IQueryController {
     }
 
     override fun parseRacesQuery(version: String, context:Context, response: Response<RaceVersionQuery.Data>): QueryData?{
-        if(response.data() == null) {
+        if(response.data() == null || response.data()!!.racesByVersion == null) {
             if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
             else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
                 throw AuthQueryException("Invalid Token")
@@ -156,14 +156,14 @@ class ApolloQueryCntroller: IQueryController {
         return null
     }
 
-    override fun versionClassesQuery(version: String, context: Context, response:Response<ClassVersionQuery.Data>): ApolloQueryCall<ClassVersionQuery.Data>?{
+    override fun versionClassesQuery(version: String, context: Context): ApolloQueryCall<ClassVersionQuery.Data>?{
         return MyApolloClient.getMyApolloClient().query(
                 ClassVersionQuery.builder().version(version).context(getQueryContext(context)).build()
         )
     }
 
     override fun parseClassesQuery(version: String, context: Context, response: Response<ClassVersionQuery.Data>):QueryData?{
-        if(response.data() == null) {
+        if(response.data() == null || response.data()!!.classesByVersion == null) {
             if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
             else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
                 throw AuthQueryException("Invalid Token")
