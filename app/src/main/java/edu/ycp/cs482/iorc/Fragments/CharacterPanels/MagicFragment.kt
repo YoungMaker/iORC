@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.google.gson.Gson
 
 import edu.ycp.cs482.iorc.R
+import edu.ycp.cs482.iorc.ViewAdapters.MyMagicRecyclerViewAdapter
 import edu.ycp.cs482.iorc.fragment.ItemData
 
 /**
@@ -56,7 +57,7 @@ class MagicFragment : Fragment() {
         if (view is RecyclerView) {
             val context = view.getContext()
             //TODO: put data into view adapter
-            view.adapter = MyItemRecyclerViewAdapter(mItemsList, mListener)
+            view.adapter = MyMagicRecyclerViewAdapter(mItemsList, mListener)
         }
         return view
     }

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment.OnListFragmentInteractionListener
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment.OnListFragmentInteractionListener
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.R
 import edu.ycp.cs482.iorc.fragment.ItemData
@@ -17,7 +17,7 @@ import org.w3c.dom.Text
  * specified [OnListFragmentInteractionListener].
  * TODO: Replace the implementation with code for your data type.
  */
-class MyItemRecyclerViewAdapter(private val mValues: List<ItemData>?, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
+class MyMagicRecyclerViewAdapter(private val mValues: List<ItemData>?, private val mListener: OnListFragmentInteractionListener?) : RecyclerView.Adapter<MyMagicRecyclerViewAdapter.ViewHolder>() {
 
     private val MIN_CMP_FLOAT = 0.001
 
