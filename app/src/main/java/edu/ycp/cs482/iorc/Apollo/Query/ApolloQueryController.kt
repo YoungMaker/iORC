@@ -138,6 +138,43 @@ class ApolloQueryCntroller: IQueryController {
         }
     }
 
+    override fun versionRacesQuery(version:String, context:Context): ApolloQueryCall<RaceVersionQuery.Data>?{
+        return MyApolloClient.getMyApolloClient().query(
+                RaceVersionQuery.builder().version(version).context(getQueryContext(context)).build())
+    }
+
+    override fun parseRacesQuery(version: String, context:Context, response: Response<RaceVersionQuery.Data>): QueryData?{
+        if(response.data() == null) {
+            if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
+            else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
+                throw AuthQueryException("Invalid Token")
+            }
+        } else {
+            return QueryData(Gson().toJson(response.data()!!.racesByVersion),
+                    mapOf(Pair("version", version)))
+        }
+        return null
+    }
+
+    override fun versionClassesQuery(version: String, context: Context, response:Response<ClassVersionQuery.Data>): ApolloQueryCall<ClassVersionQuery.Data>?{
+        return MyApolloClient.getMyApolloClient().query(
+                ClassVersionQuery.builder().version(version).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseClassesQuery(version: String, context: Context, response: Response<ClassVersionQuery.Data>):QueryData?{
+        if(response.data() == null) {
+            if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
+            else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
+                throw AuthQueryException("Invalid Token")
+            }
+        } else {
+            return QueryData(Gson().toJson(response.data()!!.classesByVersion),
+                    mapOf(Pair("version", version)))
+        }
+        return null
+    }
+
     private fun getQueryContext(context: Context): ContextQL{
         val token = getToken(context) ?: throw AuthQueryException("No saved token!")
         return ContextQL.builder().token(token).build()

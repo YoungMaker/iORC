@@ -75,26 +75,15 @@ public class CharacterListActivity extends AppCompatActivity {
     private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
-    private static final String V_DATA = "VERSION_DATA";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
-    private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
     private List <CharacterData> characterResponses = new ArrayList<>();
     private List <CharacterUserQuery.GetUsersCharacter> characterDataResponse;
 
-    public static SkillVersionQuery.GetVersionSkills skillResponseData;
-    private ArrayList <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
     //FIXME: Store only QueryData in intents/savedinstancestate. Deserialize
-    private HashMap<String, String> characterDetailMap = new HashMap<>();
-    private static HashMap<String, String> skillDetailMap = new HashMap<>();
-    private HashMap<String, String> versionInfoMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
-    private VersionSheetQuery.GetVersionSheet versionData;
-
     private String abilGenExpression = "3d6";
-
-    private Map<String, String> inputs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +145,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
 
 
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane, versionInfoMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, mTwoPane);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -200,7 +189,7 @@ public class CharacterListActivity extends AppCompatActivity {
         }
     }
 
- //   test query
+ //   deprecated
 //    private void getIds(HttpCachePolicy.Policy policy){
 //        final View loadingView = findViewById(R.id.loadingPanel);
 //        MyApolloClient.getCharacterApolloClient().query(
@@ -304,7 +293,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private void processQueryData(QueryData queryData){
         final View loadingView = findViewById(R.id.loadingPanel);
         final String data = queryData.getGsonData();
-        Log.d("GSON_CHAR_DATA", data);
+        //Log.d("GSON_CHAR_DATA", data);
         CharacterListActivity.this.runOnUiThread(new Runnable(){
             @Override
             public void run(){
@@ -317,11 +306,7 @@ public class CharacterListActivity extends AppCompatActivity {
                     characterResponses.add(data.fragments().characterData());
                 }
 
-                /*for (data in response.data()!!.usersCharacters){
-
-                }*/
-
-                Log.d("RESPONSE_DATA", characterDataResponse.toString());
+                //Log.d("RESPONSE_DATA", characterDataResponse.toString());
                 refreshView();
                 loadingView.setVisibility(View.GONE);
             }
@@ -391,6 +376,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
 
     //TODO implement this with the edit character interface
+    //deprecated
     /*private void editCharacter(){
         MyApolloClient.getMyApolloClient().mutate(
             EditCharacterMutation.builder().id().name().abil().classid().raceid().build()).enqueue(new ApolloCall.Callback<EditCharacterMutation.Data>() {
@@ -439,31 +425,31 @@ public class CharacterListActivity extends AppCompatActivity {
 
         builder.show();
     }
-
-    public void getVersionInfo(HttpCachePolicy.Policy policy){
-        MyApolloClient.getVersionSheetApolloClient().query(
-                VersionSheetQuery.builder().version("4e").build()
-        )
-                .httpCachePolicy(policy)
-                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
-                        versionData = response.data().getVersionSheet();
-                        //Log.d("VERSION DATA", versionData.toString());
-                        CharacterListActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                versionInfoMap.put(V_DATA, (new Gson()).toJson(versionData));
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        Log.d("QUERY FAILED", "NO RESPONSE");
-                    }
-                });
-    }
+//Depricated
+//    public void getVersionInfo(HttpCachePolicy.Policy policy){
+//        MyApolloClient.getVersionSheetApolloClient().query(
+//                VersionSheetQuery.builder().version("4e").build()
+//        )
+//                .httpCachePolicy(policy)
+//                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
+//                    @Override
+//                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
+//                        versionData = response.data().getVersionSheet();
+//                        //Log.d("VERSION DATA", versionData.toString());
+//                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                versionInfoMap.put(V_DATA, (new Gson()).toJson(versionData));
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@Nonnull ApolloException e) {
+//                        Log.d("QUERY FAILED", "NO RESPONSE");
+//                    }
+//                });
+//    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(mSimpleAdapter);
@@ -503,19 +489,16 @@ public class CharacterListActivity extends AppCompatActivity {
 
         private final CharacterListActivity mParentActivity;
         private final List<CharacterData> mValues;;
-        private final HashMap<String, String> mMap;
-        //private final HashMap<String, String> mSkillMap;
-        private final HashMap<String, String> mVData;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CharacterVersionQuery.GetCharactersByVersion item = (CharacterVersionQuery.GetCharactersByVersion) view.getTag();
+                CharacterData item = (CharacterData) view.getTag();
 
                 //TODO bundle the queried character data and pass it on to the detail activity
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData().id());
+                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, serializeCharData(item));
 
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
@@ -535,9 +518,7 @@ public class CharacterListActivity extends AppCompatActivity {
                     //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
-                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData().id());
-                    intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
-                    intent.putExtra(V_DATA, mVData);
+                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, serializeCharData(item));
                     context.startActivity(intent);
                 }
             }
@@ -545,13 +526,16 @@ public class CharacterListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
                                       List<CharacterData> items,
-                                      HashMap<String, String> characterDetailMap, boolean twoPane,
-                                      HashMap<String, String> versionData) {
+                                      boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
-            mMap = characterDetailMap;
-            mVData = versionData;
+        }
+
+        //serialize data for the selected character
+        private String serializeCharData(CharacterData characterData){
+            String serializedData = new Gson().toJson(characterData);
+            return serializedData;
         }
 
         @Override

@@ -20,6 +20,7 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
@@ -39,6 +40,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryData;
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
 
 import edu.ycp.cs482.iorc.CreateCharacterMutation;
@@ -68,19 +73,16 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
-    private static final String V_DATA = "VERSION_DATA";
-    private CharacterVersionQuery.GetCharactersByVersion mItem;
+    //private CharacterVersionQuery.GetCharactersByVersion mItem;
     private CharacterData mCharacterData;
     private String CHARCTER_ID = "";
-    private VersionSheetQuery.GetVersionSheet versionData;
-    private HashMap<String, Double> charStatMap = new HashMap<>();
+    private VersionSheetData versionData;
+    private HashMap<String, Double> charStatMap;
     private List<VersionSheetData.Stat> skillList = new ArrayList<>();
     private HashMap<String, Double> skillValueMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
 
     //FIXME: Store only QueryData object in saved instance state/bundles
-    public static final String ITEM_ID = "item_id";
-    public static final String MAP_ID = "map_id";
     public static final String CHAR_ID = "CHAR_ID";
 
     private HashMap<String, String> creationData;
@@ -111,38 +113,22 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+
+
         Intent extra = getIntent();
 
-        //receive map from character list activity
-        if (extra.getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) != null&& extra
-                .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID) != null) {
-            //Log.d("CHAR_ARGUMENTS", getArguments().toString());
-            HashMap<String, String> charMap =(HashMap<String, String>)extra.
-                    getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
-            String charObj = "";
-            if(charMap != null){
-                //Log.d("CHAR_OBJ", charMap.get(bundle.getString(ARG_ITEM_ID)));
-                charObj = charMap.get(extra.getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-            }
-            mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
-            //Log.d("mItem CHECK: ", "" + mItem);
-        }
-
-        if(extra.getSerializableExtra(V_DATA) != null){
-            HashMap<String, String> vDataMap = (HashMap<String, String>)getIntent().getSerializableExtra(V_DATA);
-            if(vDataMap != null){
-                versionData = (new Gson()).fromJson(vDataMap
-                        .get(V_DATA), VersionSheetQuery.GetVersionSheet.class);
-            }
-        }
-
-        if(versionData != null){
-            generateCharacterStats();
+        //get characterdata from list
+        if(extra.getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) != null){
+            //get character data to be used in fragments
+            String serializedCharData = (String) extra
+                    .getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID);
+            mCharacterData = deserializeCharData(serializedCharData);
+            getVersionSheet();
         }
 
         //Display Character name on Toolbar
         Bundle char_Arguments = new Bundle();
-        char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
+        //char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
         char_Arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                 getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
         char_Arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
@@ -150,24 +136,19 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         CharacterDetailFragment char_Fragment = new CharacterDetailFragment();
         char_Fragment.setArguments(char_Arguments);
 
-        HashMap<String, String> charMap =(HashMap<String, String>)char_Arguments.getSerializable(CharacterDetailFragment.ARG_MAP_ID);
-        String charObj = "";
-        if(charMap != null){
-            charObj = charMap.get(char_Arguments.getString((CharacterDetailFragment.ARG_ITEM_ID)));
-        }
-        mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
-
-        //get character data to be used in fragments
-        mCharacterData = mItem.fragments().characterData();
+        //HashMap<String, String> charMap =(HashMap<String, String>)char_Arguments.getSerializable(CharacterDetailFragment.ARG_MAP_ID);
+        //give characterdata serializable here
+        //et item as characterdata object (just use mCharacterData instead)
+        //mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
 
         CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
-        if (appBarLayout != null && mItem != null) {
-            appBarLayout.setTitle(mItem.fragments().characterData().name());
+        if (appBarLayout != null && mCharacterData != null) {
+            appBarLayout.setTitle(mCharacterData.name());
 
         }
 
-        if(mItem != null){
-            char_id = mItem.fragments().characterData().id();
+        if(mCharacterData != null){
+            char_id = mCharacterData.id();
         }
 
         // savedInstanceState is non-null when there is fragment state
@@ -181,24 +162,23 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         //
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            Bundle arguments = new Bundle();
-            CHARCTER_ID = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
-            arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                    CHARCTER_ID);
-            arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
-            arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
-            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
-                    getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
-            arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
             CharacterDetailFragment detailFragment = new CharacterDetailFragment();
-            detailFragment.setArguments(arguments);
+            //detailFragment.setArguments(arguments);
             //if(versionData.fragments().versionSheetData() != null){
-            detailFragment.loadVersionData(versionData.fragments().versionSheetData());
+            if(versionData != null){
+                detailFragment.loadVersionData(versionData);
+            }
+
+            detailFragment.loadCharacterData(mCharacterData, charStatMap, defenseTableData);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.character_detail_container, detailFragment)
                     .commit();
         }
+    }
+
+    //deserialize character data
+    public CharacterData deserializeCharData(String serialData){
+        return new Gson().fromJson(serialData, CharacterData.class);
     }
 
     //Create the menu button on the toolbar
@@ -208,6 +188,65 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         return true;
     }
 
+    private void getVersionSheet(){
+        try{
+            QueryControllerProvider.getInstance().getQueryController().versionQuery(mCharacterData.version(), getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
+                            try {
+                                QueryData versionQueryData = QueryControllerProvider.getInstance()
+                                        .getQueryController()
+                                        .parseVersionQuery(mCharacterData.version(), getApplicationContext(), response);
+                                processVersionQueryData(versionQueryData);
+                            }catch(AuthQueryException e){
+                                Log.d("FAILED", "AUTH Query exception");
+                            }catch(QueryException e){
+                                Log.d("FAILED", "ERROR");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+
+                        }
+                    });
+        }catch(AuthQueryException e){
+            Log.d("FAILED", "Invalid token");
+        }
+    }
+
+    private void processVersionQueryData(QueryData versionQueryData){
+        final String data = versionQueryData.getGsonData();
+        CharacterDetailActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                VersionSheetQuery.GetVersionSheet versionQuery = new Gson().fromJson(data, VersionSheetQuery.GetVersionSheet.class);
+                versionData = versionQuery.fragments().versionSheetData();
+                if(versionData != null){
+                    generateCharacterStats();
+                }
+                refreshView();
+            }
+        });
+    }
+
+    private void refreshView(){
+
+        CharacterDetailFragment detailFragment = new CharacterDetailFragment();
+        //detailFragment.setArguments(arguments);
+        //if(versionData.fragments().versionSheetData() != null){
+        if(versionData != null){
+            detailFragment.loadVersionData(versionData);
+        }
+
+        detailFragment.loadCharacterData(mCharacterData, charStatMap, defenseTableData);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.character_detail_container, detailFragment)
+                .commit();
+        ViewGroup view = findViewById(R.id.character_detail_container);
+        view.refreshDrawableState();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -238,19 +277,14 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             switch (item.getItemId()) {
                 case R.id.action_sheet:
                     Bundle arguments = new Bundle();
-                    getIntent().getSerializableExtra(V_DATA);
-                    Log.d("V_DATA", arguments.toString());
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                            getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
-                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
-                            getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
-
+                    //getIntent().getSerializableExtra(V_DATA);
+                    //Log.d("V_DATA", arguments.toString());
                     CharacterDetailFragment detailFragment = new CharacterDetailFragment();
                     detailFragment.setArguments(arguments);
-                    //if(versionData.fragments().versionSheetData() != null){
-                    detailFragment.loadVersionData(versionData.fragments().versionSheetData());
+                    if(versionData != null) {
+                        detailFragment.loadVersionData(versionData);
+                    }
+                    detailFragment.loadCharacterData(mCharacterData, charStatMap, defenseTableData);
                     //}
 
                     getSupportFragmentManager().beginTransaction()
@@ -271,21 +305,11 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_equipment:
-                    //get key for character map
-                    String itemKey = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
-                    //get character map
-                    HashMap<String, String> charMap =
-                            (HashMap<String, String>) getIntent()
-                                    .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
-                    //unwrap character data
-                    CharacterData character = (new Gson()).fromJson(charMap.get(itemKey),
-                            CharacterVersionQuery.GetCharactersByVersion.class).fragments().characterData();
-
                     //get items from character inventory and put into map, key is just i for now
                     //value is just name for now
                     HashMap<String, String> invMap = new HashMap<>();
-                    for (int i = 0; i < character.inventory().size(); i++) {
-                        CharacterData.Inventory invItem = character.inventory().get(i);
+                    for (int i = 0; i < mCharacterData.inventory().size(); i++) {
+                        CharacterData.Inventory invItem = mCharacterData.inventory().get(i);
                         ItemData itemDataobj = invItem.fragments().itemData();
                         String itemData = new Gson().toJson(itemDataobj);
                         invMap.put(String.valueOf(i), itemData);
@@ -409,19 +433,19 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
     public void generateCharacterStats(){
         //TODO unspaghet
-
-        List<VersionSheetData.Stat> stats = versionData.fragments().versionSheetData().stats();
+        charStatMap = new HashMap<>();
+        List<VersionSheetData.Stat> stats = versionData.stats();
         List<String> abilityList = new ArrayList<>();
         List<String> modifierList = new ArrayList<>();
-        CharacterData charData = mItem.fragments().characterData();
+        CharacterData charData = mCharacterData;
         HashMap<String, VersionSheetData.Stat> statObjMap = new HashMap<>();
         List<String> defList = new ArrayList<>();
 
-        Log.d("VERSION_DATA", versionData.fragments().versionSheetData().stats().toString());
+        //Log.d("VERSION_DATA", versionData.stats().toString());
 
         CharacterData.Classql charClass = charData.classql();
         CharacterData.Race charRace = charData.race();
-        CharacterData.AbilityPoints abilityScores = mItem.fragments().characterData().abilityPoints();
+        CharacterData.AbilityPoints abilityScores = charData.abilityPoints();
 
         //loop through stats list and add to hashmap with the key being the name of the stat
         for(int i = 0; i < stats.size(); i++){

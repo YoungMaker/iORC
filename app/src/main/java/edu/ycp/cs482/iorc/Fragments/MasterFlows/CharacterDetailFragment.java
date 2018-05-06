@@ -52,7 +52,7 @@ public class CharacterDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private CharacterVersionQuery.GetCharactersByVersion mItem;
+    private CharacterData mItem;
     private VersionSheetData versionData;
     private HashMap<String, Double> charStatMap;
     private HashMap<String, String> acAddModTab = new HashMap<>();
@@ -74,7 +74,7 @@ public class CharacterDetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         //receive map from character list activity
-        if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_MAP_ID)) {
+        /*if (getArguments().containsKey(ARG_ITEM_ID) && getArguments().containsKey(ARG_MAP_ID)) {
             Bundle bundle = getArguments();
             //Log.d("CHAR_ARGUMENTS", getArguments().toString());
             HashMap<String, String> charMap =(HashMap<String, String>)bundle.getSerializable(ARG_MAP_ID);
@@ -83,11 +83,11 @@ public class CharacterDetailFragment extends Fragment {
                 //Log.d("CHAR_OBJ", charMap.get(bundle.getString(ARG_ITEM_ID)));
                 charObj = charMap.get(bundle.getString((ARG_ITEM_ID)));
             }
-            mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
+            //mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
             //Log.d("mItem CHECK: ", "" + mItem);
-        }
+        }*/
 
-        if(getArguments().containsKey(ARG_CHAR_STAT_DATA)){
+       /* if(getArguments().containsKey(ARG_CHAR_STAT_DATA)){
             charStatMap = (HashMap<String, Double>) getArguments().getSerializable(ARG_CHAR_STAT_DATA);
             //Log.d("KEY SET", charStatMap.keySet().toString());
         }
@@ -113,7 +113,7 @@ public class CharacterDetailFragment extends Fragment {
             willAddModTab.put("class", (defMap.get("will_class") != null) ? defMap.get("will_class") : "0");
             willAddModTab.put("feat", (defMap.get("will_feat") != null) ? defMap.get("will_feat") : "0");
             willAddModTab.put("enh", (defMap.get("will_enh") != null) ? defMap.get("will_enh") : "0");
-        }
+        }*/
 
         //Log.d("mItem CHECK: ", "Finished Loading Map");
     }
@@ -257,31 +257,34 @@ public class CharacterDetailFragment extends Fragment {
 
         }
 
-        private void updateCharView(CharacterVersionQuery.GetCharactersByVersion item) {
+        private void updateCharView(CharacterData item) {
             //TODO find better way to create and assign values for textviews
-            //convert the long values (of each ability score) to strings that can be shown as the character ability score values
-            mCharacterAbilStr.setText(String.valueOf(Math.round(charStatMap.get("str"))));
-            mCharacterAbilCon.setText(String.valueOf(Math.round(charStatMap.get("con"))));
-            mCharacterAbilDex.setText(String.valueOf(Math.round(charStatMap.get("dex"))));
-            mCharacterAbilInt.setText(String.valueOf(Math.round(charStatMap.get("int"))));
-            mCharacterAbilWis.setText(String.valueOf(Math.round(charStatMap.get("wis"))));
-            mCharacterAbilCha.setText(String.valueOf(Math.round(charStatMap.get("cha"))));
+            if (charStatMap != null) {
 
-            //abilmods
-            mCharacterAbilStrMod.setText(String.valueOf(Math.round(charStatMap.get("str_mod"))));
-            mCharacterAbilConMod.setText(String.valueOf(Math.round(charStatMap.get("con_mod"))));
-            mCharacterAbilDexMod.setText(String.valueOf(Math.round(charStatMap.get("dex_mod"))));
-            mCharacterAbilIntMod.setText(String.valueOf(Math.round(charStatMap.get("int_mod"))));
-            mCharacterAbilWisMod.setText(String.valueOf(Math.round(charStatMap.get("wis_mod"))));
-            mCharacterAbilChaMod.setText(String.valueOf(Math.round(charStatMap.get("cha_mod"))));
+                //convert the long values (of each ability score) to strings that can be shown as the character ability score values
+                mCharacterAbilStr.setText(String.valueOf(Math.round(charStatMap.get("str"))));
+                mCharacterAbilCon.setText(String.valueOf(Math.round(charStatMap.get("con"))));
+                mCharacterAbilDex.setText(String.valueOf(Math.round(charStatMap.get("dex"))));
+                mCharacterAbilInt.setText(String.valueOf(Math.round(charStatMap.get("int"))));
+                mCharacterAbilWis.setText(String.valueOf(Math.round(charStatMap.get("wis"))));
+                mCharacterAbilCha.setText(String.valueOf(Math.round(charStatMap.get("cha"))));
 
-            mCharacterDetailAC.setText(String.valueOf(Math.round(charStatMap.get("ac"))));
-            mCharacterDetailFort.setText(String.valueOf(Math.round(charStatMap.get("fort"))));
-            mCharacterDetailRef.setText(String.valueOf(Math.round(charStatMap.get("ref"))));
-            mCharacterDetailWill.setText(String.valueOf(Math.round(charStatMap.get("will"))));
-            mCharacterDetailHp.setText(String.valueOf(Math.round(charStatMap.get("hp"))));
-            mCharacterDetailSpd.setText(String.valueOf(Math.round(charStatMap.get("speed"))));
-            mCharacterDetailInitiative.setText(String.valueOf(Math.round(charStatMap.get("initiative"))));
+                //abilmods
+                mCharacterAbilStrMod.setText(String.valueOf(Math.round(charStatMap.get("str_mod"))));
+                mCharacterAbilConMod.setText(String.valueOf(Math.round(charStatMap.get("con_mod"))));
+                mCharacterAbilDexMod.setText(String.valueOf(Math.round(charStatMap.get("dex_mod"))));
+                mCharacterAbilIntMod.setText(String.valueOf(Math.round(charStatMap.get("int_mod"))));
+                mCharacterAbilWisMod.setText(String.valueOf(Math.round(charStatMap.get("wis_mod"))));
+                mCharacterAbilChaMod.setText(String.valueOf(Math.round(charStatMap.get("cha_mod"))));
+
+                mCharacterDetailAC.setText(String.valueOf(Math.round(charStatMap.get("ac"))));
+                mCharacterDetailFort.setText(String.valueOf(Math.round(charStatMap.get("fort"))));
+                mCharacterDetailRef.setText(String.valueOf(Math.round(charStatMap.get("ref"))));
+                mCharacterDetailWill.setText(String.valueOf(Math.round(charStatMap.get("will"))));
+                mCharacterDetailHp.setText(String.valueOf(Math.round(charStatMap.get("health points"))));
+                mCharacterDetailSpd.setText(String.valueOf(Math.round(charStatMap.get("speed"))));
+                mCharacterDetailInitiative.setText(String.valueOf(Math.round(charStatMap.get("initiative"))));
+            }
 
             //TODO read up on iterating through view IDS so I can get rid of this mess of variables
 //            mCharacterAcAbil.setText(String.valueOf(acAddModTab.get("abil")));
@@ -304,8 +307,8 @@ public class CharacterDetailFragment extends Fragment {
             mCharacterWillFeat.setText(String.valueOf(Math.round(Float.parseFloat(willAddModTab.get("feat")))));
             //mCharacterWillEnh.setText(String.valueOf(willAddModTab.get("enh")));
 
-            CharacterData.Race Races = item.fragments().characterData().race();
-            CharacterData.Classql Classes = item.fragments().characterData().classql();
+            CharacterData.Race Races = item.race();
+            CharacterData.Classql Classes = item.classql();
             //Log.d("RACE", Races.fragments().raceData().name());
             if(Races != null){
                 //Log.d("RACE DATA", Races.toString());
@@ -321,7 +324,7 @@ public class CharacterDetailFragment extends Fragment {
             //find out why character data does not have money
             //get currency from version
             String currencyName = "NONE";
-            mCharacterWealth.setText(String.valueOf(item.fragments().characterData().money()));
+            mCharacterWealth.setText(String.valueOf(item.money()));
             if(versionData != null){
                 for(int i = 0; i < versionData.infoList().size(); i++){
                     VersionSheetData.InfoList info = versionData.infoList().get(i);
@@ -344,7 +347,38 @@ public class CharacterDetailFragment extends Fragment {
     }
 
     public void loadVersionData(VersionSheetData versionSheetData){
+        Log.d("TEST", "loadVersionData: " + versionSheetData.toString());
         versionData = versionSheetData;
+    }
+
+    public void loadCharacterData(CharacterData characterData, HashMap<String, Double> statMap, HashMap<String, String> defMap){
+        Log.d("TEST", "loadCharacterData: " + characterData.toString());
+        mItem = characterData;
+        if(statMap != null){
+            charStatMap = statMap;
+            Log.d("STAT_MAP", statMap.toString());
+        }
+
+
+        acAddModTab.put("abil", (defMap.get("ac_abil") != null) ? defMap.get("ac_abil") : "0");
+        acAddModTab.put("class", (defMap.get("ac_class") != null) ? defMap.get("ac_class") : "0");
+        acAddModTab.put("feat", (defMap.get("ac_feat") != null) ? defMap.get("ac_feat") : "0");
+        acAddModTab.put("enh", (defMap.get("ac_enh") != null) ? defMap.get("ac_enh") : "0");
+
+        fortAddModTab.put("abil", (defMap.get("fort_abil") != null) ? defMap.get("fort_abil") : "0");
+        fortAddModTab.put("class", (defMap.get("fort_class") != null) ? defMap.get("fort_class") : "0");
+        fortAddModTab.put("feat", (defMap.get("fort_feat") != null) ? defMap.get("fort_feat") : "0");
+        fortAddModTab.put("enh", (defMap.get("fort_enh") != null) ? defMap.get("fort_enh") : "0");
+
+        refAddModTab.put("abil", (defMap.get("ref_abil") != null) ? defMap.get("ref_abil") : "0");
+        refAddModTab.put("class", (defMap.get("ref_class") != null) ? defMap.get("ref_class") : "0");
+        refAddModTab.put("feat", (defMap.get("ref_feat") != null) ? defMap.get("ref_feat") : "0");
+        refAddModTab.put("enh", (defMap.get("ref_enh") != null) ? defMap.get("ref_enh") : "0");
+
+        willAddModTab.put("abil", (defMap.get("will_abil") != null) ? defMap.get("will_abil") : "0");
+        willAddModTab.put("class", (defMap.get("will_class") != null) ? defMap.get("will_class") : "0");
+        willAddModTab.put("feat", (defMap.get("will_feat") != null) ? defMap.get("will_feat") : "0");
+        willAddModTab.put("enh", (defMap.get("will_enh") != null) ? defMap.get("will_enh") : "0");
     }
 }
 
