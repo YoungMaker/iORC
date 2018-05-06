@@ -6,8 +6,7 @@ package edu.ycp.cs482.iorc.Apollo.Query.Exception
 open class QueryException(message: String): Exception(message)
 
 class AuthQueryException(
-        message: String,
-        val userId: String) : QueryException(message)
+        message: String) : QueryException(message)
 
 class InvalidQueryInputException(message: String): QueryException(message)
 

@@ -26,7 +26,26 @@ import edu.ycp.cs482.iorc.type.Context as ContextQL
 
 
 class ApolloQueryCntroller: IQueryController {
+
     private val PREFS_FILE = "iorctkfile"
+
+    override fun versionQuery(version: String, context: Context): ApolloQueryCall<VersionSheetQuery.Data>? {
+        return MyApolloClient.getMyApolloClient().query(
+                VersionSheetQuery.builder().version(version).context(getQueryContext(context)).build())
+    }
+
+    override fun parseVersionQuery(version: String, context: Context, response: Response<VersionSheetQuery.Data>): QueryData? {
+        if(response.data() == null) {
+            if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
+            else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
+                throw AuthQueryException("Invalid Token")
+            }
+        } else {
+            return QueryData(Gson().toJson(response.data()!!.versionSheet),
+                    mapOf(Pair("version", version)))
+        }
+        return null
+    }
 
     override fun logoutMuation(context: Context): ApolloMutationCall<LogoutMutation.Data>? {
         return MyApolloClient.getMyApolloClient().mutate(
@@ -64,7 +83,7 @@ class ApolloQueryCntroller: IQueryController {
             for (error in response.errors()){
                 errStr += error.message() + ", "
             }
-            throw AuthQueryException(errStr, "") // throws query exception
+            throw AuthQueryException(errStr) // throws query exception
         }else{
             //stores token in Shared Prefs
             val token =  response.data()!!.loginUser().token()
@@ -74,26 +93,26 @@ class ApolloQueryCntroller: IQueryController {
         }
     }
 
-    override fun userCharactersQuery(userID: String, context: Context): ApolloQueryCall<CharacterUserQuery.Data>? {
+    override fun userCharactersQuery(context: Context): ApolloQueryCall<CharacterUserQuery.Data>? {
         return MyApolloClient.getMyApolloClient().query(
                 CharacterUserQuery.builder().context(getQueryContext(context)).build())
 
     }
 
-    override fun parseUserCharactersQuery(userID: String, context: Context, response: Response<CharacterUserQuery.Data>): QueryData?{
+    override fun parseUserCharactersQuery(context: Context, response: Response<CharacterUserQuery.Data>): QueryData?{
         if(response.data() == null){
             if(!response.errors().isEmpty()){
-                if(response.errors()[0].message()!!.contains("Invalid Token!")) { throw AuthQueryException("Invalid Token, or user banned", userID)}
+                if(response.errors()[0].message()!!.contains("Invalid Token!")) { throw AuthQueryException("Invalid Token, or user banned")}
                 else { throw QueryException("user does not exist or is banned")}
             }
             throw QueryException("Query returned nothing")
         } else {
-            return QueryData(Gson().toJson(response.data()!!.usersCharacters), mapOf(Pair("userID", userID)))
+            return QueryData(Gson().toJson(response.data()!!.usersCharacters), mapOf())
         }
     }
 
     private fun getQueryContext(context: Context): ContextQL{
-        val token = getToken(context) ?: throw AuthQueryException("No saved token!", "")
+        val token = getToken(context) ?: throw AuthQueryException("No saved token!")
         return ContextQL.builder().token(token).build()
     }
 

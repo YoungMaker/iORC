@@ -127,13 +127,13 @@ public class CharacterListActivity extends AppCompatActivity {
 
         //getVersionInfo(HttpCachePolicy.CACHE_FIRST);
 
-        QueryControllerProvider.getInstance().getQueryController().userCharactersQuery("doesn't matter", getApplicationContext())
+        QueryControllerProvider.getInstance().getQueryController().userCharactersQuery( getApplicationContext())
                 .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
                     private QueryData queryData;
                     @Override
                     public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
                         try{
-                            queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery("doesnt matter", getApplicationContext(), response);
+                            queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery(getApplicationContext(), response);
                             processQueryData(queryData);
                         }catch(AuthQueryException e) {
                             returnToLogin();
