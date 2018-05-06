@@ -324,7 +324,7 @@ public class CharacterDetailFragment extends Fragment {
             //find out why character data does not have money
             //get currency from version
             String currencyName = "NONE";
-            mCharacterWealth.setText(String.valueOf(item.money()));
+            mCharacterWealth.setText(getString(R.string.money_title, String.valueOf(item.money())));
             if(versionData != null){
                 for(int i = 0; i < versionData.infoList().size(); i++){
                     VersionSheetData.InfoList info = versionData.infoList().get(i);
