@@ -78,6 +78,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
     private static final String CREATE_ACCOUNT = "CREATE_ACCOUNT";
+    private static final String POP_ERROR = "ERR_POP";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -142,6 +143,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     setupForCreateAccount();
                     Log.d("CREATE_ACCT", "Login intent set for create account");
                     getIntent().removeExtra(CREATE_ACCOUNT);
+                }
+            }
+            if(extra.containsKey(POP_ERROR)){
+                if(extra.getBoolean(POP_ERROR)){
+                    popTokenError();
+                    getIntent().removeExtra(POP_ERROR);
                 }
             }
         }
@@ -474,6 +481,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+    }
+
+    private void popTokenError(){
+        AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+        alertDialog.setTitle("Session");
+        alertDialog.setMessage("Session has expired");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+        showProgress(false); //reset progress
     }
 
     private void popCommError(){

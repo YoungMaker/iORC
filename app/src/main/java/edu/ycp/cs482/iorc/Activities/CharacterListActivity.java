@@ -75,6 +75,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
+    private static final String POP_ERROR = "ERR_POP";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
@@ -236,20 +237,10 @@ public class CharacterListActivity extends AppCompatActivity {
 //    }
 
     private void returnToLogin(){
-        //TODO: set intent extra as flag to pop this in login screen
-//        AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
-//        alertDialog.setTitle("Authentication Failed");
-//        alertDialog.setMessage("Authentication failed: Invalid Token");
-//        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//        alertDialog.show();
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(POP_ERROR, true);
         startActivity(intent);
         finish();
     }

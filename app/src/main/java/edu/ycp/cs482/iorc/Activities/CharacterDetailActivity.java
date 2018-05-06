@@ -73,6 +73,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
+    private static final String POP_ERROR = "ERR_POP";
     //private CharacterVersionQuery.GetCharactersByVersion mItem;
     private CharacterData mCharacterData;
     private String CHARCTER_ID = "";
@@ -201,8 +202,9 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                                 processVersionQueryData(versionQueryData);
                             }catch(AuthQueryException e){
                                 Log.d("FAILED", "AUTH Query exception");
+                                returnToLogin(); //user authentication has expired, go back to login activity
                             }catch(QueryException e){
-                                Log.d("FAILED", "ERROR");
+                                Log.d("FAILED", e.getMessage());
                             }
                         }
 
@@ -213,7 +215,19 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     });
         }catch(AuthQueryException e){
             Log.d("FAILED", "Invalid token");
+            returnToLogin();
         }
+    }
+
+
+    private void returnToLogin(){
+        //TODO: set intent extra as flag to pop this in login screen
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(POP_ERROR, true);
+        startActivity(intent);
+        finish();
     }
 
     private void processVersionQueryData(QueryData versionQueryData){
