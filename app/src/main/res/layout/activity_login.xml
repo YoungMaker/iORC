@@ -97,7 +97,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:text="@string/create_acct"
-                android:textColor="#409bbf"
                 />
 
         </LinearLayout>

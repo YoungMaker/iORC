@@ -101,12 +101,16 @@ class ApolloQueryCntroller: IQueryController {
     override fun parseLoginQuery(context: Context, response: Response<LoginMutation.Data>){
         val editor = context.getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit()
 
-        if(response.data() == null){
-            var errStr = ""
-            for (error in response.errors()){
-                errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+        if(response.data() == null || response.data()!!.loginUser().token() == ""){
+            if(!response.errors().isEmpty()) {
+                var errStr = ""
+                for (error in response.errors()) {
+                    errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+                }
+                throw AuthQueryException(errStr) // throws query exception
+            } else {
+                throw AuthQueryException("Invalid Response!")
             }
-            throw AuthQueryException(errStr) // throws query exception
         }else{
             //stores token in Shared Prefs
             val token =  response.data()!!.loginUser().token()

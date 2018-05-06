@@ -307,6 +307,7 @@
     <string name="money_title">Currency:</string>
     <string name="logout">Logout</string>
     <string name="user_name">User Name</string>
-    <string name="create_acct"><a href="">Don\'t have an accont? Click here to make one!</a></string>
+    <string name="create_acct"><a href="">Don\'t have an Account? Click here to make one!</a></string>
+    <string name="login_text"><a href="">Already Have an Account? Click here to login!</a></string>
 
 </resources>

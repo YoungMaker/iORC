@@ -120,15 +120,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         mCreateAcctLink = findViewById(R.id.create_acct);
-        mCreateAcctLink.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), LoginActivity.class);
-                intent.putExtra(CREATE_ACCOUNT, true);
-                startActivity(intent);
-            }
-        });
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
         mUnameView = findViewById(R.id.uname);
@@ -151,10 +142,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             }
         }
+
+        mCreateAcctLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!creatingAccount) {
+                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                    intent.putExtra(CREATE_ACCOUNT, true);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                    intent.putExtra(CREATE_ACCOUNT, false);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     private void setupForCreateAccount(){
         mUnameView.setVisibility(View.VISIBLE);
+        mCreateAcctLink.setText(R.string.login_text);
         creatingAccount = true;
     }
 
@@ -218,7 +225,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        final String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString().toLowerCase();
         final String password = mPasswordView.getText().toString();
         final String uname = mUnameView.getText().toString();
 
@@ -295,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        final String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString().toLowerCase();
         final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
