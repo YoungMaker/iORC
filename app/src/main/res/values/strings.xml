@@ -305,5 +305,6 @@
     <string name="stats_title">Stats</string>
     <string name="ac_title">AC:</string>
     <string name="money_title">Currency:</string>
+    <string name="logout">Logout</string>
 
 </resources>
