@@ -29,9 +29,12 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryData;
 import edu.ycp.cs482.iorc.CharacterUserQuery;
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
 import edu.ycp.cs482.iorc.CreateCharacterMutation;
@@ -46,9 +49,11 @@ import edu.ycp.cs482.iorc.SkillVersionQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
 import edu.ycp.cs482.iorc.type.AbilityInput;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -86,6 +91,8 @@ public class CharacterListActivity extends AppCompatActivity {
 
     private String abilGenExpression = "3d6";
 
+    private Map<String, String> inputs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,19 +127,23 @@ public class CharacterListActivity extends AppCompatActivity {
 
         QueryControllerProvider.getInstance().getQueryController().userCharactersQuery("doesn't matter", getApplicationContext())
                 .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
+                    private QueryData queryData;
                     @Override
                     public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
                         try{
-                            QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery("doesnt matter", getApplicationContext(), response);
+                            queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery("doesnt matter", getApplicationContext(), response);
+                            processQueryData(queryData);
                         }catch(AuthQueryException e) {
-                            Log.d("THING", "thing");
+                            returnToLogin();
+                        }catch (QueryException e){
+                            popQueryError();
                         }
-
                         Log.d("WORKED", "got chars");
                     }
 
                     @Override
                     public void onFailure(@Nonnull ApolloException e) {
+                        popCommError();
                         Log.d("failed to get response", e.getMessage());
                     }
                 });
@@ -222,6 +233,79 @@ public class CharacterListActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    private void returnToLogin(){
+        AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
+        alertDialog.setTitle("Authentication Failed");
+        alertDialog.setMessage("Authentication failed: Invalid Token");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void popCommError(){
+        //TODO: Move to fcn
+        CharacterListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
+                alertDialog.setTitle("Get Characters Failed");
+                alertDialog.setMessage("Get characters attempt failed: Communication Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    private void popQueryError(){
+        //TODO: Move to fcn
+        CharacterListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
+                alertDialog.setTitle("Get Characters Failed");
+                alertDialog.setMessage("Get characters attempt failed: Query Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    private void processQueryData(QueryData queryData){
+        final View loadingView = findViewById(R.id.loadingPanel);
+        final String data = queryData.getGsonData();
+        Log.d("GSON_CHAR_DATA", data);
+        CharacterListActivity.this.runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+
+                Type listType = new TypeToken<ArrayList<CharacterVersionQuery.GetCharactersByVersion>>(){}.getType();
+                characterResponses = new Gson().fromJson(data, listType);
+                refreshView();
+                loadingView.setVisibility(View.GONE);
+            }
+        });
+        Log.d("RESPONSE_DATA", characterResponses.toString());
     }
 
     private void createCharacter(HashMap<String, String> creationData){
