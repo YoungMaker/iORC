@@ -72,6 +72,7 @@ public class CharacterListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
     private static final String V_DATA = "VERSION_DATA";
@@ -482,6 +483,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
             case R.id.login:
                 Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
+                loginIntent.putExtra(LOGOUT_BOOL, true);
                 startActivity(loginIntent);
                 break;
         }

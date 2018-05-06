@@ -118,7 +118,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         if(extra != null){ //if we have intent extras
             if(extra.containsKey(LOGOUT_BOOL)){ //if we have logout bool
                if(extra.getBoolean(LOGOUT_BOOL)){ //if its true
-                   logoutToken(); //logout
+                   logoutToken();//logout
+                   extra.remove(LOGOUT_BOOL);
                }
             }
         }
@@ -255,7 +256,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onResponse(@Nonnull Response<LogoutMutation.Data> response) {
                         try {
                             QueryControllerProvider.getInstance().getQueryController().logoutMutationParse(response, getApplicationContext());
-                        } catch (QueryException e) {
+                        }catch (AuthQueryException e){
+                            Log.e("LOGOUT_FAILED", "Failed to logout");
+                        }catch (QueryException e) {
                             Log.e("LOGOUT_FAILED", "Logout of user failed.");
                         }
                     }
