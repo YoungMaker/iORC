@@ -77,7 +77,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private CharacterData mCharacterData;
     private String CHARCTER_ID = "";
     private VersionSheetData versionData;
-    private HashMap<String, Double> charStatMap = new HashMap<>();
+    private HashMap<String, Double> charStatMap;
     private List<VersionSheetData.Stat> skillList = new ArrayList<>();
     private HashMap<String, Double> skillValueMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
@@ -151,11 +151,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 //            }
 //        }
 
-
-        if(versionData != null){
-            generateCharacterStats();
-        }
-
         //Display Character name on Toolbar
         Bundle char_Arguments = new Bundle();
         //char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
@@ -197,7 +192,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
-            Bundle arguments = new Bundle();
+            /*Bundle arguments = new Bundle();
             CHARCTER_ID = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
             arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
                     CHARCTER_ID);
@@ -205,11 +200,15 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
             arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
                     getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
-            arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
+            arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);*/
             CharacterDetailFragment detailFragment = new CharacterDetailFragment();
-            detailFragment.setArguments(arguments);
+            //detailFragment.setArguments(arguments);
             //if(versionData.fragments().versionSheetData() != null){
-            detailFragment.loadVersionData(versionData);
+            if(versionData != null){
+                detailFragment.loadVersionData(versionData);
+            }
+
+            detailFragment.loadCharacterData(mCharacterData, charStatMap, defenseTableData);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.character_detail_container, detailFragment)
                     .commit();
@@ -263,7 +262,10 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             public void run() {
                 VersionSheetQuery.GetVersionSheet versionQuery = new Gson().fromJson(data, VersionSheetQuery.GetVersionSheet.class);
                 versionData = versionQuery.fragments().versionSheetData();
-                refreshView();
+                if(versionData != null){
+                    generateCharacterStats();
+                }
+                //refreshView();
             }
         });
     }
@@ -313,8 +315,10 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
                     CharacterDetailFragment detailFragment = new CharacterDetailFragment();
                     detailFragment.setArguments(arguments);
-                    //if(versionData.fragments().versionSheetData() != null){
-                    detailFragment.loadVersionData(versionData);
+                    if(versionData != null) {
+                        detailFragment.loadVersionData(versionData);
+                    }
+                    detailFragment.loadCharacterData(mCharacterData, charStatMap, defenseTableData);
                     //}
 
                     getSupportFragmentManager().beginTransaction()
@@ -335,21 +339,11 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_equipment:
-                    //get key for character map
-                    String itemKey = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
-                    //get character map
-                    HashMap<String, String> charMap =
-                            (HashMap<String, String>) getIntent()
-                                    .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
-                    //unwrap character data
-                    CharacterData character = (new Gson()).fromJson(charMap.get(itemKey),
-                            CharacterVersionQuery.GetCharactersByVersion.class).fragments().characterData();
-
                     //get items from character inventory and put into map, key is just i for now
                     //value is just name for now
                     HashMap<String, String> invMap = new HashMap<>();
-                    for (int i = 0; i < character.inventory().size(); i++) {
-                        CharacterData.Inventory invItem = character.inventory().get(i);
+                    for (int i = 0; i < mCharacterData.inventory().size(); i++) {
+                        CharacterData.Inventory invItem = mCharacterData.inventory().get(i);
                         ItemData itemDataobj = invItem.fragments().itemData();
                         String itemData = new Gson().toJson(itemDataobj);
                         invMap.put(String.valueOf(i), itemData);
@@ -473,7 +467,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
     public void generateCharacterStats(){
         //TODO unspaghet
-
+        charStatMap = new HashMap<>();
         List<VersionSheetData.Stat> stats = versionData.stats();
         List<String> abilityList = new ArrayList<>();
         List<String> modifierList = new ArrayList<>();
