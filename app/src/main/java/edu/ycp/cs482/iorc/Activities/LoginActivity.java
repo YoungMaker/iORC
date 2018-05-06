@@ -44,8 +44,10 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
 import edu.ycp.cs482.iorc.LoginMutation;
+import edu.ycp.cs482.iorc.LogoutMutation;
 import edu.ycp.cs482.iorc.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -224,7 +226,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+        //this autogen logic should be ok for us
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
@@ -234,8 +236,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return password.length() > 4;
     }
 
+    private void logoutToken(){
+        QueryControllerProvider.getInstance().getQueryController().logoutMuation(getApplicationContext())
+                .enqueue(new ApolloCall.Callback<LogoutMutation.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<LogoutMutation.Data> response) {
+                        try {
+                            QueryControllerProvider.getInstance().getQueryController().logoutMutationParse(response, getApplicationContext());
+                        } catch (QueryException e) {
+                            Log.e("LOGOUT_FAILED", "Logout of user failed.");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.e("LOGOUT_FAILED", "Error communicating with server");
+                    }
+                });
+    }
+
     private void popInvalidError(){
-        //TODO: Move to fcn
         LoginActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

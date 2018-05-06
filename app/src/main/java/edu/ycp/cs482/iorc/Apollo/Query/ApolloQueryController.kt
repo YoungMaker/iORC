@@ -33,6 +33,7 @@ class ApolloQueryCntroller: IQueryController {
     }
 
     override fun logoutMutationParse(response: Response<LogoutMutation.Data>, context: Context): String? {
+        val editor = context.getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit()
         if(response.data() == null) {
             if(response.errors().isEmpty()){ throw  QueryException("Invalid Response!")}
             val err = response.errors()[0] //assumes we only have 1 error, which is true always but risky boi
@@ -42,6 +43,8 @@ class ApolloQueryCntroller: IQueryController {
                 throw QueryException(err.message()!!)
             }
         } else {
+            editor.clear() //clears current token from memory.
+            editor.apply()
             return response.data()!!.logout()
         }
     }
@@ -79,7 +82,8 @@ class ApolloQueryCntroller: IQueryController {
     override fun parseUserCharactersQuery(userID: String, context: Context, response: Response<CharacterUserQuery.Data>): QueryData?{
         if(response.data() == null){
             if(!response.errors().isEmpty()){
-                throw AuthQueryException("Invalid Token, or user banned", userID)
+                if(response.errors()[0].message()!!.contains("Invalid Token!")) { throw AuthQueryException("Invalid Token, or user banned", userID)}
+                else { throw QueryException("user does not exist or is banned")}
             }
             throw QueryException("Query returned nothing")
         } else {
