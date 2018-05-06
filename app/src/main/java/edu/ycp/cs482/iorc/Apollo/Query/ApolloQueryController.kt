@@ -10,9 +10,6 @@ import com.apollographql.apollo.exception.ApolloException
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException
-import edu.ycp.cs482.iorc.CreateCharacterMutation
-import edu.ycp.cs482.iorc.LoginMutation
-import edu.ycp.cs482.iorc.R
 import android.content.Context.MODE_PRIVATE
 import android.R.id.edit
 import android.content.Context
@@ -20,15 +17,34 @@ import android.content.SharedPreferences
 import com.apollographql.apollo.ApolloMutationCall
 import com.apollographql.apollo.ApolloQueryCall
 import com.google.gson.Gson
+import edu.ycp.cs482.iorc.*
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.ServerCommunicationError
-import edu.ycp.cs482.iorc.CharacterUserQuery
 import java.security.AuthProvider
 import edu.ycp.cs482.iorc.type.Context as ContextQL
 
 
 
 class ApolloQueryCntroller: IQueryController {
-      private val PREFS_FILE = "iorctkfile"
+    private val PREFS_FILE = "iorctkfile"
+
+    override fun logoutMuation(context: Context): ApolloMutationCall<LogoutMutation.Data>? {
+        return MyApolloClient.getMyApolloClient().mutate(
+                LogoutMutation.builder().context(getQueryContext(context)).build())
+    }
+
+    override fun logoutMutationParse(response: Response<LogoutMutation.Data>, context: Context): String? {
+        if(response.data() == null) {
+            if(response.errors().isEmpty()){ throw  QueryException("Invalid Response!")}
+            val err = response.errors()[0] //assumes we only have 1 error, which is true always but risky boi
+            if(err.message()!!.contains("Invalid Token!")){
+                throw QueryException("Invalid Token")
+            } else {
+                throw QueryException(err.message()!!)
+            }
+        } else {
+            return response.data()!!.logout()
+        }
+    }
 
     override fun loginQuery(email: String, password: String): ApolloMutationCall<LoginMutation.Data>? {
         return MyApolloClient.getMyApolloClient().mutate(

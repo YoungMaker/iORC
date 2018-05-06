@@ -70,6 +70,10 @@
     }
  }
 
+  mutation LogoutMutation($context: Context!){
+     logout(context:$context)
+  }
+
  mutation AddItemToCharMutation($itemId :ID!, $charID :ID!, $context: Context!){
    addItemToCharacter(itemid:$itemId, id:$charID, context:$context){
      ...CharacterData

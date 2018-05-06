@@ -8,14 +8,21 @@ import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException
 import edu.ycp.cs482.iorc.CharacterUserQuery
 import edu.ycp.cs482.iorc.LoginMutation
+import edu.ycp.cs482.iorc.LogoutMutation
 
 interface IQueryController {
-    //Query constructiors
+    //Query constructors
+    //FIXME: is actually mutation
     fun loginQuery(email: String, password: String): ApolloMutationCall<LoginMutation.Data>?
     @Throws(AuthQueryException::class)
     fun parseLoginQuery(context: Context, response: Response<LoginMutation.Data>)
 
+    fun logoutMuation(context: Context): ApolloMutationCall<LogoutMutation.Data>?
+    @Throws(QueryException::class)
+    fun logoutMutationParse(response: Response<LogoutMutation.Data>, context: Context): String?
+
     fun userCharactersQuery(userID:String, context: Context): ApolloQueryCall<CharacterUserQuery.Data>?
     @Throws(AuthQueryException::class)
     fun parseUserCharactersQuery(userID: String, context: Context, response: Response<CharacterUserQuery.Data>): QueryData?
+
 }
