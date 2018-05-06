@@ -47,6 +47,7 @@ import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.SkillVersionQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
+import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.type.AbilityInput;
 
 import java.lang.reflect.Type;
@@ -78,7 +79,8 @@ public class CharacterListActivity extends AppCompatActivity {
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
-    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
+    private List <CharacterData> characterResponses = new ArrayList<>();
+    private List <CharacterUserQuery.GetUsersCharacter> characterDataResponse;
 
     public static SkillVersionQuery.GetVersionSkills skillResponseData;
     private ArrayList <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
@@ -189,51 +191,51 @@ public class CharacterListActivity extends AppCompatActivity {
         }
     }
 
-    //test query
-    private void getIds(HttpCachePolicy.Policy policy){
-        final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getCharacterApolloClient().query(
-                //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
-                //Boii:    b9704025-b811-426b-af3a-461dd40866e3
-                CharacterVersionQuery.builder().version("4e").build())
-                .httpCachePolicy(policy)
-                .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
-
-                        characterResponseData = response.data().getCharactersByVersion();
-                        //Log.d("BEFORE UI THREAD","Line before new runnable");
-                        CharacterListActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //characterResponses.add(characterResponseData);
-                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
-                                //clear list of characters so that when the query is called for a list update duplicate characters do not appear
-                                characterResponses.clear();
-                                //add each character into map and list
-                                for(int i = 0; i < characterResponseData.size(); i++){
-                                    characterResponses.add(characterResponseData.get(i));
-                                    characterDetailMap.put(
-                                            characterResponseData.get(i).fragments().characterData().id(),
-                                            (new Gson()).toJson(characterResponseData.get(i)));
-                                }
-                                refreshView();
-                                loadingView.setVisibility(View.GONE);
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                        Log.e("ERROR: ", e.toString());
-                    }
-                });
-
-
-    }
+ //   test query
+//    private void getIds(HttpCachePolicy.Policy policy){
+//        final View loadingView = findViewById(R.id.loadingPanel);
+//        MyApolloClient.getCharacterApolloClient().query(
+//                //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
+//                //Boii:    b9704025-b811-426b-af3a-461dd40866e3
+//                CharacterVersionQuery.builder().version("4e").build())
+//                .httpCachePolicy(policy)
+//                .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
+//                    @Override
+//                    public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
+//
+//                        characterResponseData = response.data().getCharactersByVersion();
+//                        //Log.d("BEFORE UI THREAD","Line before new runnable");
+//                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                //characterResponses.add(characterResponseData);
+//                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+//                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+//                                //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+//                                characterResponses.clear();
+//                                //add each character into map and list
+//                                for(int i = 0; i < characterResponseData.size(); i++){
+//                                    characterResponses.add(characterResponseData.get(i));
+//                                    characterDetailMap.put(
+//                                            characterResponseData.get(i).fragments().characterData().id(),
+//                                            (new Gson()).toJson(characterResponseData.get(i)));
+//                                }
+//                                refreshView();
+//                                loadingView.setVisibility(View.GONE);
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@Nonnull ApolloException e) {
+//                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                                .setAction("Action", null).show();
+//                        Log.e("ERROR: ", e.toString());
+//                    }
+//                });
+//
+//
+//    }
 
     private void returnToLogin(){
         AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
@@ -299,13 +301,24 @@ public class CharacterListActivity extends AppCompatActivity {
             @Override
             public void run(){
 
-                Type listType = new TypeToken<ArrayList<CharacterVersionQuery.GetCharactersByVersion>>(){}.getType();
-                characterResponses = new Gson().fromJson(data, listType);
+                Type listType = new TypeToken<List<CharacterUserQuery.GetUsersCharacter>>(){}.getType();
+                characterDataResponse = new Gson().fromJson(data, listType);
+
+                for (int i = 0; i < characterDataResponse.size(); i++) {
+                    CharacterUserQuery.GetUsersCharacter data = characterDataResponse.get(i);
+                    characterResponses.add(data.fragments().characterData());
+                }
+
+                /*for (data in response.data()!!.usersCharacters){
+
+                }*/
+
+                Log.d("RESPONSE_DATA", characterDataResponse.toString());
                 refreshView();
                 loadingView.setVisibility(View.GONE);
             }
         });
-        Log.d("RESPONSE_DATA", characterResponses.toString());
+
     }
 
     private void createCharacter(HashMap<String, String> creationData){
@@ -330,7 +343,7 @@ public class CharacterListActivity extends AppCompatActivity {
                 Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
                 loadingView.setVisibility(View.GONE);
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
-                getIds(policy);
+                //getIds(policy);
                 //notify user the network response has been received.
                 Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -354,7 +367,7 @@ public class CharacterListActivity extends AppCompatActivity {
             public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
 
                 HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
-                getIds(policy);
+                //getIds(policy);
 
             }
 
@@ -480,7 +493,7 @@ public class CharacterListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;;
+        private final List<CharacterData> mValues;;
         private final HashMap<String, String> mMap;
         //private final HashMap<String, String> mSkillMap;
         private final HashMap<String, String> mVData;
@@ -522,7 +535,7 @@ public class CharacterListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
-                                      List<CharacterVersionQuery.GetCharactersByVersion> items,
+                                      List<CharacterData> items,
                                       HashMap<String, String> characterDetailMap, boolean twoPane,
                                       HashMap<String, String> versionData) {
             mValues = items;
@@ -542,7 +555,7 @@ public class CharacterListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //holder.mIdView.setText(mValues.get(position).characterData.id());
-            holder.mContentView.setText(mValues.get(position).fragments().characterData().name());
+            holder.mContentView.setText(mValues.get(position).name());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

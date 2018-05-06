@@ -14,6 +14,7 @@ import android.content.Context.MODE_PRIVATE
 import android.R.id.edit
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.apollographql.apollo.ApolloMutationCall
 import com.apollographql.apollo.ApolloQueryCall
 import com.google.gson.Gson
