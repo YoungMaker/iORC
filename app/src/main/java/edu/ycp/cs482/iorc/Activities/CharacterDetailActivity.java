@@ -78,6 +78,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private HashMap<String, Double> skillValueMap = new HashMap<>();
     private static final String CREATION_DATA = "CREATION_DATA";
 
+    //FIXME: Store only QueryData object in saved instance state/bundles
     public static final String ITEM_ID = "item_id";
     public static final String MAP_ID = "map_id";
     public static final String CHAR_ID = "CHAR_ID";

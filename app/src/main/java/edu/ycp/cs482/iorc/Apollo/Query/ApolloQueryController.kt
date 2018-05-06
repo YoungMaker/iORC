@@ -26,7 +26,7 @@ import edu.ycp.cs482.iorc.type.Context as ContextQL
 
 
 class ApolloQueryCntroller: IQueryController {
-
+    //TODO: Re-enable HTTP caching
     private val PREFS_FILE = "iorctkfile"
 
     override fun versionQuery(version: String, context: Context): ApolloQueryCall<VersionSheetQuery.Data>? {

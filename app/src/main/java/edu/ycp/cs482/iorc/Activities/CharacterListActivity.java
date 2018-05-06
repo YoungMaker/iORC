@@ -85,7 +85,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
     public static SkillVersionQuery.GetVersionSkills skillResponseData;
     private ArrayList <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
-
+    //FIXME: Store only QueryData in intents/savedinstancestate. Deserialize
     private HashMap<String, String> characterDetailMap = new HashMap<>();
     private static HashMap<String, String> skillDetailMap = new HashMap<>();
     private HashMap<String, String> versionInfoMap = new HashMap<>();
@@ -126,31 +126,9 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
-        //getVersionInfo(HttpCachePolicy.CACHE_FIRST);
 
-        QueryControllerProvider.getInstance().getQueryController().userCharactersQuery( getApplicationContext())
-                .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
-                    private QueryData queryData;
-                    @Override
-                    public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
-                        try{
-                            queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery(getApplicationContext(), response);
-                            processQueryData(queryData);
-                        }catch(AuthQueryException e) {
-                            returnToLogin();
-                        }catch (QueryException e){
-                            popQueryError();
-                        }
-                        Log.d("WORKED", "got chars");
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        popCommError();
-                        Log.d("failed to get response", e.getMessage());
-                    }
-                });
-
+        //get users characters
+        getChars();
 
 
         //check if character is being deleted
@@ -189,6 +167,36 @@ public class CharacterListActivity extends AppCompatActivity {
                 popInputDialog("Character Name:");
                 getIntent().removeExtra("SET_CHAR_NAME");
             }
+        }
+    }
+
+    private void getChars(){
+        try {
+            QueryControllerProvider.getInstance().getQueryController().userCharactersQuery( getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
+                        private QueryData queryData;
+                        @Override
+                        public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
+                            try{
+                                queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery(getApplicationContext(), response);
+                                processQueryData(queryData);
+                            }catch(AuthQueryException e) {
+                                returnToLogin();
+                            }catch (QueryException e){
+                                popQueryError();
+                            }
+                            Log.d("WORKED", "got chars");
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                            Log.d("failed to get response", e.getMessage());
+                        }
+                    });
+        } catch (AuthQueryException e) {
+            Log.d("TOKEN_GONE", "No token stored!");
+            returnToLogin();
         }
     }
 
@@ -239,16 +247,17 @@ public class CharacterListActivity extends AppCompatActivity {
 //    }
 
     private void returnToLogin(){
-        AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
-        alertDialog.setTitle("Authentication Failed");
-        alertDialog.setMessage("Authentication failed: Invalid Token");
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
+        //TODO: set intent extra as flag to pop this in login screen
+//        AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
+//        alertDialog.setTitle("Authentication Failed");
+//        alertDialog.setMessage("Authentication failed: Invalid Token");
+//        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//        alertDialog.show();
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -257,7 +266,6 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void popCommError(){
-        //TODO: Move to fcn
         CharacterListActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -276,7 +284,6 @@ public class CharacterListActivity extends AppCompatActivity {
     }
 
     private void popQueryError(){
-        //TODO: Move to fcn
         CharacterListActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {

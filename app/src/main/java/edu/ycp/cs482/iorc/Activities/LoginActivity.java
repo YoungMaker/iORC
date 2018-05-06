@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if(extra.containsKey(LOGOUT_BOOL)){ //if we have logout bool
                if(extra.getBoolean(LOGOUT_BOOL)){ //if its true
                    logoutToken();//logout
-                   extra.remove(LOGOUT_BOOL);
+                   getIntent().removeExtra(LOGOUT_BOOL);
                }
             }
         }
@@ -250,24 +250,28 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void logoutToken(){
-        QueryControllerProvider.getInstance().getQueryController().logoutMuation(getApplicationContext())
-                .enqueue(new ApolloCall.Callback<LogoutMutation.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<LogoutMutation.Data> response) {
-                        try {
-                            QueryControllerProvider.getInstance().getQueryController().logoutMutationParse(response, getApplicationContext());
-                        }catch (AuthQueryException e){
-                            Log.e("LOGOUT_FAILED", "Failed to logout");
-                        }catch (QueryException e) {
-                            Log.e("LOGOUT_FAILED", "Logout of user failed.");
+        try {
+            QueryControllerProvider.getInstance().getQueryController().logoutMuation(getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<LogoutMutation.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<LogoutMutation.Data> response) {
+                            try {
+                                QueryControllerProvider.getInstance().getQueryController().logoutMutationParse(response, getApplicationContext());
+                            }catch (AuthQueryException e){
+                                Log.e("LOGOUT_FAILED", "Failed to logout");
+                            }catch (QueryException e) {
+                                Log.e("LOGOUT_FAILED", "Logout of user failed.");
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        Log.e("LOGOUT_FAILED", "Error communicating with server");
-                    }
-                });
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            Log.e("LOGOUT_FAILED", "Error communicating with server");
+                        }
+                    });
+        } catch (AuthQueryException e) {
+            Log.d("LOGOUT_FAILED", "Failed to Logout");
+        }
     }
 
     private void popInvalidError(){
