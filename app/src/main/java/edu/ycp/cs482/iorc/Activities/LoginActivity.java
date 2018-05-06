@@ -40,6 +40,7 @@ import com.apollographql.apollo.exception.ApolloException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.annotation.Nonnull;
 
@@ -223,6 +224,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mUnameView.setError(null);
 
         // Store values at the time of the login attempt.
         final String email = mEmailView.getText().toString().toLowerCase();
@@ -232,23 +234,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+        String validPassword = isPasswordValid(password);
+        String validUname = isUsernameValid(uname);
 
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
+                mEmailView.setError(getString(R.string.error_invalid_email));
+                focusView = mEmailView;
+                cancel = true;
+        }
+
+        if (TextUtils.isEmpty(uname)) {
+            mUnameView.setError(getString(R.string.error_field_required));
+            focusView = mUnameView;
+            cancel = true;
+        } else if (!validUname.equals("")) {
+            String text = getString(R.string.error_invalid_username, validUname);
+            mUnameView.setError(text);
+            focusView = mUnameView;
             cancel = true;
         }
+
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!validPassword.equals("")) {
+            String text = getString(R.string.error_invalid_password, validPassword);
+            mPasswordView.setError(text);
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+
+
+
+
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -308,14 +333,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
-        // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
@@ -323,6 +340,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
             cancel = true;
         }
 
@@ -361,10 +383,49 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         return (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches());
     }
 
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        //is handle on back end, should be handled on front as well???
-        return password.length() > 4;
+    private String isPasswordValid(String password) {
+            if ( password.length() < 8) {
+                return "Too Short!";
+            }
+            String upperCaseChars = "(.*[A-Z].*)";
+            if (!password.matches(upperCaseChars)) {
+                return "Does not contain uppercase or lowercase letters";
+            }
+            String lowerCaseChars = "(.*[a-z].*)";
+            if (!password.matches(lowerCaseChars)) {
+                return "Does not contain uppercase or lowercase letters";
+            }
+            String numbers = "(.*[0-9].*)";
+            if (!password.matches(numbers)) {
+                return "Must contain one digit 0-9 and a special character i.e: ~,!,@,#,$,%,^,&,*,?";
+            }
+            if(password.contains(" ")){
+                return "Cannot contain spaces!";
+            }
+            //FIXME: will not detect ` character as special. Dunno why
+            String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+            if (!password.matches(specialChars)) {
+                return "Must contain one digit 0-9 and a special character i.e: ~,!,@,#,$,%,^,&,*,?";
+            }
+            return "";
+    }
+
+    private String isUsernameValid(String password) {
+        if ( password.length() < 4) {
+            return "Too Short!";
+        }
+        if ( password.length() > 20) {
+            return "Too Long!";
+        }
+        if(password.contains(" ")){
+            return "Cannot contain spaces!";
+        }
+        //FIXME: will not detect ` character as special. Dunno why
+        String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+        if (password.matches(specialChars)) {
+            return "Cannot contain special characters!";
+        }
+        return "";
     }
 
     private void logoutToken(){
