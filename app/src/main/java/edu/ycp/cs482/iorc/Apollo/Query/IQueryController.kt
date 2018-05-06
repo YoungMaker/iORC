@@ -4,12 +4,9 @@ import android.content.Context
 import com.apollographql.apollo.ApolloMutationCall
 import com.apollographql.apollo.ApolloQueryCall
 import com.apollographql.apollo.api.Response
+import edu.ycp.cs482.iorc.*
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException
-import edu.ycp.cs482.iorc.CharacterUserQuery
-import edu.ycp.cs482.iorc.LoginMutation
-import edu.ycp.cs482.iorc.LogoutMutation
-import edu.ycp.cs482.iorc.VersionSheetQuery
 
 interface IQueryController {
     //Query constructors
@@ -32,4 +29,14 @@ interface IQueryController {
     fun versionQuery(version: String, context: Context): ApolloQueryCall<VersionSheetQuery.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseVersionQuery(version: String, context: Context, response: Response<VersionSheetQuery.Data>): QueryData?
+
+    @Throws(AuthQueryException::class)
+    fun versionRacesQuery(version:String, context:Context): ApolloQueryCall<RaceVersionQuery.Data>?
+    @Throws(QueryException::class, AuthQueryException::class)
+    fun parseRacesQuery(version:String, context:Context, response: Response<RaceVersionQuery.Data>): QueryData?
+
+    @Throws(AuthQueryException::class)
+    fun versionClassesQuery(version: String, context: Context, response:Response<ClassVersionQuery.Data>): ApolloQueryCall<ClassVersionQuery.Data>?
+    @Throws(QueryException::class, AuthQueryException::class)
+    fun parseClassesQuery(version: String, context: Context, response: Response<ClassVersionQuery.Data>):QueryData?
 }
