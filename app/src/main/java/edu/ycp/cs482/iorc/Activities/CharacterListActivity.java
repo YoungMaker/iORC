@@ -30,6 +30,8 @@ import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.CharacterUserQuery;
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
 import edu.ycp.cs482.iorc.CreateCharacterMutation;
 import edu.ycp.cs482.iorc.DeleteCharacterMutation;
@@ -37,6 +39,7 @@ import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
 import edu.ycp.cs482.iorc.Apollo.RandAbilityGenerator;
+import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.SkillVersionQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
@@ -112,7 +115,23 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
-        getVersionInfo(HttpCachePolicy.CACHE_FIRST);
+        //getVersionInfo(HttpCachePolicy.CACHE_FIRST);
+
+        QueryControllerProvider.getInstance().getQueryController().userCharactersQuery("doesn't matter", getApplicationContext())
+                .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
+                    @Override
+                    public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
+                        QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery("doesnt matter", getApplicationContext(), response);
+                        Log.d("WORKED", "got chars");
+                    }
+
+                    @Override
+                    public void onFailure(@Nonnull ApolloException e) {
+                        Log.d("failed to get response", e.getMessage());
+                    }
+                });
+
+
 
         //check if character is being deleted
         if(extras != null && extras.getBoolean(DO_DELETE)){
@@ -123,7 +142,7 @@ public class CharacterListActivity extends AppCompatActivity {
         } else{
             //get character list if now character is being deleted
             HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
-            getIds(policy);
+            //getIds(policy);
         }
 
 

@@ -3,9 +3,12 @@ package edu.ycp.cs482.iorc.Activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -19,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -30,9 +34,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -156,8 +169,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -188,8 +201,25 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            QueryControllerProvider.getInstance().getQueryController().loginQuery(email, password)
+                    .enqueue(new ApolloCall.Callback<LoginMutation.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<LoginMutation.Data> response) {
+                            try {
+                                QueryControllerProvider.getInstance().getQueryController().parseLoginQuery(getApplicationContext(), response);
+                                proceed();
+                            }catch (AuthQueryException e){
+                                popInvalidError();
+                            }
+                            Log.d("WORKED", "LOGGED IN");
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                            Log.d("LOGIN_FAILED", "communication error");
+                        }
+                    });
         }
     }
 
@@ -202,6 +232,52 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         //TODO: Replace this with your own logic
         //is handle on back end, should be handled on front as well???
         return password.length() > 4;
+    }
+
+    private void popInvalidError(){
+        //TODO: Move to fcn
+        LoginActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                alertDialog.setTitle("Login Failed");
+                alertDialog.setMessage("Login attempt failed: Bad Credentials");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                showProgress(false); //reset
+            }
+        });
+
+    }
+
+    private void popCommError(){
+        //TODO: Move to fcn
+        LoginActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                alertDialog.setTitle("Login Failed");
+                alertDialog.setMessage("Login attempt failed: Communication Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+                showProgress(false); //resets view
+            }
+        });
+    }
+
+    private void proceed(){
+        Intent intent = new Intent(this, CharacterListActivity.class);
+        startActivity(intent);
     }
 
     /**
