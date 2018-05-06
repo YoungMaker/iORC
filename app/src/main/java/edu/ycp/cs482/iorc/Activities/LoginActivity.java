@@ -82,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private EditText mConfirmPasswordView;
     private AutoCompleteTextView mUnameView;
     private View mProgressView;
     private View mLoginFormView;
@@ -97,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mConfirmPasswordView = (EditText) findViewById(R.id.confirm_password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -162,6 +164,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void setupForCreateAccount(){
         mUnameView.setVisibility(View.VISIBLE);
+        mConfirmPasswordView.setVisibility(View.VISIBLE);
         mCreateAcctLink.setText(R.string.login_text);
         creatingAccount = true;
     }
@@ -229,6 +232,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         final String email = mEmailView.getText().toString().toLowerCase();
         final String password = mPasswordView.getText().toString();
+        final String confirm_password = mConfirmPasswordView.getText().toString();
         final String uname = mUnameView.getText().toString();
 
         boolean cancel = false;
@@ -267,13 +271,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.setError(text);
             focusView = mPasswordView;
             cancel = true;
+        } else if(!confirm_password.equals(password)){
+            String text = getString(R.string.error_invalid_password, "Passwords Must Match!");
+            mConfirmPasswordView.setError(text);
+            focusView = mConfirmPasswordView;
+            cancel = true;
         }
-
-
-
-
-
-
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
