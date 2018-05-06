@@ -306,5 +306,7 @@
     <string name="ac_title">AC:</string>
     <string name="money_title">Currency:</string>
     <string name="logout">Logout</string>
+    <string name="user_name">User Name</string>
+    <string name="create_acct"><a href="">Don\'t have an accont? Click here to make one!</a></string>
 
 </resources>

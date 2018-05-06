@@ -46,6 +46,7 @@ import javax.annotation.Nonnull;
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.CreateAccountMutation;
 import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.LogoutMutation;
 import edu.ycp.cs482.iorc.R;
@@ -74,13 +75,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mAuthTask = null;
 
-    private final String LOGOUT_BOOL = "LOGOUT_BOOL";
+    private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
+    private static final String CREATE_ACCOUNT = "CREATE_ACCOUNT";
 
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private AutoCompleteTextView mUnameView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView mCreateAcctLink;
+    private boolean creatingAccount = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +111,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                if(creatingAccount){
+                    attemptCreateUser();
+                }else {
+                    attemptLogin();
+                }
+            }
+        });
+
+        mCreateAcctLink = findViewById(R.id.create_acct);
+        mCreateAcctLink.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), LoginActivity.class);
+                intent.putExtra(CREATE_ACCOUNT, true);
+                startActivity(intent);
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mUnameView = findViewById(R.id.uname);
 
         final Bundle extra = getIntent().getExtras();
 
@@ -122,7 +142,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                    getIntent().removeExtra(LOGOUT_BOOL);
                }
             }
+            if(extra.containsKey(CREATE_ACCOUNT)){
+                if(extra.getBoolean(CREATE_ACCOUNT)){
+                    //TODO: setup for create account!
+                    setupForCreateAccount();
+                    Log.d("CREATE_ACCT", "Login intent set for create account");
+                    getIntent().removeExtra(CREATE_ACCOUNT);
+                }
+            }
         }
+    }
+
+    private void setupForCreateAccount(){
+        mUnameView.setVisibility(View.VISIBLE);
+        creatingAccount = true;
     }
 
     private void populateAutoComplete() {
@@ -169,15 +202,93 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
+
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
+    private void attemptCreateUser() {
+//        if (mAuthTask != null) {
+//            return;
+//        }
+
+        // Reset errors.
+        mEmailView.setError(null);
+        mPasswordView.setError(null);
+
+        // Store values at the time of the login attempt.
+        final String email = mEmailView.getText().toString();
+        final String password = mPasswordView.getText().toString();
+        final String uname = mUnameView.getText().toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid password, if the user entered one.
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (TextUtils.isEmpty(email)) {
+            mEmailView.setError(getString(R.string.error_field_required));
+            focusView = mEmailView;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            mEmailView.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true);
+            QueryControllerProvider.getInstance().getQueryController().createAccountMutation(email, password, uname)
+                    .enqueue(new ApolloCall.Callback<CreateAccountMutation.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<CreateAccountMutation.Data> response) {
+                            try {
+                                QueryControllerProvider.getInstance().getQueryController().parseCreateAccountMutation(response);
+                                //proceed();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        attemptLogin(); //now logs you in!
+                                    }
+                                });
+                            }catch (QueryException e){
+                                popInvalidError(e.getMessage());
+                            }
+                            Log.d("WORKED", "LOGGED IN");
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                            Log.d("LOGIN_FAILED", "communication error");
+                        }
+                    });
+        }
+    }
+
+
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
-            return;
-        }
+//        if (mAuthTask != null) {
+//            return;
+//        }
 
         // Reset errors.
         mEmailView.setError(null);
@@ -224,7 +335,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 QueryControllerProvider.getInstance().getQueryController().parseLoginQuery(getApplicationContext(), response);
                                 proceed();
                             }catch (AuthQueryException e){
-                                popInvalidError();
+                                popInvalidError(e.getMessage());
                             }
                             Log.d("WORKED", "LOGGED IN");
                         }
@@ -274,13 +385,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    private void popInvalidError(){
+    private void popInvalidError(final String err){
         LoginActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog alertDialog = new AlertDialog.Builder(LoginActivity.this).create();
                 alertDialog.setTitle("Login Failed");
-                alertDialog.setMessage("Login attempt failed: Bad Credentials");
+                alertDialog.setMessage("Login attempt failed: " + err);
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
