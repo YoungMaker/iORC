@@ -16,6 +16,6 @@ interface IQueryController {
     fun parseLoginQuery(context: Context, response: Response<LoginMutation.Data>)
 
     fun userCharactersQuery(userID:String, context: Context): ApolloQueryCall<CharacterUserQuery.Data>?
-    @Throws(QueryException::class, AuthQueryException::class)
+    @Throws(AuthQueryException::class)
     fun parseUserCharactersQuery(userID: String, context: Context, response: Response<CharacterUserQuery.Data>): QueryData?
 }

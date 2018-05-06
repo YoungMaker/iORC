@@ -30,6 +30,7 @@ import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
 
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
 import edu.ycp.cs482.iorc.CharacterUserQuery;
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
@@ -121,7 +122,12 @@ public class CharacterListActivity extends AppCompatActivity {
                 .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
-                        QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery("doesnt matter", getApplicationContext(), response);
+                        try{
+                            QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery("doesnt matter", getApplicationContext(), response);
+                        }catch(AuthQueryException e) {
+                            Log.d("THING", "thing");
+                        }
+
                         Log.d("WORKED", "got chars");
                     }
 
