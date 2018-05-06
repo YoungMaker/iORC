@@ -126,31 +126,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             getVersionSheet();
         }
 
-
-
-//        //receive map from character list activity
-//        if (extra.getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) != null&& extra
-//                .getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID) != null) {
-//            //Log.d("CHAR_ARGUMENTS", getArguments().toString());
-//            HashMap<String, String> charMap =(HashMap<String, String>)extra.
-//                    getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID);
-//            String charObj = "";
-//            if(charMap != null){
-//                //Log.d("CHAR_OBJ", charMap.get(bundle.getString(ARG_ITEM_ID)));
-//                charObj = charMap.get(extra.getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-//            }
-//            mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
-//            //Log.d("mItem CHECK: ", "" + mItem);
-//        }
-
-//        if(extra.getSerializableExtra(V_DATA) != null){
-//            HashMap<String, String> vDataMap = (HashMap<String, String>)getIntent().getSerializableExtra(V_DATA);
-//            if(vDataMap != null){
-//                versionData = (new Gson()).fromJson(vDataMap
-//                        .get(V_DATA), VersionSheetQuery.GetVersionSheet.class);
-//            }
-//        }
-
         //Display Character name on Toolbar
         Bundle char_Arguments = new Bundle();
         //char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
@@ -162,12 +137,8 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         char_Fragment.setArguments(char_Arguments);
 
         //HashMap<String, String> charMap =(HashMap<String, String>)char_Arguments.getSerializable(CharacterDetailFragment.ARG_MAP_ID);
-        //TODO give characterdata serializable here
-        String charObj = "";
-//        if(charMap != null){
-//            charObj = charMap.get(char_Arguments.getString((CharacterDetailFragment.ARG_ITEM_ID)));
-//        }
-        //TODO set item as characterdata object (just use mCharacterData instead)
+        //give characterdata serializable here
+        //et item as characterdata object (just use mCharacterData instead)
         //mItem = (new Gson()).fromJson(charObj, CharacterVersionQuery.GetCharactersByVersion.class);
 
         CollapsingToolbarLayout appBarLayout = findViewById(R.id.toolbar_layout);
@@ -191,16 +162,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         //
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
-            // using a fragment transaction.
-            /*Bundle arguments = new Bundle();
-            CHARCTER_ID = getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID);
-            arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                    CHARCTER_ID);
-            //arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
-            arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
-            arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
-                    getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
-            arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);*/
             CharacterDetailFragment detailFragment = new CharacterDetailFragment();
             //detailFragment.setArguments(arguments);
             //if(versionData.fragments().versionSheetData() != null){
@@ -265,12 +226,24 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                 if(versionData != null){
                     generateCharacterStats();
                 }
-                //refreshView();
+                refreshView();
             }
         });
     }
 
     private void refreshView(){
+
+        CharacterDetailFragment detailFragment = new CharacterDetailFragment();
+        //detailFragment.setArguments(arguments);
+        //if(versionData.fragments().versionSheetData() != null){
+        if(versionData != null){
+            detailFragment.loadVersionData(versionData);
+        }
+
+        detailFragment.loadCharacterData(mCharacterData, charStatMap, defenseTableData);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.character_detail_container, detailFragment)
+                .commit();
         ViewGroup view = findViewById(R.id.character_detail_container);
         view.refreshDrawableState();
     }
@@ -306,13 +279,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     Bundle arguments = new Bundle();
                     //getIntent().getSerializableExtra(V_DATA);
                     //Log.d("V_DATA", arguments.toString());
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID,
-                            getIntent().getStringExtra(CharacterDetailFragment.ARG_ITEM_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_CHAR_STAT_DATA, charStatMap);
-                    arguments.putSerializable(CharacterDetailFragment.ARG_MAP_ID,
-                            getIntent().getSerializableExtra(CharacterDetailFragment.ARG_MAP_ID));
-                    arguments.putSerializable(CharacterDetailFragment.ARG_DEF_TABLE_DATA, defenseTableData);
-
                     CharacterDetailFragment detailFragment = new CharacterDetailFragment();
                     detailFragment.setArguments(arguments);
                     if(versionData != null) {
