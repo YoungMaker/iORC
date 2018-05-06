@@ -281,7 +281,7 @@ public class CharacterDetailFragment extends Fragment {
                 mCharacterDetailFort.setText(String.valueOf(Math.round(charStatMap.get("fort"))));
                 mCharacterDetailRef.setText(String.valueOf(Math.round(charStatMap.get("ref"))));
                 mCharacterDetailWill.setText(String.valueOf(Math.round(charStatMap.get("will"))));
-                mCharacterDetailHp.setText(String.valueOf(Math.round(charStatMap.get("health points"))));
+                mCharacterDetailHp.setText(String.valueOf(Math.round(charStatMap.get("hp"))));
                 mCharacterDetailSpd.setText(String.valueOf(Math.round(charStatMap.get("speed"))));
                 mCharacterDetailInitiative.setText(String.valueOf(Math.round(charStatMap.get("initiative"))));
             }
@@ -323,7 +323,7 @@ public class CharacterDetailFragment extends Fragment {
 
             //find out why character data does not have money
             //get currency from version
-            String currencyName = "NONE";
+            String currencyName = getString(R.string.currency_placeholder);
             mCharacterWealth.setText(getString(R.string.money_title, String.valueOf(item.money())));
             if(versionData != null){
                 for(int i = 0; i < versionData.infoList().size(); i++){
