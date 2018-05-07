@@ -21,13 +21,20 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryData;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.AlignmentReligionDetailFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.RaceVersionQuery;
 import edu.ycp.cs482.iorc.VersionInfoTypeQuery;
 import edu.ycp.cs482.iorc.fragment.VersionInfoData;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,33 +135,77 @@ public class AlignmentReligionListActivity extends AppCompatActivity {
     }
 
 
-    //query for getting alignment/deities
-    private void getAlignDeity(String version, String type){
-        MyApolloClient.getMyApolloClient().query(
-                VersionInfoTypeQuery.builder().version(version).type(type).build())
-                .enqueue(new ApolloCall.Callback<VersionInfoTypeQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<VersionInfoTypeQuery.Data> response) {
-                        versionInfoData = response.data().getVersionInfoType();
-                        AlignmentReligionListActivity.this.runOnUiThread(new Runnable() {
-                             @Override
-                             public void run() {
+    private void getAlignDeity(final String version, final String type){
+        try{
+            QueryControllerProvider.getInstance().getQueryController().versionInfoTypeQuery(version, type, getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<VersionInfoTypeQuery.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<VersionInfoTypeQuery.Data> response) {
+                            try{
+                                QueryData queryData = QueryControllerProvider.getInstance().getQueryController().parseVersionInfoTypeQuery(version, type, response);
+                                processQueryData(queryData);
+                            }catch(AuthQueryException e){
+                                Log.d("AUTH_ERROR", "Invalid token during query parser");
+                            }catch(QueryException e){
+                                Log.d("QUERY_EXCEPTION", "Error during Query");
+                            }
+                        }
 
-                                 infoDataList.addAll(versionInfoData.fragments()
-                                         .versionInfoData().infoList());
-                                 Log.d("INFO_LIST", infoDataList.toString());
-                                 refreshView();
-                             }
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
 
-                        });
-                    }
+                        }
+                    });
+        }catch(AuthQueryException e){
+            Log.d("AUTH_ERROR", "Invalid token on query");
+        }
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-
-                    }
-                });
     }
+
+    private void processQueryData(QueryData queryData){
+        //final View loadingView = findViewById(R.id.loadingPanel);
+        final String data = queryData.getGsonData();
+        //Log.d("GSON_CHAR_DATA", data);
+        AlignmentReligionListActivity.this.runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                //Type listType = new TypeToken<List<VersionInfoTypeQuery.GetVersionInfoType>>(){}.getType();
+                versionInfoData = new Gson().fromJson(data, VersionInfoTypeQuery.GetVersionInfoType.class);
+
+                infoDataList.addAll(versionInfoData.fragments()
+                    .versionInfoData().infoList());
+//                                 Log.d("INFO_LIST", infoDataList.toString());
+                refreshView();
+            }
+        });
+    }
+//    //query for getting alignment/deities
+//    private void getAlignDeity(String version, String type){
+//        MyApolloClient.getMyApolloClient().query(
+//                VersionInfoTypeQuery.builder().version(version).type(type).build())
+//                .enqueue(new ApolloCall.Callback<VersionInfoTypeQuery.Data>() {
+//                    @Override
+//                    public void onResponse(@Nonnull Response<VersionInfoTypeQuery.Data> response) {
+//                        versionInfoData = response.data().getVersionInfoType();
+//                        AlignmentReligionListActivity.this.runOnUiThread(new Runnable() {
+//                             @Override
+//                             public void run() {
+//
+//                                 infoDataList.addAll(versionInfoData.fragments()
+//                                         .versionInfoData().infoList());
+//                                 Log.d("INFO_LIST", infoDataList.toString());
+//                                 refreshView();
+//                             }
+//
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@Nonnull ApolloException e) {
+//
+//                    }
+//                });
+//    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(mSimpleAdapter);

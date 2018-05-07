@@ -9,10 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ClassRaceDetailFragment;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.fragment.ClassData;
+import edu.ycp.cs482.iorc.fragment.RaceData;
 
 /**
  * An activity representing a single ClassRace detail screen. This
@@ -28,6 +32,8 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
     private String ARG_EXTRA_NAME = "RACE_SWITCH";
     private String ARG_FRAG_BOOL = "SHOW_RACE";
     private static final String CREATION_DATA = "CREATION_DATA";
+    private RaceData raceData;
+    private ClassData classData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +44,14 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
         if(extra != null){
             if(extra.getBoolean(ARG_BOOL_KEY)){
                 showRace = true;
+                raceData = new Gson()
+                        .fromJson(extra.getString(ClassRaceDetailFragment.ARG_RACE), RaceData.class);
+            }else{
+                showRace = false;
+                classData = new Gson()
+                        .fromJson(extra.getString(ClassRaceDetailFragment.ARG_CLASS), ClassData.class);
             }
+
         }else {
             showRace = false;
         }
@@ -52,16 +65,14 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //handle selection of class/race being made
                 if(!showRace){
-                    String classid = (String) extra.get(ClassRaceDetailFragment.ARG_CLASS_MAP_ID);
-                    creationData.put("CLASS ID", classid);
+                    creationData.put("CLASS ID", classData.id());
                     Intent intent = new Intent(ClassRaceDetailActivity.this, ClassRaceListActivity.class);
                     intent.putExtra(ARG_EXTRA_NAME, true);
                     intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
 
                 } else if(showRace){
-                    String raceid = (String) extra.get(ClassRaceDetailFragment.ARG_RACE_MAP_ID);
-                    creationData.put("RACE ID", raceid);
+                    creationData.put("RACE ID", raceData.id());
                     Intent intent = new Intent(ClassRaceDetailActivity.this, AlignmentReligionListActivity.class);
                     intent.putExtra(ClassRaceDetailFragment.CREATION_DATA, creationData);
                     startActivity(intent);
@@ -89,18 +100,21 @@ public class ClassRaceDetailActivity extends AppCompatActivity {
             // using a fragment transaction.
             Bundle arguments = new Bundle();
             //arguments.putSerializable(ClassRaceDetailFragment.CREATION_DATA, getIntent().getSerializableExtra(ClassRaceDetailFragment.CREATION_DATA));
+            ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
             arguments.putString(ClassRaceDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(ClassRaceDetailFragment.ARG_ITEM_ID));
             if(showRace){
                 arguments.putBoolean(ARG_FRAG_BOOL, true);
                 arguments.putString(ClassRaceDetailFragment.ARG_RACE_MAP_ID, getIntent().getStringExtra(ClassRaceDetailFragment.ARG_RACE_MAP_ID));
                 arguments.putSerializable(ClassRaceDetailFragment.ARG_RACE_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_RACE_MAP));
+                fragment.loadRaces(raceData);
             }else {
                 arguments.putBoolean(ARG_FRAG_BOOL, false);
                 arguments.putString(ClassRaceDetailFragment.ARG_CLASS_MAP_ID, getIntent().getStringExtra(ClassRaceDetailFragment.ARG_CLASS_MAP_ID));
                 arguments.putSerializable(ClassRaceDetailFragment.ARG_CLASS_MAP, getIntent().getSerializableExtra(ClassRaceDetailFragment.ARG_CLASS_MAP));
+                fragment.loadClasses(classData);
             }
-            ClassRaceDetailFragment fragment = new ClassRaceDetailFragment();
+
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.classrace_detail_container, fragment)

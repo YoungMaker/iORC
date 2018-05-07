@@ -171,7 +171,7 @@ class ApolloQueryCntroller: IQueryController {
     }
 
     override fun parseRacesQuery(version: String, context:Context, response: Response<RaceVersionQuery.Data>): QueryData?{
-        if(response.data() == null) {
+        if(response.data() == null || response.data()!!.racesByVersion == null) {
             if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
             else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
                 throw AuthQueryException("Invalid Token")
@@ -183,20 +183,39 @@ class ApolloQueryCntroller: IQueryController {
         return null
     }
 
-    override fun versionClassesQuery(version: String, context: Context, response:Response<ClassVersionQuery.Data>): ApolloQueryCall<ClassVersionQuery.Data>?{
+    override fun versionClassesQuery(version: String, context: Context): ApolloQueryCall<ClassVersionQuery.Data>?{
         return MyApolloClient.getMyApolloClient().query(
                 ClassVersionQuery.builder().version(version).context(getQueryContext(context)).build()
         )
     }
 
     override fun parseClassesQuery(version: String, context: Context, response: Response<ClassVersionQuery.Data>):QueryData?{
-        if(response.data() == null) {
+        if(response.data() == null || response.data()!!.classesByVersion == null) {
             if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
             else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
                 throw AuthQueryException("Invalid Token")
             }
         } else {
             return QueryData(Gson().toJson(response.data()!!.classesByVersion),
+                    mapOf(Pair("version", version)))
+        }
+        return null
+    }
+
+    override fun versionInfoTypeQuery(version: String, type: String, context: Context): ApolloQueryCall<VersionInfoTypeQuery.Data>? {
+        return MyApolloClient.getMyApolloClient().query(
+                VersionInfoTypeQuery.builder().version(version).type(type).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseVersionInfoTypeQuery(version: String, type: String, response: Response<VersionInfoTypeQuery.Data>): QueryData? {
+        if(response.data() == null || response.data()!!.versionInfoType == null) {
+            if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
+            else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
+                throw AuthQueryException("Invalid Token")
+            }
+        } else {
+            return QueryData(Gson().toJson(response.data()!!.versionInfoType),
                     mapOf(Pair("version", version)))
         }
         return null
