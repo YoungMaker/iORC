@@ -175,6 +175,25 @@ class ApolloQueryCntroller: IQueryController {
         return null
     }
 
+    override fun versionInfoTypeQuery(version: String, type: String, context: Context): ApolloQueryCall<VersionInfoTypeQuery.Data>? {
+        return MyApolloClient.getMyApolloClient().query(
+                VersionInfoTypeQuery.builder().version(version).type(type).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseVersionInfoTypeQuery(version: String, type: String, response: Response<VersionInfoTypeQuery.Data>): QueryData? {
+        if(response.data() == null || response.data()!!.versionInfoType == null) {
+            if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
+            else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
+                throw AuthQueryException("Invalid Token")
+            }
+        } else {
+            return QueryData(Gson().toJson(response.data()!!.versionInfoType),
+                    mapOf(Pair("version", version)))
+        }
+        return null
+    }
+
     private fun getQueryContext(context: Context): ContextQL{
         val token = getToken(context) ?: throw AuthQueryException("No saved token!")
         return ContextQL.builder().token(token).build()
