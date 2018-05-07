@@ -1,71 +1,134 @@
 
- query IdQuery($id: ID!) {
- 	getCharacterById(id : $id ) {
+ query IdQuery($id: ID!, $context: Context!) {
+ 	getCharacterById(id : $id, context:$context) {
     ... CharacterData
    }
  }
 
- query VersionItemsQuery($version: String!){
-   getVersionItems(version: $version){
+query UserDataQuery($email: String, $context:Context!){
+  getUserInfo(email:$email, context:$context){
+    ...UserData
+  }
+}
+ query VersionItemsQuery($version: String!,  $context: Context!){
+   getVersionItems(version: $version, context:$context){
      ...ItemData
    }
  }
 
- query VersionSheetQuery($version: String!){
-     getVersionSheet(version : $version){
+ query VersionItemsByType($type:ObjType!, $version:String!, $context:Context!){
+    getVersionItemType(type:$type, version:$version, context:$context){
+        ...ItemData
+    }
+ }
+
+ query VersionSheetQuery($version: String!, $context: Context!){
+     getVersionSheet(version : $version, context:$context){
          ...VersionSheetData
      }
   }
 
- query CharacterVersionQuery($version :String!){
-   getCharactersByVersion(version:$version){
+ query CharacterVersionQuery($version :String!, $context: Context!){
+   getCharactersByVersion(version:$version, context:$context){
      ...CharacterData
    }
  }
 
-  query RaceVersionQuery($version :String!){
-    getRacesByVersion(version: $version){
+  query CharacterUserQuery($context: Context!){
+    getUsersCharacters(context:$context){
+      ...CharacterData
+    }
+  }
+
+  query RaceVersionQuery($version :String!, $context: Context!){
+    getRacesByVersion(version: $version, context:$context){
       ...RaceData
     }
   }
 
-  query ClassVersionQuery($version :String!) {
-    getClassesByVersion(version: $version) {
+  query ClassVersionQuery($version :String!, $context: Context!) {
+    getClassesByVersion(version: $version, context:$context) {
       ...ClassData
     }
   }
 
-  query SkillVersionQuery($version: String!){
-    getVersionSkills(version: $version){
+  query SkillVersionQuery($version: String!, $context: Context!){
+    getVersionSkills(version: $version, context:$context){
       ... VersionSheetData
       }
  }
-  query VersionInfoTypeQuery($version :String!, $type :String!){
-    getVersionInfoType(version: $version, type: $type){
+  query VersionInfoTypeQuery($version :String!, $type :String!, $context: Context!){
+    getVersionInfoType(version: $version, type: $type, context:$context){
       ...VersionInfoData
     }
   }
 
- mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!){
-     createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid){
+ mutation CreateCharacterMutation($name :String!, $abil :AbilityInput!, $version :String!, $raceid :String!, $classid :String!, $context: Context!){
+     createCharacter(name:$name, abilityPoints:$abil, version:$version, raceid:$raceid, classid:$classid, context:$context){
        ...CharacterData
      }
  }
 
- mutation DeleteCharacterMutation($id:ID!){
-   deleteCharacter(id:$id)
+ mutation EquipItemMutation($charId: ID!, $itemId: ID!, $slotid: String!, $context: Context!){
+    equipItem(id:$charId, itemid:$itemId, slotid:$slotid, context:$context){
+        ...CharacterData
+    }
  }
 
- mutation EditCharacterMutation($id:ID!, $name:String!, $abil:AbilityInput!, $raceid:String!, $classid:String!){
-   updateCharacter(id:$id, name:$name, abilityPoints:$abil, raceid:$raceid, classid:$classid){
+ mutation CreateAccountMutation($uname:String!, $email:String!, $password:String!){
+    createUser(email:$email, name:$uname, password:$password){
+        ...UserData
+    }
+ }
+
+
+ mutation LoginMutation($email: String!, $password: String!){
+    loginUser(email:$email, password:$password){
+        token
+    }
+ }
+
+  mutation LogoutMutation($context: Context!){
+     logout(context:$context)
+  }
+
+ mutation AddItemToCharMutation($itemId :ID!, $charID :ID!, $context: Context!){
+   addItemToCharacter(itemid:$itemId, id:$charID, context:$context){
      ...CharacterData
    }
  }
+
+ mutation DeleteCharacterMutation($id:ID!, $context: Context!){
+   deleteCharacter(id:$id, context:$context)
+ }
+
+ mutation EditCharacterMutation($id:ID!, $name:String!, $abil:AbilityInput!, $raceid:String!, $classid:String!, $context: Context!){
+   updateCharacter(id:$id, name:$name, abilityPoints:$abil, raceid:$raceid, classid:$classid, context:$context){
+     ...CharacterData
+   }
+ }
+
+ mutation PurchaseItemMutation($id:ID!, $itemID:ID!,  $context: Context!){
+    purchaseItem(id:$id, itemid:$itemID, context:$context){
+      inventory{
+          ...ItemData
+        }
+    }
+ }
+
+ fragment UserData on User{
+    id
+    email
+    uname
+    authorityLevels
+ }
+
 
 fragment CharacterData on Character{
   id
   name
   version
+  money
   abilityPoints{
     str
     int
@@ -143,6 +206,7 @@ fragment VersionInfoData on Version{
 }
 
 fragment ItemData on Item {
+  id
   name
   version
   description

@@ -78,12 +78,14 @@
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_confirm">Confirm Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_password">Invalid password: %1$s</string>
+    <string name="error_invalid_username">Invalid username: %1$s</string>
+    <string name="error_incorrect_password">Please Enter a Password</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -195,7 +197,8 @@
 
     <!-- character_detail.xml - fragment -->
     <string name="empty_char_name">Character Name</string>
-    <string name="abil_title">Ability Points:</string>
+    <string name="abil_title">Ability Scores</string>
+    <string name="abil_mod_title">Ability Modifier Scores</string>
     <string name="pref_dex">%1$s</string>
     <string name="pref_con">%1$s</string>
     <string name="pref_str">%1$s</string>
@@ -212,13 +215,21 @@
     <string name="Int">INT:</string>
     <string name="Wis">WIS:</string>
     <string name="Cha">CHA:</string>
+    <string name="Con_mod">CON MOD:</string>
+    <string name="Str_mod">STR MOD:</string>
+    <string name="Dex_mod">DEX MOD:</string>
+    <string name="Int_mod">INT MOD:</string>
+    <string name="Wis_mod">WIS MOD:</string>
+    <string name="Cha_mod">CHA MOD:</string>
     <string name="race">Race:</string>
     <string name="Class">Class:</string>
     <string name="initiative">Initiative:</string>
     <string name="hitpoints">Hitpoints:</string>
     <string name="speed">Speed:</string>
     <string name="pref_race">%1$s</string>
+    <string name="pref_race_desc">%1$s</string>
     <string name="pref_class">%1$s</string>
+    <string name="pref_class_desc">%1$s</string>
     <string name="pref_skill_history">%1$s</string>
     <string name="pref_skill_acrobatics">%1$s</string>
     <string name="pref_skill_arcana">%1$s</string>
@@ -292,5 +303,13 @@
     <string name="itemIntent">Items</string>
     <string name="skill_value">+0</string>
     <string name="roll">ROLL</string>
+    <string name="saving_throws_title">Saving Throws</string>
+    <string name="stats_title">Stats</string>
+    <string name="ac_title">AC:</string>
+    <string name="money_title">Currency: %1$s</string>
+    <string name="logout">Logout</string>
+    <string name="user_name">User Name</string>
+    <string name="create_acct"><a href="">Don\'t have an Account? Click here to make one!</a></string>
+    <string name="login_text"><a href="">Already Have an Account? Click here to login!</a></string>
 
 </resources>

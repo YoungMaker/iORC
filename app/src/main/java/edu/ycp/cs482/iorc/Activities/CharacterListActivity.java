@@ -3,6 +3,7 @@ package edu.ycp.cs482.iorc.Activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -29,7 +30,13 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.api.cache.http.HttpCachePolicy;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryData;
+import edu.ycp.cs482.iorc.CharacterUserQuery;
 import edu.ycp.cs482.iorc.CharacterVersionQuery;
 import edu.ycp.cs482.iorc.CreateCharacterMutation;
 import edu.ycp.cs482.iorc.DeleteCharacterMutation;
@@ -37,14 +44,19 @@ import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
 import edu.ycp.cs482.iorc.Apollo.RandAbilityGenerator;
+import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.SkillVersionQuery;
+import edu.ycp.cs482.iorc.UserDataQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
+import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.type.AbilityInput;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -62,25 +74,22 @@ public class CharacterListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private static final String LOGOUT_BOOL = "LOGOUT_BOOL";
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
-    private static final String V_DATA = "VERSION_DATA";
+    private static final String POP_ERROR = "ERR_POP";
+    private static final String USER_EMAIL = "USER_EMAIL";
+    private String PREFS_FILE = "iorctkfile";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
-    private List<CharacterVersionQuery.GetCharactersByVersion> characterResponseData;
-    private List <CharacterVersionQuery.GetCharactersByVersion> characterResponses = new ArrayList<>();
+    private List <CharacterData> characterResponses = new ArrayList<>();
+    private List <CharacterUserQuery.GetUsersCharacter> characterDataResponse;
 
-    public static SkillVersionQuery.GetVersionSkills skillResponseData;
-    private ArrayList <SkillVersionQuery.GetVersionSkills> skillResponses = new ArrayList<>();
-
-    private HashMap<String, String> characterDetailMap = new HashMap<>();
-    private static HashMap<String, String> skillDetailMap = new HashMap<>();
-    private HashMap<String, String> versionInfoMap = new HashMap<>();
+    //FIXME: Store only QueryData in intents/savedinstancestate. Deserialize
     private static final String CREATION_DATA = "CREATION_DATA";
-    private VersionSheetQuery.GetVersionSheet versionData;
-
     private String abilGenExpression = "3d6";
+    private View mLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +100,8 @@ public class CharacterListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        mLoadingView = findViewById(R.id.loadingPanel);
 
         //get extras
         Bundle extras = getIntent().getExtras();
@@ -112,18 +123,30 @@ public class CharacterListActivity extends AppCompatActivity {
             }
         });
 
-        getVersionInfo(HttpCachePolicy.CACHE_FIRST);
+
+        //get users characters
+        getChars();
+
 
         //check if character is being deleted
-        if(extras != null && extras.getBoolean(DO_DELETE)){
-            //trigger delete muation
-            String toDel = extras.getString(DEL_ID);
-            deleteCharacter(toDel);
-            //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
-        } else{
-            //get character list if now character is being deleted
-            HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
-            getIds(policy);
+        if(extras != null) {
+            if (extras.containsKey(DO_DELETE) && extras.getBoolean(DO_DELETE)) {
+                //trigger delete muation
+                String toDel = extras.getString(DEL_ID);
+                deleteCharacter(toDel);
+                getIntent().removeExtra(DO_DELETE);
+                getIntent().removeExtra(DEL_ID);
+                //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+            } else {
+                //get character list if now character is being deleted
+                HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
+                //getIds(policy);
+            }
+        }
+        //TODO: put uname into savedinstancestate so that it does not have to pull this every time you reload.
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+        if(prefs.contains(USER_EMAIL)){
+            fetchUserData(prefs.getString(USER_EMAIL, ""));
         }
 
 
@@ -139,7 +162,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
 
 
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, characterDetailMap, mTwoPane, versionInfoMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, characterResponses, mTwoPane);
         View recyclerView = findViewById(R.id.character_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -153,53 +176,213 @@ public class CharacterListActivity extends AppCompatActivity {
         }
     }
 
-    //test query
-    private void getIds(HttpCachePolicy.Policy policy){
-        final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getCharacterApolloClient().query(
-                //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
-                //Boii:    b9704025-b811-426b-af3a-461dd40866e3
-                CharacterVersionQuery.builder().version("4e").build())
-                .httpCachePolicy(policy)
-                .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
 
-                        characterResponseData = response.data().getCharactersByVersion();
-                        //Log.d("BEFORE UI THREAD","Line before new runnable");
-                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+    private void fetchUserData(final String email){
+        if(!email.isEmpty()){
+            try {
+                QueryControllerProvider.getInstance().getQueryController().userInfoQuery(email, getApplicationContext())
+                        .enqueue(new ApolloCall.Callback<UserDataQuery.Data>() {
                             @Override
-                            public void run() {
-                                //characterResponses.add(characterResponseData);
-                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
-                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
-                                //clear list of characters so that when the query is called for a list update duplicate characters do not appear
-                                characterResponses.clear();
-                                //add each character into map and list
-                                for(int i = 0; i < characterResponseData.size(); i++){
-                                    characterResponses.add(characterResponseData.get(i));
-                                    characterDetailMap.put(
-                                            characterResponseData.get(i).fragments().characterData().id(),
-                                            (new Gson()).toJson(characterResponseData.get(i)));
+                            public void onResponse(@Nonnull Response<UserDataQuery.Data> response) {
+                                try {
+                                    String gsonData = QueryControllerProvider.getInstance().getQueryController().parseUserInfoQuery(email, response).getGsonData();
+                                    parseUserData(gsonData);
+                                } catch (AuthQueryException e) {
+                                    Log.e("SESSION_EXPIRED", "active Session has expired!");
+                                    returnToLogin();
+                                }catch (QueryException e){
+                                    Log.e("QUERY_FAILED", "User Query Failed");
                                 }
-                                refreshView();
-                                loadingView.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onFailure(@Nonnull ApolloException e) {
+                                Log.e("QUERY_FAILED", "Communication error");
                             }
                         });
-                    }
+            } catch (AuthQueryException e) {
+                Log.e("NO_TOKEN", "No active user session");
+                returnToLogin();
+            }
+        }
+    }
 
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                        Log.e("ERROR: ", e.toString());
-                    }
-                });
+    private void parseUserData(String gsonData){
+        UserDataQuery.GetUserInfo data =  new Gson().fromJson(gsonData, UserDataQuery.GetUserInfo.class);
+        setUserTitleBar(data.fragments().userData().uname());
+    }
 
+    private void setUserTitleBar(final String uname){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(uname + "'s characters");
+                }else {
+                    Log.e("TITLE_BAR", "Cannot get title bar");
+                }
+            }
+        });
+    }
+
+    private void getChars(){
+        try {
+            QueryControllerProvider.getInstance().getQueryController().userCharactersQuery( getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<CharacterUserQuery.Data>() {
+                        private QueryData queryData;
+                        @Override
+                        public void onResponse(@Nonnull Response<CharacterUserQuery.Data> response) {
+                            try{
+                                queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery(getApplicationContext(), response);
+                                processQueryData(queryData);
+                            }catch(AuthQueryException e) {
+                                Log.e("SESSION_EXPIRED", "user session has expired");
+                                returnToLogin();
+                            }catch (QueryException e){
+                                popQueryError();
+                            }
+                            Log.d("WORKED", "got chars");
+                        }
+
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                            Log.e("failed to get response", e.getMessage());
+                        }
+                    });
+        } catch (AuthQueryException e) {
+            Log.e("NO_TOKEN", "no active user session");
+            returnToLogin();
+        }
+    }
+
+ //   deprecated
+//    private void getIds(HttpCachePolicy.Policy policy){
+//        final View loadingView = findViewById(R.id.loadingPanel);
+//        MyApolloClient.getCharacterApolloClient().query(
+//                //Groot:   58ff414b-f945-44bd-b20f-4a2ad3440254
+//                //Boii:    b9704025-b811-426b-af3a-461dd40866e3
+//                CharacterVersionQuery.builder().version("4e").build())
+//                .httpCachePolicy(policy)
+//                .enqueue(new ApolloCall.Callback<CharacterVersionQuery.Data>() {
+//                    @Override
+//                    public void onResponse(@Nonnull Response<CharacterVersionQuery.Data> response) {
+//
+//                        characterResponseData = response.data().getCharactersByVersion();
+//                        //Log.d("BEFORE UI THREAD","Line before new runnable");
+//                        CharacterListActivity.this.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                //characterResponses.add(characterResponseData);
+//                                // Log.d("TAG","ON RESPONSE: " + response.data().getCharacterById());
+//                                //Log.d("OUR TYPENAME: ","REPSONSE TYPENAME := " + characterResponseData.characterData().name());
+//                                //clear list of characters so that when the query is called for a list update duplicate characters do not appear
+//                                characterResponses.clear();
+//                                //add each character into map and list
+//                                for(int i = 0; i < characterResponseData.size(); i++){
+//                                    characterResponses.add(characterResponseData.get(i));
+//                                    characterDetailMap.put(
+//                                            characterResponseData.get(i).fragments().characterData().id(),
+//                                            (new Gson()).toJson(characterResponseData.get(i)));
+//                                }
+//                                refreshView();
+//                                loadingView.setVisibility(View.GONE);
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@Nonnull ApolloException e) {
+//                        Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                                .setAction("Action", null).show();
+//                        Log.e("ERROR: ", e.toString());
+//                    }
+//                });
+//
+//
+//    }
+
+    private void returnToLogin(){
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(POP_ERROR, true);
+        startActivity(intent);
+        finish();
+    }
+
+    private void popCommError(){
+        CharacterListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
+                alertDialog.setTitle("Get Characters Failed");
+                alertDialog.setMessage("Get characters attempt failed: Communication Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    private void popQueryError(){
+        CharacterListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(CharacterListActivity.this).create();
+                alertDialog.setTitle("Get Characters Failed");
+                alertDialog.setMessage("Get characters attempt failed: Query Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    private void processQueryData(QueryData queryData){
+        final String data = queryData.getGsonData();
+
+        //Log.d("GSON_CHAR_DATA", data);
+        CharacterListActivity.this.runOnUiThread(new Runnable(){
+            @Override
+            public void run(){
+                if(characterResponses != null) {
+                    characterResponses.clear();
+                }
+                if(characterDataResponse!= null) {
+                    characterDataResponse.clear();
+                }
+
+                Type listType = new TypeToken<List<CharacterUserQuery.GetUsersCharacter>>(){}.getType();
+                characterDataResponse = new Gson().fromJson(data, listType);
+
+                for (int i = 0; i < characterDataResponse.size(); i++) {
+                    CharacterUserQuery.GetUsersCharacter data = characterDataResponse.get(i);
+                    characterResponses.add(data.fragments().characterData());
+                }
+
+                //Log.d("RESPONSE_DATA", characterDataResponse.toString());
+                refreshView();
+                mLoadingView.setVisibility(View.GONE);
+            }
+        });
 
     }
 
     private void createCharacter(HashMap<String, String> creationData){
+        final String charName = creationData.get("Name");
+        final String charRaceID = creationData.get("RACE ID");
+        final String charClassID = creationData.get("CLASS ID");
+        final String charVersion = creationData.get("version");
+
         RandAbilityGenerator randAbils = new RandAbilityGenerator();
         AbilityInput.Builder abilityScores = AbilityInput.builder();
         abilityScores.str(randAbils.generateRoll(abilGenExpression));
@@ -209,58 +392,99 @@ public class CharacterListActivity extends AppCompatActivity {
         abilityScores.wis(randAbils.generateRoll(abilGenExpression));
         abilityScores.cha(randAbils.generateRoll(abilGenExpression));
         AbilityInput staticAbil = abilityScores.build();
+        try{
+            QueryControllerProvider.getInstance().getQueryController().createCharacterMutation(
+                    charName, charRaceID, charClassID, charVersion, getApplicationContext(), staticAbil)
+                    .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
+                            try{
+                                QueryControllerProvider.getInstance().getQueryController().parseCreateCharacterMutation(charVersion, response);
+                                //get the updated list of characters
+                                getChars();
 
-        final View loadingView = findViewById(R.id.loadingPanel);
+                            }catch(AuthQueryException e){
+                                Log.e("SESSION_EXPIRED", "user session has expired");
+                                returnToLogin();
+                            }catch(QueryException e){
+                                popQueryError();
+                            }
+                        }
 
-        MyApolloClient.getMyApolloClient().mutate(
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                            Log.e("failed to get response", e.getMessage());
+                        }
+                    });
+        }catch (AuthQueryException e){
+            Log.e("NO_TOKEN", "no active user session");
+            returnToLogin();
+        }
 
-            CreateCharacterMutation.builder().name(creationData.get("Name")).version(creationData.get("version")).abil(staticAbil).raceid(creationData.get("RACE ID")).classid(creationData.get("CLASS ID")).build())
-                .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
-            @Override
-            public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
-                Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
-                loadingView.setVisibility(View.GONE);
-                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
-                getIds(policy);
-                //notify user the network response has been received.
-                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                loadingView.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        MyApolloClient.getMyApolloClient().mutate(
+//
+//            CreateCharacterMutation.builder().name(creationData.get("Name")).version(creationData.get("version")).abil(staticAbil).raceid(creationData.get("RACE ID")).classid(creationData.get("CLASS ID")).build())
+//                .enqueue(new ApolloCall.Callback<CreateCharacterMutation.Data>() {
+//            @Override
+//            public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
+//                Log.d("CHARACTER CREATED", "CHARACTER HAS BEEN CREATED");
+//                //loadingView.setVisibility(View.GONE);
+//                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+//                //getIds(policy);
+//                //notify user the network response has been received.
+//                Snackbar.make(findViewById(R.id.frameLayout), "Character \"" + mText + "\" created" , Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//                //loadingView.setVisibility(View.GONE);
+//            }
+//
+//            @Override
+//            public void onFailure(@Nonnull ApolloException e) {
+//                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
     }
 
-    private void deleteCharacter(String toDel){
-        final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getMyApolloClient().mutate(
-                DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
-            //on character deletion get the character list
-            @Override
-            public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+    private void deleteCharacter(final String toDel){
+        try {
+            QueryControllerProvider.getInstance().getQueryController().deleteCharacterMutation(toDel, getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
+                //on character deletion get the character list
+                @Override
+                public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+                    //HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                    try {
+                        QueryControllerProvider.getInstance().getQueryController().parseDeleteCharacterMutation(toDel, response);
+                        getChars(); // redo the get chars query and re-parse the data out
+                    } catch (AuthQueryException e) {
+                        Log.e("SESSION_EXPIRED", "user session has expired");
+                        returnToLogin();
+                    } catch (QueryException e){
+                        popQueryError();
+                        Log.e("QUERY_ERROR", "Query failed");
+                    }
 
-                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
-                getIds(policy);
+                }
 
-            }
+                @Override
+                public void onFailure(@Nonnull ApolloException e) {
+                    popCommError();
+                    Log.e("failed to get response", e.getMessage());
 
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-            }
-        });
+                }
+            });
+        } catch (AuthQueryException e) {
+            Log.e("NO_TOKEN", "no active user session");
+            returnToLogin();
+        }
 
     }
 
 
     //TODO implement this with the edit character interface
+    //deprecated
     /*private void editCharacter(){
         MyApolloClient.getMyApolloClient().mutate(
             EditCharacterMutation.builder().id().name().abil().classid().raceid().build()).enqueue(new ApolloCall.Callback<EditCharacterMutation.Data>() {
@@ -310,31 +534,6 @@ public class CharacterListActivity extends AppCompatActivity {
         builder.show();
     }
 
-    public void getVersionInfo(HttpCachePolicy.Policy policy){
-        MyApolloClient.getVersionSheetApolloClient().query(
-                VersionSheetQuery.builder().version("4e").build()
-        )
-                .httpCachePolicy(policy)
-                .enqueue(new ApolloCall.Callback<VersionSheetQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<VersionSheetQuery.Data> response) {
-                        versionData = response.data().getVersionSheet();
-                        //Log.d("VERSION DATA", versionData.toString());
-                        CharacterListActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                versionInfoMap.put(V_DATA, (new Gson()).toJson(versionData));
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-                        Log.d("QUERY FAILED", "NO RESPONSE");
-                    }
-                });
-    }
-
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         recyclerView.setAdapter(mSimpleAdapter);
         DividerItemDecoration itemDecor = new DividerItemDecoration(recyclerView.getContext(),
@@ -360,6 +559,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
             case R.id.login:
                 Intent loginIntent = new Intent(CharacterListActivity.this, LoginActivity.class);
+                loginIntent.putExtra(LOGOUT_BOOL, true);
                 startActivity(loginIntent);
                 break;
         }
@@ -371,20 +571,17 @@ public class CharacterListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final CharacterListActivity mParentActivity;
-        private final List<CharacterVersionQuery.GetCharactersByVersion> mValues;;
-        private final HashMap<String, String> mMap;
-        //private final HashMap<String, String> mSkillMap;
-        private final HashMap<String, String> mVData;
+        private final List<CharacterData> mValues;;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CharacterVersionQuery.GetCharactersByVersion item = (CharacterVersionQuery.GetCharactersByVersion) view.getTag();
+                CharacterData item = (CharacterData) view.getTag();
 
                 //TODO bundle the queried character data and pass it on to the detail activity
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData().id());
+                    arguments.putString(CharacterDetailFragment.ARG_ITEM_ID, serializeCharData(item));
 
                     CharacterDetailFragment fragment = new CharacterDetailFragment();
                     fragment.setArguments(arguments);
@@ -404,23 +601,24 @@ public class CharacterListActivity extends AppCompatActivity {
                     //SkillVersionQuery.GetVersionSkills skillItem = (SkillVersionQuery.GetVersionSkills) view.getTag();
                     Context context = view.getContext();
                     Intent intent = new Intent(context, CharacterDetailActivity.class);
-                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, item.fragments().characterData().id());
-                    intent.putExtra(CharacterDetailFragment.ARG_MAP_ID, mMap);
-                    intent.putExtra(V_DATA, mVData);
+                    intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, serializeCharData(item));
                     context.startActivity(intent);
                 }
             }
         };
 
         SimpleItemRecyclerViewAdapter(CharacterListActivity parent,
-                                      List<CharacterVersionQuery.GetCharactersByVersion> items,
-                                      HashMap<String, String> characterDetailMap, boolean twoPane,
-                                      HashMap<String, String> versionData) {
+                                      List<CharacterData> items,
+                                      boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
-            mMap = characterDetailMap;
-            mVData = versionData;
+        }
+
+        //serialize data for the selected character
+        private String serializeCharData(CharacterData characterData){
+            String serializedData = new Gson().toJson(characterData);
+            return serializedData;
         }
 
         @Override
@@ -433,7 +631,7 @@ public class CharacterListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             //holder.mIdView.setText(mValues.get(position).characterData.id());
-            holder.mContentView.setText(mValues.get(position).fragments().characterData().name());
+            holder.mContentView.setText(mValues.get(position).name());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

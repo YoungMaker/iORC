@@ -14,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * Created by Hunter on 2/17/2018.
  */
 
+
 public class MyApolloClient {
     private static final String BASE_URL = "http://iorc-api.mooo.com:8081/graphql";
     private static ApolloClient myApolloClient;
