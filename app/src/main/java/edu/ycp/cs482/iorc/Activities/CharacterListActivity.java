@@ -342,7 +342,9 @@ public class CharacterListActivity extends AppCompatActivity {
                         public void onResponse(@Nonnull Response<CreateCharacterMutation.Data> response) {
                             try{
                                 QueryControllerProvider.getInstance().getQueryController().parseCreateCharacterMutation(charVersion, response);
-                                //TODO parse data
+                                //get the updated list of characters
+                                getChars();
+
                             }catch(AuthQueryException e){
                                 Log.e("SESSION_EXPIRED", "user session has expired");
                                 returnToLogin();
