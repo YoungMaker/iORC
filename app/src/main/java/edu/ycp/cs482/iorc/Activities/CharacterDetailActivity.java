@@ -224,7 +224,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private void returnToLogin(){
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(POP_ERROR, true);
+        //intent.putExtra(POP_ERROR, true);
         startActivity(intent);
         finish();
     }
