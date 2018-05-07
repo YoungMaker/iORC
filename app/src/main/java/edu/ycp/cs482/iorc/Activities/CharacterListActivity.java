@@ -143,8 +143,8 @@ public class CharacterListActivity extends AppCompatActivity {
                 //getIds(policy);
             }
         }
+        //TODO: put uname into savedinstancestate so that it does not have to pull this every time you reload.
         SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
-
         if(prefs.contains(USER_EMAIL)){
             fetchUserData(prefs.getString(USER_EMAIL, ""));
         }
