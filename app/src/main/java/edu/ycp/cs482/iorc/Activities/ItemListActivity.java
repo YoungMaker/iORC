@@ -1,6 +1,8 @@
 package edu.ycp.cs482.iorc.Activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,15 +24,23 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import edu.ycp.cs482.iorc.AddItemToCharMutation;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
+import edu.ycp.cs482.iorc.Apollo.Query.QueryData;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.Apollo.MyApolloClient;
 import edu.ycp.cs482.iorc.PurchaseItemMutation;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.VersionItemsByTypeQuery;
 import edu.ycp.cs482.iorc.VersionItemsQuery;
 import edu.ycp.cs482.iorc.fragment.ItemData;
+import edu.ycp.cs482.iorc.type.ObjType;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +63,7 @@ public class ItemListActivity extends AppCompatActivity {
      */
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
     private static final String CREATION_DATA = "CREATION_DATA";
+    private static final String POP_ERROR = "ERR_POP";
     private boolean mTwoPane;
     private HashMap<String, String> creationMap;
     private VersionItemsQuery.Data versionItemQueryData;
@@ -60,6 +71,9 @@ public class ItemListActivity extends AppCompatActivity {
     public static final String CHAR_ID = "CHAR_ID";
     private static final int ITEM_SELECTION_REQ_CODE = 1;
     private static String charIDVal;
+    private static String version = "4e";
+    private static ObjType type = ObjType.ITEM;
+    private List<VersionItemsByTypeQuery.GetVersionItemType> versionItemTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +95,12 @@ public class ItemListActivity extends AppCompatActivity {
 
         Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
+        getVersionItemTypes(version, type);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
-        getAllItems();
+        //getAllItems();
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -204,36 +220,128 @@ public class ItemListActivity extends AppCompatActivity {
 
     //item queries
 
-    //all items
-    private void getAllItems(){
-        MyApolloClient.getMyApolloClient().query(
-            VersionItemsQuery.builder().version("4e").build())
-                .enqueue(new ApolloCall.Callback<VersionItemsQuery.Data>() {
-                    @Override
-                    public void onResponse(@Nonnull Response<VersionItemsQuery.Data> response) {
+    private void getVersionItemTypes(final String version, ObjType type){
+        try{
+            QueryControllerProvider.getInstance().getQueryController().getVersionItemsByType(type, version, getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<VersionItemsByTypeQuery.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<VersionItemsByTypeQuery.Data> response) {
+                            try{
+                                QueryData queryData = QueryControllerProvider.getInstance().getQueryController().parseGetVersionItemsByType(version, response);
+                                processItemTypes(queryData);
+                            }catch(AuthQueryException e){
+                                returnToLogin();
+                            }catch(QueryException e){
+                                popQueryError();
+                            }
 
-                        versionItemQueryData = response.data();
+                        }
 
-                        ItemListActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                int numItems = versionItemQueryData.getVersionItems().size();
-                                List<VersionItemsQuery.GetVersionItem> versionItems =
-                                        versionItemQueryData.getVersionItems();
-                                for(int i = 0; i < numItems; i++){
-                                    itemList.add(versionItems.get(i).fragments().itemData());
-                                }
-                                refreshView();
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                        }
+                    });
+        }catch(AuthQueryException e){
+            returnToLogin();
+        }
+
+    }
+
+    private void processItemTypes(QueryData queryData){
+        final String data = queryData.getGsonData();
+        ItemListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Type typeList = new TypeToken<List<VersionItemsByTypeQuery.GetVersionItemType>>(){}.getType();
+                versionItemTypes = new Gson().fromJson(data, typeList);
+
+                for(int i = 0; i < versionItemTypes.size(); i++){
+                    VersionItemsByTypeQuery.GetVersionItemType itemdata = versionItemTypes.get(i);
+                    itemList.add(itemdata.fragments().itemData());
+                }
+
+                refreshView();
+            }
+        });
+
+    }
+
+    private void returnToLogin(){
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(POP_ERROR, true);
+        startActivity(intent);
+        finish();
+    }
+
+    private void popCommError(){
+        ItemListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(ItemListActivity.this).create();
+                alertDialog.setTitle("Get Characters Failed");
+                alertDialog.setMessage("Get characters attempt failed: Communication Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         });
-                    }
-
-                    @Override
-                    public void onFailure(@Nonnull ApolloException e) {
-
-                    }
-                });
+                alertDialog.show();
+            }
+        });
     }
+
+    private void popQueryError(){
+        ItemListActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(ItemListActivity.this).create();
+                alertDialog.setTitle("Get Characters Failed");
+                alertDialog.setMessage("Get characters attempt failed: Query Failed");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    //all items
+//    private void getAllItems(){
+//        MyApolloClient.getMyApolloClient().query(
+//            VersionItemsQuery.builder().version("4e").build())
+//                .enqueue(new ApolloCall.Callback<VersionItemsQuery.Data>() {
+//                    @Override
+//                    public void onResponse(@Nonnull Response<VersionItemsQuery.Data> response) {
+//
+//                        versionItemQueryData = response.data();
+//
+//                        ItemListActivity.this.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                int numItems = versionItemQueryData.getVersionItems().size();
+//                                List<VersionItemsQuery.GetVersionItem> versionItems =
+//                                        versionItemQueryData.getVersionItems();
+//                                for(int i = 0; i < numItems; i++){
+//                                    itemList.add(versionItems.get(i).fragments().itemData());
+//                                }
+//                                refreshView();
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onFailure(@Nonnull ApolloException e) {
+//
+//                    }
+//                });
+//    }
 
     private void purchaseItemforChar(String itemID){
         MyApolloClient.getMyApolloClient().mutate(

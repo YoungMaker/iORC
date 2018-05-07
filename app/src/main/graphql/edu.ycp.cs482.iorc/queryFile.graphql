@@ -11,6 +11,12 @@
    }
  }
 
+ query VersionItemsByType($type:ObjType!, $version:String!, $context:Context!){
+    getVersionItemType(type:$type, version:$version, context:$context){
+        ...ItemData
+    }
+ }
+
  query VersionSheetQuery($version: String!, $context: Context!){
      getVersionSheet(version : $version, context:$context){
          ...VersionSheetData
