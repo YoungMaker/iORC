@@ -95,7 +95,9 @@ public class ItemListActivity extends AppCompatActivity {
 
         Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
-        getVersionItemTypes(version, type);
+        getVersionItemTypes(version, type, true);
+        getVersionItemTypes(version, ObjType.ITEM_ARMOR, false);
+        getVersionItemTypes(version, ObjType.ITEM_WEAPON, false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -220,7 +222,7 @@ public class ItemListActivity extends AppCompatActivity {
 
     //item queries
 
-    private void getVersionItemTypes(final String version, ObjType type){
+    private void getVersionItemTypes(final String version, ObjType type, final boolean renewListFlag){
         try{
             QueryControllerProvider.getInstance().getQueryController().getVersionItemsByType(type, version, getApplicationContext())
                     .enqueue(new ApolloCall.Callback<VersionItemsByTypeQuery.Data>() {
@@ -228,7 +230,7 @@ public class ItemListActivity extends AppCompatActivity {
                         public void onResponse(@Nonnull Response<VersionItemsByTypeQuery.Data> response) {
                             try{
                                 QueryData queryData = QueryControllerProvider.getInstance().getQueryController().parseGetVersionItemsByType(version, response);
-                                processItemTypes(queryData);
+                                processItemTypes(queryData, renewListFlag);
                             }catch(AuthQueryException e){
                                 returnToLogin();
                             }catch(QueryException e){
@@ -248,11 +250,14 @@ public class ItemListActivity extends AppCompatActivity {
 
     }
 
-    private void processItemTypes(QueryData queryData){
+    private void processItemTypes(QueryData queryData, final boolean newQueryFlag){
         final String data = queryData.getGsonData();
         ItemListActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if(newQueryFlag){
+                    itemList.clear();
+                }
                 Type typeList = new TypeToken<List<VersionItemsByTypeQuery.GetVersionItemType>>(){}.getType();
                 versionItemTypes = new Gson().fromJson(data, typeList);
 
