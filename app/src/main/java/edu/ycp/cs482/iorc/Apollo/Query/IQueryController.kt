@@ -62,6 +62,7 @@ interface IQueryController {
     @Throws(AuthQueryException::class, QueryException::class)
     fun parseUserInfoQuery(email: String, response: Response<UserDataQuery.Data>): QueryData
 
+    @Throws(AuthQueryException::class)
     fun createCharacterMutation(name:String, raceid:String, classid:String, version:String, context: Context, abilityInput: AbilityInput): ApolloMutationCall<CreateCharacterMutation.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseCreateCharacterMutation(version: String, response: Response<CreateCharacterMutation.Data>): QueryData?
