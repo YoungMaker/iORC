@@ -9,6 +9,7 @@ import edu.ycp.cs482.iorc.*
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException
 import edu.ycp.cs482.iorc.type.AbilityInput
+import edu.ycp.cs482.iorc.type.ObjType
 
 interface IQueryController {
     //Query constructors
@@ -67,4 +68,7 @@ interface IQueryController {
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseCreateCharacterMutation(version: String, response: Response<CreateCharacterMutation.Data>): QueryData?
 
-}
+    @Throws(AuthQueryException::class)
+    fun getVersionItemsByType(type: ObjType, version: String, context: Context): ApolloQueryCall<VersionItemsByTypeQuery.Data>?
+    @Throws(QueryException::class, AuthQueryException::class)
+    fun parseGetVersionItemsByType(version: String, response: Response<VersionItemsByTypeQuery.Data>): QueryData?

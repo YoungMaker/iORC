@@ -21,6 +21,7 @@ import com.google.gson.Gson
 import edu.ycp.cs482.iorc.*
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.ServerCommunicationError
 import edu.ycp.cs482.iorc.type.AbilityInput
+import edu.ycp.cs482.iorc.type.ObjType
 import java.security.AuthProvider
 import edu.ycp.cs482.iorc.type.Context as ContextQL
 
@@ -271,6 +272,25 @@ class ApolloQueryCntroller: IQueryController {
         } else {
             throw QueryException("Invalid Response!")
         }
+    }
+
+    override fun getVersionItemsByType(type: ObjType, version: String, context: Context): ApolloQueryCall<VersionItemsByTypeQuery.Data>? {
+        return MyApolloClient.getMyApolloClient().query(
+                VersionItemsByTypeQuery.builder().type(type).version(version).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseGetVersionItemsByType(version: String, response: Response<VersionItemsByTypeQuery.Data>): QueryData? {
+        if(response.data() == null || response.data()!!.versionItemType == null) {
+            if(response.errors().isEmpty()) { throw  QueryException("Invalid Response!")}
+            else if(response.errors()[0].message()!!.contains("Invalid Token!")) {
+                throw AuthQueryException("Invalid Token")
+            }
+        } else {
+            return QueryData(Gson().toJson(response.data()!!.versionItemType),
+                    mapOf(Pair("version", version)))
+        }
+        return null
     }
 
     private fun getQueryContext(context: Context): ContextQL{
