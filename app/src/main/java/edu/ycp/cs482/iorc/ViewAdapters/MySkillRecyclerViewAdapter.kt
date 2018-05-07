@@ -46,8 +46,9 @@ class MySkillRecyclerViewAdapter(private val mValues: List<SkillsFragment.Stats>
         }
         else {
             //Log.d("TEXT_OUTPUT", "\'" + mValues[position].description + "\'")
-            val outputStr = mValues[position].description.subSequence(0, 110)
-            holder.mContentView.text = "%s...".format(outputStr)
+//            val outputStr = mValues[position].description.subSequence(0, 110)
+//            holder.mContentView.text = "%s...".format(outputStr)
+            holder.mContentView.text = mValues[position].description
         }
 
     }
