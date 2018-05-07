@@ -5,6 +5,11 @@
    }
  }
 
+query UserDataQuery($email: String, $context:Context!){
+  getUserInfo(email:$email, context:$context){
+    ...UserData
+  }
+}
  query VersionItemsQuery($version: String!,  $context: Context!){
    getVersionItems(version: $version, context:$context){
      ...ItemData
@@ -69,6 +74,7 @@
         ...UserData
     }
  }
+
 
  mutation LoginMutation($email: String!, $password: String!){
     loginUser(email:$email, password:$password){

@@ -3,6 +3,7 @@ package edu.ycp.cs482.iorc.Activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -46,6 +47,7 @@ import edu.ycp.cs482.iorc.Apollo.RandAbilityGenerator;
 import edu.ycp.cs482.iorc.LoginMutation;
 import edu.ycp.cs482.iorc.R;
 import edu.ycp.cs482.iorc.SkillVersionQuery;
+import edu.ycp.cs482.iorc.UserDataQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.type.AbilityInput;
@@ -76,6 +78,8 @@ public class CharacterListActivity extends AppCompatActivity {
     private static final String DO_DELETE = "DO_DELETE";
     private static final String DEL_ID = "DEL_ID";
     private static final String POP_ERROR = "ERR_POP";
+    private static final String USER_EMAIL = "USER_EMAIL";
+    private String PREFS_FILE = "iorctkfile";
     private boolean mTwoPane;
     private String mText;
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
@@ -139,6 +143,11 @@ public class CharacterListActivity extends AppCompatActivity {
                 //getIds(policy);
             }
         }
+        SharedPreferences prefs = getApplicationContext().getSharedPreferences(PREFS_FILE, MODE_PRIVATE);
+
+        if(prefs.contains(USER_EMAIL)){
+            fetchUserData(prefs.getString(USER_EMAIL, ""));
+        }
 
 
         //Log.d("AFTER ID", "THIS LINE IS AFTER THE GET IDS FUNCTION");
@@ -165,6 +174,55 @@ public class CharacterListActivity extends AppCompatActivity {
                 getIntent().removeExtra("SET_CHAR_NAME");
             }
         }
+    }
+
+
+    private void fetchUserData(final String email){
+        if(!email.isEmpty()){
+            try {
+                QueryControllerProvider.getInstance().getQueryController().userInfoQuery(email, getApplicationContext())
+                        .enqueue(new ApolloCall.Callback<UserDataQuery.Data>() {
+                            @Override
+                            public void onResponse(@Nonnull Response<UserDataQuery.Data> response) {
+                                try {
+                                    String gsonData = QueryControllerProvider.getInstance().getQueryController().parseUserInfoQuery(email, response).getGsonData();
+                                    parseUserData(gsonData);
+                                } catch (AuthQueryException e) {
+                                    Log.e("SESSION_EXPIRED", "active Session has expired!");
+                                    returnToLogin();
+                                }catch (QueryException e){
+                                    Log.e("QUERY_FAILED", "User Query Failed");
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(@Nonnull ApolloException e) {
+                                Log.e("QUERY_FAILED", "Communication error");
+                            }
+                        });
+            } catch (AuthQueryException e) {
+                Log.e("NO_TOKEN", "No active user session");
+                returnToLogin();
+            }
+        }
+    }
+
+    private void parseUserData(String gsonData){
+        UserDataQuery.GetUserInfo data =  new Gson().fromJson(gsonData, UserDataQuery.GetUserInfo.class);
+        setUserTitleBar(data.fragments().userData().uname());
+    }
+
+    private void setUserTitleBar(final String uname){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(getSupportActionBar() != null) {
+                    getSupportActionBar().setTitle(uname + "'s characters");
+                }else {
+                    Log.e("TITLE_BAR", "Cannot get title bar");
+                }
+            }
+        });
     }
 
     private void getChars(){

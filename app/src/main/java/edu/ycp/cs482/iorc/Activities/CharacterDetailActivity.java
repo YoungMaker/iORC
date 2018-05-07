@@ -54,11 +54,13 @@ import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
+import edu.ycp.cs482.iorc.UserDataQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.fragment.ClassData;
 import edu.ycp.cs482.iorc.fragment.ItemData;
 import edu.ycp.cs482.iorc.fragment.RaceData;
+import edu.ycp.cs482.iorc.fragment.UserData;
 import edu.ycp.cs482.iorc.fragment.VersionSheetData;
 
 
@@ -116,16 +118,16 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
 
         Intent extra = getIntent();
-
-        //get characterdata from list
-        if(extra.getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) != null){
-            //get character data to be used in fragments
-            String serializedCharData = (String) extra
-                    .getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID);
-            mCharacterData = deserializeCharData(serializedCharData);
-            getVersionSheet();
+        if(extra != null) {
+            //get characterdata from list
+            if (extra.getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) != null) {
+                //get character data to be used in fragments
+                String serializedCharData = (String) extra
+                        .getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID);
+                mCharacterData = deserializeCharData(serializedCharData);
+                getVersionSheet();
+            }
         }
-
         //Display Character name on Toolbar
         Bundle char_Arguments = new Bundle();
         //char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));
@@ -213,7 +215,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                         }
                     });
         }catch(AuthQueryException e){
-            Log.d("FAILED", "Invalid token");
+            Log.d("NO_TOKEN", "No active user session");
             returnToLogin();
         }
     }
