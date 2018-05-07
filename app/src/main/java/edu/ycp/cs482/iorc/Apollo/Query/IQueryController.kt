@@ -46,6 +46,11 @@ interface IQueryController {
     fun parseClassesQuery(version: String, context: Context, response: Response<ClassVersionQuery.Data>):QueryData?
 
     @Throws(AuthQueryException::class)
+    fun deleteCharacterMutation(id: String, context: Context): ApolloMutationCall<DeleteCharacterMutation.Data>
+    @Throws(AuthQueryException::class, QueryException::class)
+    fun parseDeleteCharacterMutation(id: String, response: Response<DeleteCharacterMutation.Data>): QueryData?
+    
+    @Throws(AuthQueryException::class)
     fun versionInfoTypeQuery(version: String, type: String, context: Context): ApolloQueryCall<VersionInfoTypeQuery.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseVersionInfoTypeQuery(version: String, type: String, response: Response<VersionInfoTypeQuery.Data>): QueryData?

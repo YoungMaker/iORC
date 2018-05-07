@@ -85,6 +85,7 @@ public class CharacterListActivity extends AppCompatActivity {
     //FIXME: Store only QueryData in intents/savedinstancestate. Deserialize
     private static final String CREATION_DATA = "CREATION_DATA";
     private String abilGenExpression = "3d6";
+    private View mLoadingView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,8 @@ public class CharacterListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+
+        mLoadingView = findViewById(R.id.loadingPanel);
 
         //get extras
         Bundle extras = getIntent().getExtras();
@@ -122,15 +125,19 @@ public class CharacterListActivity extends AppCompatActivity {
 
 
         //check if character is being deleted
-        if(extras != null && extras.getBoolean(DO_DELETE)){
-            //trigger delete muation
-            String toDel = extras.getString(DEL_ID);
-            deleteCharacter(toDel);
-            //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
-        } else{
-            //get character list if now character is being deleted
-            HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
-            //getIds(policy);
+        if(extras != null) {
+            if (extras.containsKey(DO_DELETE) && extras.getBoolean(DO_DELETE)) {
+                //trigger delete muation
+                String toDel = extras.getString(DEL_ID);
+                deleteCharacter(toDel);
+                getIntent().removeExtra(DO_DELETE);
+                getIntent().removeExtra(DEL_ID);
+                //Log.d("DELETION ACTION", "DELETE CHARACTER WITH ID: " + toDel);
+            } else {
+                //get character list if now character is being deleted
+                HttpCachePolicy.Policy policy = HttpCachePolicy.CACHE_FIRST;
+                //getIds(policy);
+            }
         }
 
 
@@ -171,6 +178,7 @@ public class CharacterListActivity extends AppCompatActivity {
                                 queryData = QueryControllerProvider.getInstance().getQueryController().parseUserCharactersQuery(getApplicationContext(), response);
                                 processQueryData(queryData);
                             }catch(AuthQueryException e) {
+                                Log.e("SESSION_EXPIRED", "user session has expired");
                                 returnToLogin();
                             }catch (QueryException e){
                                 popQueryError();
@@ -181,11 +189,11 @@ public class CharacterListActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@Nonnull ApolloException e) {
                             popCommError();
-                            Log.d("failed to get response", e.getMessage());
+                            Log.e("failed to get response", e.getMessage());
                         }
                     });
         } catch (AuthQueryException e) {
-            Log.d("TOKEN_GONE", "No token stored!");
+            Log.e("NO_TOKEN", "no active user session");
             returnToLogin();
         }
     }
@@ -284,10 +292,17 @@ public class CharacterListActivity extends AppCompatActivity {
     private void processQueryData(QueryData queryData){
         final View loadingView = findViewById(R.id.loadingPanel);
         final String data = queryData.getGsonData();
+
         //Log.d("GSON_CHAR_DATA", data);
         CharacterListActivity.this.runOnUiThread(new Runnable(){
             @Override
             public void run(){
+                if(characterResponses != null) {
+                    characterResponses.clear();
+                }
+                if(characterDataResponse!= null) {
+                    characterDataResponse.clear();
+                }
 
                 Type listType = new TypeToken<List<CharacterUserQuery.GetUsersCharacter>>(){}.getType();
                 characterDataResponse = new Gson().fromJson(data, listType);
@@ -342,26 +357,38 @@ public class CharacterListActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteCharacter(String toDel){
-        final View loadingView = findViewById(R.id.loadingPanel);
-        MyApolloClient.getMyApolloClient().mutate(
-                DeleteCharacterMutation.builder().id(toDel).build()).enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
-            //on character deletion get the character list
-            @Override
-            public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+    private void deleteCharacter(final String toDel){
+        try {
+            QueryControllerProvider.getInstance().getQueryController().deleteCharacterMutation(toDel, getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<DeleteCharacterMutation.Data>() {
+                //on character deletion get the character list
+                @Override
+                public void onResponse(@Nonnull Response<DeleteCharacterMutation.Data> response) {
+                    //HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
+                    try {
+                        QueryControllerProvider.getInstance().getQueryController().parseDeleteCharacterMutation(toDel, response);
+                        getChars(); // redo the get chars query and re-parse the data out
+                    } catch (AuthQueryException e) {
+                        Log.e("SESSION_EXPIRED", "user session has expired");
+                        returnToLogin();
+                    } catch (QueryException e){
+                        popQueryError();
+                        Log.e("QUERY_ERROR", "Query failed");
+                    }
 
-                HttpCachePolicy.Policy policy = HttpCachePolicy.NETWORK_FIRST;
-                //getIds(policy);
+                }
 
-            }
+                @Override
+                public void onFailure(@Nonnull ApolloException e) {
+                    popCommError();
+                    Log.e("failed to get response", e.getMessage());
 
-            @Override
-            public void onFailure(@Nonnull ApolloException e) {
-                Snackbar.make(findViewById(R.id.frameLayout), "Error communicating with server" , Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
-            }
-        });
+                }
+            });
+        } catch (AuthQueryException e) {
+            Log.e("NO_TOKEN", "no active user session");
+            returnToLogin();
+        }
 
     }
 
