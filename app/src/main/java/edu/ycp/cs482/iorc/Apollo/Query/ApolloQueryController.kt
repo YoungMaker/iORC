@@ -28,9 +28,34 @@ import edu.ycp.cs482.iorc.type.Context as ContextQL
 
 
 class ApolloQueryCntroller: IQueryController {
-
     //TODO: Re-enable HTTP caching
+    //TODO: move error processing to private function?
     private val PREFS_FILE = "iorctkfile"
+
+    override fun userInfoQuery(email: String, context: Context): ApolloQueryCall<UserDataQuery.Data> {
+        return MyApolloClient.getMyApolloClient().query(
+                UserDataQuery.builder().email(email).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseUserInfoQuery(email: String, response: Response<UserDataQuery.Data>): QueryData {
+        if(!response.errors().isEmpty()){
+            var errStr = ""
+            for (error in response.errors()) {
+                errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+            }
+            errStr = errStr.removeSuffix(",") //remove the last ,
+            if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
+                throw AuthQueryException(errStr)
+            }
+            else {throw QueryException(errStr)}
+        } else if(response.data() != null) {
+            return QueryData(Gson().toJson(response.data()!!.userInfo), mapOf(Pair("email", email)))
+        } else {
+            throw QueryException("Invalid Response!")
+        }
+    }
+
 
     override fun createAccountMutation(email: String, password: String, uname: String): ApolloMutationCall<CreateAccountMutation.Data>? {
        return MyApolloClient.getMyApolloClient().mutate(
@@ -45,7 +70,7 @@ class ApolloQueryCntroller: IQueryController {
                 for (error in response.errors()){
                     errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
                 }
-                errStr.removeSuffix(",")
+                errStr = errStr.removeSuffix(",")
                 throw QueryException(errStr) // throws query exception
             }
             throw QueryException("Invalid Response!")
@@ -101,7 +126,7 @@ class ApolloQueryCntroller: IQueryController {
     }
 
     //stores token from resp in shared prefs
-    override fun parseLoginQuery(context: Context, response: Response<LoginMutation.Data>){
+    override fun parseLoginQuery(email: String, context: Context, response: Response<LoginMutation.Data>){
         val editor = context.getSharedPreferences(PREFS_FILE, MODE_PRIVATE).edit()
 
         if(response.data() == null || response.data()!!.loginUser().token() == ""){
@@ -110,7 +135,7 @@ class ApolloQueryCntroller: IQueryController {
                 for (error in response.errors()) {
                     errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
                 }
-                errStr.removeSuffix(",")
+                errStr = errStr.removeSuffix(",")
                 throw AuthQueryException(errStr) // throws query exception
             } else {
                 throw AuthQueryException("Invalid Response!")
@@ -120,6 +145,7 @@ class ApolloQueryCntroller: IQueryController {
             val token =  response.data()!!.loginUser().token()
             if(token == "") { throw QueryException("Invalid response!") }
             editor.putString("ENC_TOKEN", token)
+            editor.putString("USER_EMAIL", email)
             editor.apply()
         }
     }
@@ -154,7 +180,7 @@ class ApolloQueryCntroller: IQueryController {
             for (error in response.errors()) {
                 errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
             }
-            errStr.removeSuffix(",") //remove the last ,
+            errStr = errStr.removeSuffix(",") //remove the last ,
             if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
                 throw AuthQueryException(errStr)
             }

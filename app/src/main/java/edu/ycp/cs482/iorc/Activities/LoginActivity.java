@@ -371,7 +371,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         @Override
                         public void onResponse(@Nonnull Response<LoginMutation.Data> response) {
                             try {
-                                QueryControllerProvider.getInstance().getQueryController().parseLoginQuery(getApplicationContext(), response);
+                                QueryControllerProvider.getInstance().getQueryController().parseLoginQuery(email, getApplicationContext(), response);
                                 proceed();
                             }catch (AuthQueryException e){
                                 popInvalidError(e.getMessage());

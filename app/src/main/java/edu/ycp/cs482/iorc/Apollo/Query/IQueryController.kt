@@ -1,6 +1,7 @@
 package edu.ycp.cs482.iorc.Apollo.Query
 
 import android.content.Context
+import android.provider.ContactsContract
 import com.apollographql.apollo.ApolloMutationCall
 import com.apollographql.apollo.ApolloQueryCall
 import com.apollographql.apollo.api.Response
@@ -15,7 +16,7 @@ interface IQueryController {
     //FIXME: is actually mutation
     fun loginQuery(email: String, password: String): ApolloMutationCall<LoginMutation.Data>?
     @Throws(AuthQueryException::class)
-    fun parseLoginQuery(context: Context, response: Response<LoginMutation.Data>)
+    fun parseLoginQuery(email: String, context: Context, response: Response<LoginMutation.Data>)
 
     @Throws(AuthQueryException::class)
     fun logoutMuation(context: Context): ApolloMutationCall<LogoutMutation.Data>?
@@ -58,6 +59,11 @@ interface IQueryController {
     fun parseVersionInfoTypeQuery(version: String, type: String, response: Response<VersionInfoTypeQuery.Data>): QueryData?
 
     @Throws(AuthQueryException::class)
+    fun userInfoQuery(email: String, context: Context): ApolloQueryCall<UserDataQuery.Data>
+    @Throws(AuthQueryException::class, QueryException::class)
+    fun parseUserInfoQuery(email: String, response: Response<UserDataQuery.Data>): QueryData
+
+    @Throws(AuthQueryException::class)
     fun createCharacterMutation(name:String, raceid:String, classid:String, version:String, context: Context, abilityInput: AbilityInput): ApolloMutationCall<CreateCharacterMutation.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseCreateCharacterMutation(version: String, response: Response<CreateCharacterMutation.Data>): QueryData?
@@ -71,5 +77,5 @@ interface IQueryController {
     fun purchaseItemForCharacters(id: String, itemid: String, context: Context): ApolloMutationCall<PurchaseItemMutation.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parsePurchaseItemForChar(id: String, response: Response<PurchaseItemMutation.Data>): QueryData?
-
 }
+
