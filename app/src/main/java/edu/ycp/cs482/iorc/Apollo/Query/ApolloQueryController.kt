@@ -20,6 +20,7 @@ import com.apollographql.apollo.ApolloQueryCall
 import com.google.gson.Gson
 import edu.ycp.cs482.iorc.*
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.ServerCommunicationError
+import edu.ycp.cs482.iorc.type.AbilityInput
 import java.security.AuthProvider
 import edu.ycp.cs482.iorc.type.Context as ContextQL
 
@@ -245,6 +246,31 @@ class ApolloQueryCntroller: IQueryController {
                     mapOf(Pair("version", version)))
         }
         return null
+    }
+
+    override fun createCharacterMutation(name: String, raceid: String, classid: String, version: String, context: Context, abilityInput: AbilityInput): ApolloMutationCall<CreateCharacterMutation.Data>? {
+        return MyApolloClient.getMyApolloClient().mutate(
+                CreateCharacterMutation.builder().name(name).version(version).abil(abilityInput)
+                        .classid(classid).raceid(raceid).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseCreateCharacterMutation(version: String, response: Response<CreateCharacterMutation.Data>): QueryData? {
+        if(!response.errors().isEmpty()){
+            var errStr = ""
+            for (error in response.errors()) {
+                errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+            }
+            errStr.removeSuffix(",") //remove the last ,
+            if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
+                throw AuthQueryException(errStr)
+            }
+            else {throw QueryException(errStr)}
+        } else if(response.data() != null) {
+            return QueryData(Gson().toJson(response.data()!!.createCharacter()), mapOf(Pair("version", version)))
+        } else {
+            throw QueryException("Invalid Response!")
+        }
     }
 
     private fun getQueryContext(context: Context): ContextQL{

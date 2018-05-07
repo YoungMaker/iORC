@@ -8,6 +8,7 @@ import com.apollographql.apollo.api.Response
 import edu.ycp.cs482.iorc.*
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException
+import edu.ycp.cs482.iorc.type.AbilityInput
 
 interface IQueryController {
     //Query constructors
@@ -60,4 +61,9 @@ interface IQueryController {
     fun userInfoQuery(email: String, context: Context): ApolloQueryCall<UserDataQuery.Data>
     @Throws(AuthQueryException::class, QueryException::class)
     fun parseUserInfoQuery(email: String, response: Response<UserDataQuery.Data>): QueryData
+
+    fun createCharacterMutation(name:String, raceid:String, classid:String, version:String, context: Context, abilityInput: AbilityInput): ApolloMutationCall<CreateCharacterMutation.Data>?
+    @Throws(QueryException::class, AuthQueryException::class)
+    fun parseCreateCharacterMutation(version: String, response: Response<CreateCharacterMutation.Data>): QueryData?
+
 }
