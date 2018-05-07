@@ -87,7 +87,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     public static final String CHAR_ID = "CHAR_ID";
 
     private HashMap<String, String> creationData;
-    private String char_id;
     private HashMap<String, String> defenseTableData = new HashMap<>();
 
 
@@ -149,7 +148,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         }
 
         if(mCharacterData != null){
-            char_id = mCharacterData.id();
+            CHARCTER_ID = mCharacterData.id();
         }
 
         // savedInstanceState is non-null when there is fragment state
@@ -221,8 +220,6 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
 
 
     private void returnToLogin(){
-        //TODO: set intent extra as flag to pop this in login screen
-
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(POP_ERROR, true);
@@ -416,7 +413,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
     private void equipItem(@NonNull final ItemData item) {
         MyApolloClient.getMyApolloClient().mutate(
 
-                EquipItemMutation.builder().charId(char_id).itemId(item.id()).slotid("head").build())
+                EquipItemMutation.builder().charId(CHARCTER_ID).itemId(item.id()).slotid("head").build())
                 .enqueue(new ApolloCall.Callback<EquipItemMutation.Data>() {
                     @Override
                     public void onResponse(@Nonnull Response<EquipItemMutation.Data> response) {

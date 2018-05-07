@@ -43,6 +43,7 @@ class ApolloQueryCntroller: IQueryController {
                 for (error in response.errors()){
                     errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
                 }
+                errStr.removeSuffix(",")
                 throw QueryException(errStr) // throws query exception
             }
             throw QueryException("Invalid Response!")
@@ -107,6 +108,7 @@ class ApolloQueryCntroller: IQueryController {
                 for (error in response.errors()) {
                     errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
                 }
+                errStr.removeSuffix(",")
                 throw AuthQueryException(errStr) // throws query exception
             } else {
                 throw AuthQueryException("Invalid Response!")
@@ -137,6 +139,31 @@ class ApolloQueryCntroller: IQueryController {
             return QueryData(Gson().toJson(response.data()!!.usersCharacters), mapOf())
         }
     }
+
+    override fun deleteCharacterMutation(id: String, context: Context): ApolloMutationCall<DeleteCharacterMutation.Data> {
+       return MyApolloClient.getMyApolloClient().mutate(
+               DeleteCharacterMutation.builder().context(getQueryContext(context)).id(id).build()
+       )
+    }
+
+    override fun parseDeleteCharacterMutation(id: String, response: Response<DeleteCharacterMutation.Data>): QueryData? {
+        if(!response.errors().isEmpty()){
+            var errStr = ""
+            for (error in response.errors()) {
+                errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+            }
+            errStr.removeSuffix(",") //remove the last ,
+            if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
+                throw AuthQueryException(errStr)
+            }
+            else {throw QueryException(errStr)}
+        } else if(response.data() != null) {
+            return QueryData(Gson().toJson(response.data()!!.deleteCharacter()), mapOf(Pair("id", id)))
+        } else {
+            throw QueryException("Invalid Response!")
+        }
+    }
+
 
     override fun versionRacesQuery(version:String, context:Context): ApolloQueryCall<RaceVersionQuery.Data>?{
         return MyApolloClient.getMyApolloClient().query(
