@@ -104,7 +104,9 @@
 
  mutation PurchaseItemMutation($id:ID!, $itemID:ID!,  $context: Context!){
     purchaseItem(id:$id, itemid:$itemID, context:$context){
-      ...CharacterData
+      inventory{
+          ...ItemData
+        }
     }
  }
 

@@ -267,6 +267,30 @@ class ApolloQueryCntroller: IQueryController {
         return null
     }
 
+    override fun purchaseItemForCharacters(id: String, itemid: String, context: Context): ApolloMutationCall<PurchaseItemMutation.Data>? {
+        return MyApolloClient.getMyApolloClient().mutate(
+                PurchaseItemMutation.builder().id(id).itemID(itemid).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parsePurchaseItemForChar(id: String, response: Response<PurchaseItemMutation.Data>): QueryData? {
+        if(!response.errors().isEmpty()){
+            var errStr = ""
+            for (error in response.errors()) {
+                errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+            }
+            errStr.removeSuffix(",") //remove the last ,
+            if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
+                throw AuthQueryException(errStr)
+            }
+            else {throw QueryException(errStr)}
+        } else if(response.data() != null) {
+            return QueryData(Gson().toJson(response.data()!!.purchaseItem()), mapOf(Pair("id", id)))
+        } else {
+            throw QueryException("Invalid Response!")
+        }
+    }
+
     private fun getQueryContext(context: Context): ContextQL{
         val token = getToken(context) ?: throw AuthQueryException("No saved token!")
         return ContextQL.builder().token(token).build()
