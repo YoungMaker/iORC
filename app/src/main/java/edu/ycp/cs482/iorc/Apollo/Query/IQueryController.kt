@@ -72,3 +72,10 @@ interface IQueryController {
     fun getVersionItemsByType(type: ObjType, version: String, context: Context): ApolloQueryCall<VersionItemsByTypeQuery.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parseGetVersionItemsByType(version: String, response: Response<VersionItemsByTypeQuery.Data>): QueryData?
+
+    @Throws(AuthQueryException::class)
+    fun purchaseItemForCharacters(id: String, itemid: String, context: Context): ApolloMutationCall<PurchaseItemMutation.Data>?
+    @Throws(QueryException::class, AuthQueryException::class)
+    fun parsePurchaseItemForChar(id: String, response: Response<PurchaseItemMutation.Data>): QueryData?
+}
+

@@ -312,52 +312,44 @@ public class ItemListActivity extends AppCompatActivity {
         });
     }
 
-    //all items
-//    private void getAllItems(){
-//        MyApolloClient.getMyApolloClient().query(
-//            VersionItemsQuery.builder().version("4e").build())
-//                .enqueue(new ApolloCall.Callback<VersionItemsQuery.Data>() {
-//                    @Override
-//                    public void onResponse(@Nonnull Response<VersionItemsQuery.Data> response) {
-//
-//                        versionItemQueryData = response.data();
-//
-//                        ItemListActivity.this.runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                int numItems = versionItemQueryData.getVersionItems().size();
-//                                List<VersionItemsQuery.GetVersionItem> versionItems =
-//                                        versionItemQueryData.getVersionItems();
-//                                for(int i = 0; i < numItems; i++){
-//                                    itemList.add(versionItems.get(i).fragments().itemData());
-//                                }
-//                                refreshView();
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@Nonnull ApolloException e) {
-//
-//                    }
-//                });
-//    }
-
     private void purchaseItemforChar(String itemID){
-        MyApolloClient.getMyApolloClient().mutate(
-            PurchaseItemMutation.builder().itemID(itemID).id(charIDVal).build())
-               .enqueue(new ApolloCall.Callback<PurchaseItemMutation.Data>() {
-                   @Override
-                   public void onResponse(@Nonnull Response<PurchaseItemMutation.Data> response) {
-                       Log.d("Purchase_ITEM_RESPONSE", "COMPLETE");
-                       //TODO reload character data so that updated inventory is available
-                   }
+        try{
+            QueryControllerProvider.getInstance().getQueryController().purchaseItemForCharacters(charIDVal, itemID, getApplicationContext())
+                    .enqueue(new ApolloCall.Callback<PurchaseItemMutation.Data>() {
+                        @Override
+                        public void onResponse(@Nonnull Response<PurchaseItemMutation.Data> response) {
+                            try{
+                                QueryControllerProvider.getInstance().getQueryController().parsePurchaseItemForChar(charIDVal, response);
+                            }catch (AuthQueryException e){
+                                returnToLogin();
+                            }catch (QueryException e){
+                                popQueryError();
+                            }
+                        }
 
-                   @Override
-                   public void onFailure(@Nonnull ApolloException e) {
-                       Log.d("Purchase_ITEM_RESPONSE", "ERROR");
-                   }
-               });
+                        @Override
+                        public void onFailure(@Nonnull ApolloException e) {
+                            popCommError();
+                        }
+                    });
+        }catch(QueryException e){
+            returnToLogin();
+        }
+
+//        MyApolloClient.getMyApolloClient().mutate(
+//            PurchaseItemMutation.builder().itemID(itemID).id(charIDVal).build())
+//               .enqueue(new ApolloCall.Callback<PurchaseItemMutation.Data>() {
+//                   @Override
+//                   public void onResponse(@Nonnull Response<PurchaseItemMutation.Data> response) {
+//                       Log.d("Purchase_ITEM_RESPONSE", "COMPLETE");
+//                       //TODO reload character data so that updated inventory is available
+//                   }
+//
+//                   @Override
+//                   public void onFailure(@Nonnull ApolloException e) {
+//                       Log.d("Purchase_ITEM_RESPONSE", "ERROR");
+//                   }
+//               });
     }
 
     private void addItemtoCharacter(String itemID){
