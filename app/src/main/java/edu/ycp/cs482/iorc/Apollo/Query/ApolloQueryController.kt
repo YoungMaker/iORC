@@ -44,6 +44,7 @@ class ApolloQueryCntroller: IQueryController {
             for (error in response.errors()) {
                 errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
             }
+            errStr = errStr.trim()
             errStr = errStr.removeSuffix(",") //remove the last ,
             if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
                 throw AuthQueryException(errStr)
@@ -70,6 +71,7 @@ class ApolloQueryCntroller: IQueryController {
                 for (error in response.errors()){
                     errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
                 }
+                errStr = errStr.trim()
                 errStr = errStr.removeSuffix(",")
                 throw QueryException(errStr) // throws query exception
             }
@@ -135,6 +137,7 @@ class ApolloQueryCntroller: IQueryController {
                 for (error in response.errors()) {
                     errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
                 }
+                errStr = errStr.trim()
                 errStr = errStr.removeSuffix(",")
                 throw AuthQueryException(errStr) // throws query exception
             } else {
@@ -180,6 +183,7 @@ class ApolloQueryCntroller: IQueryController {
             for (error in response.errors()) {
                 errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
             }
+            errStr = errStr.trim()
             errStr = errStr.removeSuffix(",") //remove the last ,
             if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
                 throw AuthQueryException(errStr)
@@ -262,7 +266,8 @@ class ApolloQueryCntroller: IQueryController {
             for (error in response.errors()) {
                 errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
             }
-            errStr.removeSuffix(",") //remove the last ,
+            errStr = errStr.trim()
+            errStr = errStr.removeSuffix(",") //remove the last ,
             if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
                 throw AuthQueryException(errStr)
             }
@@ -305,7 +310,8 @@ class ApolloQueryCntroller: IQueryController {
             for (error in response.errors()) {
                 errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
             }
-            errStr.removeSuffix(",") //remove the last ,
+            errStr = errStr.trim()
+            errStr = errStr.removeSuffix(",") //remove the last ,
             if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
                 throw AuthQueryException(errStr)
             }
