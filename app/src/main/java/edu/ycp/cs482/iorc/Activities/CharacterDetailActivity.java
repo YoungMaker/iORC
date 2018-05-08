@@ -397,6 +397,20 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
             }
         }
 
+        for(RaceData.Feat item :characterData.race().fragments().raceData().feats()){
+            ItemData itemData = item.fragments().itemData();
+            if(type.contains(itemData.type())){
+                items.add(itemData);
+            }
+        }
+
+        for(ClassData.Feat item : characterData.classql().fragments().classData().feats()){
+            ItemData itemData = item.fragments().itemData();
+            if(type.contains(itemData.type())){
+                items.add(itemData);
+            }
+        }
+
         return items;
     }
 
