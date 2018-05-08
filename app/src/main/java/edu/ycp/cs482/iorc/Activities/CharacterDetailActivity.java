@@ -331,28 +331,29 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     break;
 
                 case R.id.action_magic:
-                    MagicFragment fragment4 = new MagicFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
                     //create item lists and maps
                     List<ObjType> types4 = new ArrayList<>();
                     types4.add(ObjType.ITEM_SPELL);
                     List<ItemData> items4 = findItemsByType(mCharacterData, types4);
                     HashMap<String, String> itemMap4 = generateItemMap(items4);
                     //
+                    MagicFragment fragment4 = MagicFragment.Companion.newInstance(itemMap4);
+                    android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
+
                     fragmentTransaction4.commit();
                     break;
 
                 case R.id.action_feat:
-                    FeatFragment fragment5 = new FeatFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction5.replace(R.id.character_detail_container, fragment5, "FragmentName");
                     //create item lists and maps
                     List<ObjType> types5 = new ArrayList<>();
                     types5.add(ObjType.ITEM_FEAT);
                     List<ItemData> items5 = findItemsByType(mCharacterData, types5);
                     HashMap<String, String> itemMap5 = generateItemMap(items5);
                     //
+                    FeatFragment fragment5 = FeatFragment.Companion.newInstance(itemMap5);
+                    android.support.v4.app.FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction5.replace(R.id.character_detail_container, fragment5, "FragmentName");
                     fragmentTransaction5.commit();
                     break;
 
