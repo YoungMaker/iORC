@@ -10,7 +10,6 @@ import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment.OnListFrag
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.dummy.DummyContent.DummyItem
 import edu.ycp.cs482.iorc.R
 import edu.ycp.cs482.iorc.fragment.ItemData
-import org.w3c.dom.Text
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the

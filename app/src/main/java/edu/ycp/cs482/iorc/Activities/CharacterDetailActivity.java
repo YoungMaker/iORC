@@ -48,6 +48,7 @@ import edu.ycp.cs482.iorc.CharacterVersionQuery;
 
 import edu.ycp.cs482.iorc.CreateCharacterMutation;
 import edu.ycp.cs482.iorc.EquipItemMutation;
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.FeatFragment;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
@@ -340,6 +341,13 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
                     fragmentTransaction4.commit();
+                    break;
+
+                case R.id.action_feat:
+                    FeatFragment fragment5 = new FeatFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction5.replace(R.id.character_detail_container, fragment5, "FragmentName");
+                    fragmentTransaction5.commit();
                     break;
 
             }

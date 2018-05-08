@@ -28,4 +28,11 @@
         android:icon="@drawable/magic"
         android:title="@string/text_magic"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_feat"
+        android:enabled="true"
+        android:icon="@android:drawable/btn_star_big_off"
+        android:title="@string/feats_text"
+        app:showAsAction="ifRoom"/>
 </menu>
