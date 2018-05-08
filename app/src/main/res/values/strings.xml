@@ -290,6 +290,7 @@
     <string name="text_equipment">Equipment</string>
     <string name="text_magic">Magic</string>
     <string name="Skills">Skills</string>
+    <string name="feats_text">Feats</string>
     <string name="character">Character</string>
     <string name="delete_page">Delete Page</string>
     <!-- fragment_modifier_list.xml!-->
