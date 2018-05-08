@@ -102,22 +102,13 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         BottomNavigationView Bottom_navigation_main = findViewById(R.id.character_bottom);
         Bottom_navigation_main.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        FloatingActionButton fab = findViewById(R.id.edit_button);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) { //TODO toggle editing
-                //Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
-                Intent intent = new Intent(getApplicationContext(), CharacterEditActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
 
 
         Intent extra = getIntent();
@@ -131,6 +122,19 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                 getVersionSheet();
             }
         }
+
+
+        FloatingActionButton fab = findViewById(R.id.edit_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { //TODO toggle editing
+                //Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
+                Intent intent = new Intent(getApplicationContext(), CharacterEditActivity.class);
+                intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, new Gson().toJson(mCharacterData));
+                startActivity(intent);
+            }
+        });
+
         //Display Character name on Toolbar
         Bundle char_Arguments = new Bundle();
         //char_Arguments.putSerializable(V_DATA, getIntent().getSerializableExtra(V_DATA));

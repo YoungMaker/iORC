@@ -17,10 +17,15 @@ import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
+import com.google.gson.Gson
+import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment
+import edu.ycp.cs482.iorc.fragment.CharacterData
 
 
 class CharacterEditActivity : AppCompatActivity() {
 
+    private lateinit var mCharName: EditText
     private lateinit var mStrEdit: EditText
     private lateinit var mConEdit: EditText
     private lateinit var mDexEdit: EditText
@@ -29,6 +34,8 @@ class CharacterEditActivity : AppCompatActivity() {
     private lateinit var mChaEdit: EditText
     private lateinit var mProgressView: ProgressBar
     private lateinit var mUpdateFormView: LinearLayout
+
+    private lateinit var mCharacterData: CharacterData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +46,8 @@ class CharacterEditActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+
+        mCharName = findViewById(R.id.char_name_edit)
 
         mStrEdit = findViewById(R.id.character_abil_str_edit)
         mConEdit = findViewById(R.id.character_abil_con_edit)
@@ -57,7 +66,36 @@ class CharacterEditActivity : AppCompatActivity() {
         mWisEdit.filters = arrayOf(InputFilterMinMax("1", "500"))
         mChaEdit.filters = arrayOf(InputFilterMinMax("1", "500"))
 
+        val extra = intent
+        if (extra != null) {
+            //get characterdata from list
+            if (extra.getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) != null) {
+                //get character data to be used in fragments
+                val serializedCharData = extra
+                        .getSerializableExtra(CharacterDetailFragment.ARG_ITEM_ID) as String
+                mCharacterData = deserializeCharData(serializedCharData)
+                populateCharData()
+            }
+        }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+
+    private fun populateCharData(){
+        mCharName.setText(mCharacterData.name(), TextView.BufferType.EDITABLE)
+
+        mStrEdit.setText(mCharacterData.abilityPoints().str().toString(), TextView.BufferType.EDITABLE)
+        mConEdit.setText(mCharacterData.abilityPoints().con().toString(), TextView.BufferType.EDITABLE)
+        mDexEdit.setText(mCharacterData.abilityPoints().dex().toString(), TextView.BufferType.EDITABLE)
+        mIntEdit.setText(mCharacterData.abilityPoints().int_().toString(), TextView.BufferType.EDITABLE)
+        mWisEdit.setText(mCharacterData.abilityPoints().wis().toString(), TextView.BufferType.EDITABLE)
+        mChaEdit.setText(mCharacterData.abilityPoints().cha().toString(), TextView.BufferType.EDITABLE)
+    }
+
+    //deserialize character data
+    private fun deserializeCharData(serialData: String): CharacterData {
+        return Gson().fromJson(serialData, CharacterData::class.java)
     }
 
     private fun showProgress(show: Boolean) {

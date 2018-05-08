@@ -315,5 +315,7 @@
     <string name="no_data_available">Nothing to see here!</string>
     <string name="title_activity_character_edit">CharacterEditActivity</string>
     <string name="character_name_edit">Character Name</string>
+    <string name="login_to_iorc">Login to iOrc</string>
+    <string name="edit_character_stats">Edit Character Stats</string>
 
 </resources>
