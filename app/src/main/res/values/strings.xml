@@ -313,5 +313,7 @@
     <string name="create_acct"><a href="">Don\'t have an Account? Click here to make one!</a></string>
     <string name="login_text"><a href="">Already Have an Account? Click here to login!</a></string>
     <string name="no_data_available">Nothing to see here!</string>
+    <string name="title_activity_character_edit">CharacterEditActivity</string>
+    <string name="character_name_edit">Character Name</string>
 
 </resources>

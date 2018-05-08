@@ -106,7 +106,9 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //TODO toggle editing
-                Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
+                //Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
+                Intent intent = new Intent(getApplicationContext(), CharacterEditActivity.class);
+                startActivity(intent);
             }
         });
 
