@@ -22,10 +22,10 @@ import edu.ycp.cs482.iorc.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MagicFragment extends Fragment {
+public class MagicFragmentOBS extends Fragment {
 
 
-    public MagicFragment() {
+    public MagicFragmentOBS() {
         // Required empty public constructor
     }
 

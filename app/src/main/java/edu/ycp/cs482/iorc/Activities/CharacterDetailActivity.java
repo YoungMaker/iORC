@@ -1,6 +1,5 @@
 package edu.ycp.cs482.iorc.Activities;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +8,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +26,6 @@ import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -44,25 +39,23 @@ import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider;
 import edu.ycp.cs482.iorc.Apollo.Query.QueryData;
-import edu.ycp.cs482.iorc.CharacterVersionQuery;
 
-import edu.ycp.cs482.iorc.CreateCharacterMutation;
 import edu.ycp.cs482.iorc.EquipItemMutation;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.FeatFragment;
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.EquipmentFragment;
-import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragment;
+import edu.ycp.cs482.iorc.Fragments.CharacterPanels.MagicFragmentOBS;
 import edu.ycp.cs482.iorc.Fragments.CharacterPanels.SkillsFragment;
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.ItemDetailFragment;
 import edu.ycp.cs482.iorc.R;
-import edu.ycp.cs482.iorc.UserDataQuery;
 import edu.ycp.cs482.iorc.VersionSheetQuery;
 import edu.ycp.cs482.iorc.fragment.CharacterData;
 import edu.ycp.cs482.iorc.fragment.ClassData;
 import edu.ycp.cs482.iorc.fragment.ItemData;
 import edu.ycp.cs482.iorc.fragment.RaceData;
-import edu.ycp.cs482.iorc.fragment.UserData;
 import edu.ycp.cs482.iorc.fragment.VersionSheetData;
+import edu.ycp.cs482.iorc.type.ObjType;
 
 
 /**
@@ -321,16 +314,17 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                 case R.id.action_equipment:
                     //get items from character inventory and put into map, key is just i for now
                     //value is just name for now
-                    HashMap<String, String> invMap = new HashMap<>();
-                    for (int i = 0; i < mCharacterData.inventory().size(); i++) {
-                        CharacterData.Inventory invItem = mCharacterData.inventory().get(i);
-                        ItemData itemDataobj = invItem.fragments().itemData();
-                        String itemData = new Gson().toJson(itemDataobj);
-                        invMap.put(String.valueOf(i), itemData);
-                        Log.d("INVENTORY_ITEM", itemData);
-                    }
+                    //HashMap<String, String> invMap = new HashMap<>();
+                    //create item lists and maps
+                    List<ObjType> types3 = new ArrayList<>();
+                    types3.add(ObjType.ITEM_ARMOR);
+                    types3.add(ObjType.ITEM);
+                    types3.add(ObjType.ITEM_WEAPON);
+                    List<ItemData> items3 = findItemsByType(mCharacterData, types3);
+                    HashMap<String, String> itemMap3 = generateItemMap(items3);
+                    //
                     //inject character inventory into fragment
-                    EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance(invMap);
+                    EquipmentFragment fragment3 = EquipmentFragment.Companion.newInstance(itemMap3);
                     android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction3.replace(R.id.character_detail_container, fragment3, "FragmentName");
                     fragmentTransaction3.commit();
@@ -340,6 +334,12 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     MagicFragment fragment4 = new MagicFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction4 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction4.replace(R.id.character_detail_container, fragment4, "FragmentName");
+                    //create item lists and maps
+                    List<ObjType> types4 = new ArrayList<>();
+                    types4.add(ObjType.ITEM_SPELL);
+                    List<ItemData> items4 = findItemsByType(mCharacterData, types4);
+                    HashMap<String, String> itemMap4 = generateItemMap(items4);
+                    //
                     fragmentTransaction4.commit();
                     break;
 
@@ -347,6 +347,12 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
                     FeatFragment fragment5 = new FeatFragment();
                     android.support.v4.app.FragmentTransaction fragmentTransaction5 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction5.replace(R.id.character_detail_container, fragment5, "FragmentName");
+                    //create item lists and maps
+                    List<ObjType> types5 = new ArrayList<>();
+                    types5.add(ObjType.ITEM_FEAT);
+                    List<ItemData> items5 = findItemsByType(mCharacterData, types5);
+                    HashMap<String, String> itemMap5 = generateItemMap(items5);
+                    //
                     fragmentTransaction5.commit();
                     break;
 
@@ -379,6 +385,29 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         });
 
         builder.show();
+    }
+
+    private List<ItemData> findItemsByType(CharacterData characterData, List<ObjType> type){
+        List<ItemData> items = new ArrayList<>();
+        for(CharacterData.Inventory item : characterData.inventory()){
+            ItemData itemData = item.fragments().itemData();
+            if(type.contains(itemData.type())){
+                items.add(itemData);
+            }
+        }
+
+        return items;
+    }
+
+    private HashMap<String, String> generateItemMap(List<ItemData> itemData){
+        HashMap<String, String> itemMap = new HashMap<>();
+
+        for(int i = 0; i < itemData.size(); i++){
+            ItemData data = itemData.get(i);
+            itemMap.put(String.valueOf(i), new Gson().toJson(data));
+        }
+
+        return itemMap;
     }
 
 
