@@ -24,8 +24,8 @@ import edu.ycp.cs482.iorc.fragment.ItemData
  * Mandatory empty constructor for the fragment manager to instantiate the
  * fragment (e.g. upon screen orientation changes).
  */
-class EquipmentFragment : Fragment() {
-    private var mListener: OnListFragmentInteractionListener? = null
+class MagicFragment : Fragment() {
+    private var mListener: EquipmentFragment.OnListFragmentInteractionListener? = null
     private var mItemsList: MutableList<ItemData>? = null
 
 
@@ -61,7 +61,7 @@ class EquipmentFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is OnListFragmentInteractionListener) {
+        if (context is EquipmentFragment.OnListFragmentInteractionListener) {
             mListener = context
         } else {
             throw RuntimeException(context!!.toString() + " must implement OnListFragmentInteractionListener")
@@ -91,8 +91,8 @@ class EquipmentFragment : Fragment() {
 
         private val ARG_INV_DATA = "ITEM_INV_DATA"
 
-        fun newInstance(invMap: HashMap<String, String>): EquipmentFragment {
-            val fragment = EquipmentFragment()
+        fun newInstance(invMap: HashMap<String, String>): MagicFragment {
+            val fragment = MagicFragment()
             val args = Bundle()
             args.putSerializable(ARG_INV_DATA, invMap)
             fragment.arguments = args

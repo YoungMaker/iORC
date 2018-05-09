@@ -62,10 +62,10 @@ public class ItemListActivity extends AppCompatActivity {
      * device.
      */
     private SimpleItemRecyclerViewAdapter mSimpleAdapter;
-    private static final String CREATION_DATA = "CREATION_DATA";
+    //private static final String CREATION_DATA = "CREATION_DATA";
     private static final String POP_ERROR = "ERR_POP";
     private boolean mTwoPane;
-    private HashMap<String, String> creationMap;
+    //private HashMap<String, String> creationMap;
     private VersionItemsQuery.Data versionItemQueryData;
     private List<ItemData> itemList = new ArrayList<>();
     public static final String CHAR_ID = "CHAR_ID";
@@ -80,20 +80,20 @@ public class ItemListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_list);
 
-        //create a bundle of extras
+//        create a bundle of extras
         Bundle extra = getIntent().getExtras();
 
-        //create our character creation data map
+//        //create our character creation data map
         if(extra != null){
-            if(extra.containsKey(CREATION_DATA)){
-                creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
-            }
+//            if(extra.containsKey(CREATION_DATA)){
+//                creationMap = (HashMap<String, String>) extra.getSerializable(CREATION_DATA);
+//            }
             if(extra.containsKey(CHAR_ID)){
                 charIDVal = extra.getString(CHAR_ID);
             }
         }
-
-        Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
+//
+//        Log.d("CHARACTER CREATION DATA","DATA: " + creationMap);
 
         getVersionItemTypes(version, type, true);
         getVersionItemTypes(version, ObjType.ITEM_ARMOR, false);
@@ -113,7 +113,7 @@ public class ItemListActivity extends AppCompatActivity {
         }
 
         //create our simple item recycler adapter add to recycler view
-        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, itemList, mTwoPane, creationMap);
+        mSimpleAdapter = new SimpleItemRecyclerViewAdapter(this, itemList, mTwoPane);
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
@@ -122,7 +122,7 @@ public class ItemListActivity extends AppCompatActivity {
     //Create the menu button on the toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        //getMenuInflater().inflate(R.menu.quit_menu, menu);
         return true;
     }
 
@@ -152,7 +152,7 @@ public class ItemListActivity extends AppCompatActivity {
         private final ItemListActivity mParentActivity;
         private final List<ItemData> mValues;
         private final boolean mTwoPane;
-        private final HashMap<String, String> mCreationData;
+       // private final HashMap<String, String> mCreationData;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -171,7 +171,7 @@ public class ItemListActivity extends AppCompatActivity {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, ItemDetailActivity.class);
                     intent.putExtra(ItemDetailFragment.ARG_ITEM, gsonItem);
-                    intent.putExtra(CREATION_DATA, mCreationData);
+                    //intent.putExtra(CREATION_DATA, mCreationData);
                     mParentActivity.startActivityForResult(intent, ITEM_SELECTION_REQ_CODE);
                     //context.startActivityResult(intent);
                 }
@@ -180,11 +180,11 @@ public class ItemListActivity extends AppCompatActivity {
 
         SimpleItemRecyclerViewAdapter(ItemListActivity parent,
                                       List<ItemData> items,
-                                      boolean twoPane, HashMap<String, String> creationData) {
+                                      boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
-            mCreationData = creationData;
+            //mCreationData = creationData;
         }
 
         @Override
@@ -234,7 +234,7 @@ public class ItemListActivity extends AppCompatActivity {
                             }catch(AuthQueryException e){
                                 returnToLogin();
                             }catch(QueryException e){
-                                popQueryError();
+                                popQueryError("Version Query failed", e.getMessage());
                             }
 
                         }
@@ -286,8 +286,8 @@ public class ItemListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 AlertDialog alertDialog = new AlertDialog.Builder(ItemListActivity.this).create();
-                alertDialog.setTitle("Get Characters Failed");
-                alertDialog.setMessage("Get characters attempt failed: Communication Failed");
+                alertDialog.setTitle("Communication Error");
+                alertDialog.setMessage("Error communicating with server");
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -299,13 +299,13 @@ public class ItemListActivity extends AppCompatActivity {
         });
     }
 
-    private void popQueryError(){
+    private void popQueryError(final String header, final String message){
         ItemListActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog alertDialog = new AlertDialog.Builder(ItemListActivity.this).create();
-                alertDialog.setTitle("Get Characters Failed");
-                alertDialog.setMessage("Get characters attempt failed: Query Failed");
+                alertDialog.setTitle(header);
+                alertDialog.setMessage(header + ": " + message);
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -328,7 +328,7 @@ public class ItemListActivity extends AppCompatActivity {
                             }catch (AuthQueryException e){
                                 returnToLogin();
                             }catch (QueryException e){
-                                popQueryError();
+                                popQueryError("Can't purchase that item", e.getMessage());
                             }
                         }
 

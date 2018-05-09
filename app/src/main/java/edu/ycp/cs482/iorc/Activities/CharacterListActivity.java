@@ -90,6 +90,7 @@ public class CharacterListActivity extends AppCompatActivity {
     private static final String CREATION_DATA = "CREATION_DATA";
     private String abilGenExpression = "3d6";
     private View mLoadingView;
+    private TextView mEmptyView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +103,7 @@ public class CharacterListActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
 
         mLoadingView = findViewById(R.id.loadingPanel);
-
+        mEmptyView = findViewById(R.id.empty_view);
         //get extras
         Bundle extras = getIntent().getExtras();
 
@@ -306,7 +307,7 @@ public class CharacterListActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(POP_ERROR, true);
+        //intent.putExtra(POP_ERROR, true);
         startActivity(intent);
         finish();
     }

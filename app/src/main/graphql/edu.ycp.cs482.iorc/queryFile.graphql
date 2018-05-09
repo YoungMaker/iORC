@@ -157,6 +157,9 @@ fragment RaceData on Race {
   name
   description
   version
+  feats{
+    ...ItemData
+  }
   modifiers {
     key
     value
@@ -168,6 +171,9 @@ fragment ClassData on Class {
      name
      version
      description
+     feats{
+        ...ItemData
+     }
      modifiers {
        key
        value
