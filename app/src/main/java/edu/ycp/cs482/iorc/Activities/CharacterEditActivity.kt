@@ -143,6 +143,7 @@ class CharacterEditActivity : AppCompatActivity() {
                         popError(view, e.message!!)
                     }
         })
+        showProgress(false)
     }
 
     private fun returnToDetail(characterData: QueryData){
