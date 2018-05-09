@@ -127,7 +127,7 @@ public class CharacterDetailActivity extends AppCompatActivity implements Equipm
         FloatingActionButton fab = findViewById(R.id.edit_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { //TODO toggle editing
+            public void onClick(View view) {
                 //Log.d("IMPLEMENT CHAR EDITING", "Edit Character");
                 Intent intent = new Intent(getApplicationContext(), CharacterEditActivity.class);
                 intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID, new Gson().toJson(mCharacterData));

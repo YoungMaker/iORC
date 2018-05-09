@@ -3,6 +3,7 @@ package edu.ycp.cs482.iorc.Activities
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.PendingIntent.getActivity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -13,14 +14,25 @@ import edu.ycp.cs482.iorc.R
 import kotlinx.android.synthetic.main.activity_character_edit.*
 import android.text.Spanned
 import android.text.InputFilter
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import com.apollographql.apollo.ApolloCall
+import com.apollographql.apollo.api.Response
+import com.apollographql.apollo.exception.ApolloException
 import com.google.gson.Gson
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.AuthQueryException
+import edu.ycp.cs482.iorc.Apollo.Query.Exception.QueryException
+import edu.ycp.cs482.iorc.Apollo.Query.QueryControllerProvider
+import edu.ycp.cs482.iorc.Apollo.Query.QueryData
+import edu.ycp.cs482.iorc.EditCharacterMutation
 import edu.ycp.cs482.iorc.Fragments.MasterFlows.CharacterDetailFragment
+import edu.ycp.cs482.iorc.VersionSheetQuery
 import edu.ycp.cs482.iorc.fragment.CharacterData
+import edu.ycp.cs482.iorc.type.AbilityInput
 
 
 class CharacterEditActivity : AppCompatActivity() {
@@ -42,10 +54,6 @@ class CharacterEditActivity : AppCompatActivity() {
         setContentView(R.layout.activity_character_edit)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
 
         mCharName = findViewById(R.id.char_name_edit)
 
@@ -79,8 +87,84 @@ class CharacterEditActivity : AppCompatActivity() {
         }
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        fab.setOnClickListener { view ->
+           attemptToUpdateCharacter(view)
+        }
     }
 
+
+    private fun attemptToUpdateCharacter(view: View){
+        val charName:String = mCharName.text.toString()
+
+        try {
+            val str: Int = Integer.parseInt(mStrEdit.text.toString())
+            val con: Int = Integer.parseInt(mConEdit.text.toString())
+            val dex: Int = Integer.parseInt(mDexEdit.text.toString())
+            val int_: Int = Integer.parseInt(mIntEdit.text.toString())
+            val wis: Int = Integer.parseInt(mWisEdit.text.toString())
+            val cha: Int = Integer.parseInt(mChaEdit.text.toString())
+            updateCharMutation(charName, str, con, dex, int_, wis, cha, view)
+        }catch (e: NumberFormatException){
+            Snackbar.make(view, "Ability points values must be integers!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+    }
+
+    private fun updateCharMutation(charName: String, str: Int, con: Int, dex: Int, int_:Int, wis: Int, cha: Int, view: View){
+        showProgress(true)
+        val abils = AbilityInput.builder().str(str.toLong())
+                .con(con.toLong())
+                .dex(dex.toLong())
+                ._int(int_.toLong())
+                .wis(wis.toLong())
+                .cha(cha.toLong()).build()
+
+        QueryControllerProvider.getInstance().queryController.updateCharMutation(mCharacterData.id(), charName,
+                abils, mCharacterData.race()!!.fragments().raceData().id(),
+                mCharacterData.classql()!!.fragments().classData().id(),
+                applicationContext)!!.enqueue(object : ApolloCall.Callback<EditCharacterMutation.Data>() {
+                    override fun onResponse(response: Response<EditCharacterMutation.Data>) {
+                        try {
+                            val characterData = QueryControllerProvider.getInstance()
+                                    .queryController
+                                    .parseUpdateCharMutation(charName,abils, response)
+                            returnToDetail(characterData)
+                        } catch (e: AuthQueryException) {
+                            Log.d("FAILED", "AUTH Query exception")
+                            returnToLogin() //user authentication has expired, go back to login activity
+                        } catch (e: QueryException) {
+                            popError(view, e.message!!)
+                        }
+
+                    }
+
+                    override fun onFailure(e: ApolloException) {
+                        popError(view, e.message!!)
+                    }
+        })
+    }
+
+    private fun returnToDetail(characterData: QueryData){
+//        val intent = Intent(this, CharacterDetailActivity::class.java)
+//        intent.putExtra(CharacterDetailFragment.ARG_ITEM_ID,characterData.gsonData)
+//        startActivity(intent)
+        finish()
+    }
+
+    private fun popError(view: View, message: String) {
+        runOnUiThread {
+            Snackbar.make(view, "Error updating: " + message, Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+        }
+    }
+
+    private fun returnToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+        finish()
+    }
 
     private fun populateCharData(){
         mCharName.setText(mCharacterData.name(), TextView.BufferType.EDITABLE)

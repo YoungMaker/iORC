@@ -28,9 +28,45 @@ import edu.ycp.cs482.iorc.type.Context as ContextQL
 
 
 class ApolloQueryCntroller: IQueryController {
+
+
     //TODO: Re-enable HTTP caching
     //TODO: move error processing to private function?
     private val PREFS_FILE = "iorctkfile"
+
+
+    override fun updateCharMutation(id: String, name: String, abil: AbilityInput, raceid: String, classid: String, context: Context): ApolloMutationCall<EditCharacterMutation.Data>? {
+        return MyApolloClient.getMyApolloClient().mutate(
+                EditCharacterMutation.builder().id(id).abil(abil).name(name).raceid(raceid).classid(classid).context(getQueryContext(context)).build()
+        )
+    }
+
+    override fun parseUpdateCharMutation(name: String, abil: AbilityInput, response: Response<EditCharacterMutation.Data>): QueryData {
+        if(!response.errors().isEmpty()){
+            var errStr = ""
+            for (error in response.errors()) {
+                errStr += error.message()!!.replace(Regex("Exception while fetching data \\(.*\\)\\s:"), "") + ", "
+            }
+            errStr = errStr.trim()
+            errStr = errStr.removeSuffix(",") //remove the last ,
+            if(errStr.contains("Invalid Token!") || errStr.contains("banned")){
+                throw AuthQueryException(errStr)
+            }
+            else {throw QueryException(errStr)}
+        } else if(response.data() != null) {
+            return QueryData(Gson().toJson(response.data()!!.updateCharacter().fragments()),
+                    mapOf(Pair("name", name),
+                            Pair("AbilityInput", abil.str().toString() +
+                                    abil.con().toString()+  "," +
+                                    abil.dex().toString()+  "," +
+                                    abil._int().toString()+ "," +
+                                    abil.wis().toString()+
+                                    abil.cha().toString())))
+        } else {
+            throw QueryException("Invalid Response!")
+        }
+    }
+
 
     override fun userInfoQuery(email: String, context: Context): ApolloQueryCall<UserDataQuery.Data> {
         return MyApolloClient.getMyApolloClient().query(
