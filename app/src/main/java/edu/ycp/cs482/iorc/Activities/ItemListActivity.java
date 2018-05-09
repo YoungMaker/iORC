@@ -122,7 +122,7 @@ public class ItemListActivity extends AppCompatActivity {
     //Create the menu button on the toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.quit_menu, menu);
+        //getMenuInflater().inflate(R.menu.quit_menu, menu);
         return true;
     }
 

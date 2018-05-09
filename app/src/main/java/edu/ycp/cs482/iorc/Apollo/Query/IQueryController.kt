@@ -77,5 +77,10 @@ interface IQueryController {
     fun purchaseItemForCharacters(id: String, itemid: String, context: Context): ApolloMutationCall<PurchaseItemMutation.Data>?
     @Throws(QueryException::class, AuthQueryException::class)
     fun parsePurchaseItemForChar(id: String, response: Response<PurchaseItemMutation.Data>): QueryData?
+
+    @Throws(AuthQueryException::class)
+    fun updateCharMutation(id: String, name: String, abil:AbilityInput, raceid: String, classid: String, context: Context): ApolloMutationCall<EditCharacterMutation.Data>?
+    @Throws(QueryException::class, AuthQueryException::class)
+    fun parseUpdateCharMutation(name: String, abil: AbilityInput, response: Response<EditCharacterMutation.Data>): QueryData
 }
 
